@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process or Progress? | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .why-visual{display:flex; flex-direction:column; gap:14px; margin:16px 0 12px; padding:18px; background:#F8F1EF; border-radius:14px;}
+  .why-item{display:flex; align-items:flex-start; gap:12px;}
+  .why-icon{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .why-icon svg{width:17px; height:17px;}
+  .why-icon.rose-bg{background:#F0DAD6;}
+  .why-icon.rose-bg svg{stroke:var(--rose-deep);}
+  .why-icon.sage-bg2{background:#DCE6DB;}
+  .why-icon.sage-bg2 svg{stroke:var(--sage-deep);}
+  .why-item p{font-size:13.5px; color:var(--ink); font-weight:300; line-height:1.55; margin:0;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  /* results visibility now controlled by .stuck-screen wrapper */
+  .stuck-screen{display:none;}
+  .stuck-screen.active{display:block;}
+  .stuck-nav{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;}
+  .stuck-nav-hint{font-size:12.5px; color:var(--muted); font-style:italic; text-align:center; margin-top:14px;}
+  .stuck-back-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13.5px; letter-spacing:0.02em;
+    background:transparent; color:var(--muted); border:1.5px solid var(--border); padding:11px 22px;
+    border-radius:30px; cursor:pointer; transition:all .15s ease;
+  }
+  .stuck-back-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .progress-dots{display:flex; justify-content:center; gap:7px; margin-bottom:18px;}
+  .progress-dots span{width:7px; height:7px; border-radius:50%; background:var(--border); transition:all .2s ease;}
+  .progress-dots span.done{background:var(--sage-deep);}
+  .progress-dots span.current{background:var(--rose-deep); width:20px; border-radius:4px;}
+
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .spiral-echo{background:#F8F1EF; border-radius:12px; padding:16px 18px; margin-bottom:18px;}
+  .spiral-echo-label{display:block; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .spiral-echo p{font-size:14.5px; color:var(--ink); font-weight:400; font-style:italic; line-height:1.6;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 44px; text-align:center; background:linear-gradient(180deg, rgba(199,191,214,0.10), rgba(217,166,160,0.06)); position:relative;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+  .foot-feather{height:26px; width:auto; margin:0 auto 18px; display:block; opacity:0.85;}
+  .foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin-bottom:6px;}
+  .foot-links a{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:500; transition:color .15s ease;}
+  .foot-links a:hover{color:var(--rose-deep);}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section id="worksheet">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Process or Progress?</h2>
+      <p class="lede" style="font-size:19px; font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--rose-deep); margin-bottom:6px;">What do I need?</p>
+      <p class="lede">Answer eight quick prompts to sort what's pulling at you into something to talk through, or something to act on.</p>
+      <p class="disclaimer" style="margin:14px auto 0;">This is a self-reflection tool, not a diagnostic one. It can help you sort a feeling into a next step. It can't rule a clinical concern in or out, see the note at the end.</p>
+    </div>
+
+    <div class="stuck-screen active" id="screen1">
+    <div class="card">
+      <div class="progress-dots"><span class="current"></span><span></span><span></span><span></span></div>
+      <span class="step-label">Step One · Name the Spiral</span>
+      <p class="prompt" style="font-weight:400; margin-bottom:16px;">Start by putting words to it. That alone makes it easier to sort.</p>
+      <span class="prompt">What's the thing that's actually been looping in your head lately?</span>
+      <textarea id="q_spiral" rows="2" placeholder="Take your time..."></textarea>
+      <span class="prompt" style="margin-top:20px;">How long has this been going on? Days, weeks, longer?</span>
+      <textarea id="q_duration" rows="1" placeholder="A few words is enough"></textarea>
+      <div class="stuck-nav" style="justify-content:flex-end;">
+        <button class="primary" onclick="goToScreen(2)" style="margin-top:0;">Next →</button>
+      </div>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen2">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="current"></span><span></span><span></span></div>
+      <span class="step-label">Step Two · Rate Each Statement</span>
+      <p class="lede" style="margin:0 0 6px; text-align:left;">Rate how true each one is of your situation right now, not how you feel about it being true.</p>
+
+      <div class="why-visual">
+        <div class="why-item">
+          <span class="why-icon rose-bg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l6-6 4 4 6-8"/><circle cx="20" cy="8" r="1.6"/></svg></span>
+          <p><b>Plan-Orientation</b> looks for a clear next step, what researchers call problem-focused coping.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon sage-bg2"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-4.5-3-8-6.5-8-10.5A5 5 0 0 1 12 6a5 5 0 0 1 8 3.5c0 4-3.5 7.5-8 10.5z"/></svg></span>
+          <p><b>Distress / Talk-It-Through</b> looks for whether the feeling itself needs processing first, what's called emotion-focused coping.</p>
+        </div>
+      </div>
+      <p class="why-note" style="margin-top:2px;">Both are normal, well-studied ways of coping. This just helps you notice which one your situation is asking for more right now (Lazarus &amp; Folkman, 1984).</p>
+
+      <div class="cluster-label" style="margin-top:22px;">Plan-Orientation</div>
+      <div id="plan-items">
+        <div class="rate-group">
+          <div class="rate-q">1. This is tied to one specific, identifiable situation, not a bunch of different things at once.</div>
+          <div class="rate-options" data-q="p1"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">2. I have a reasonably clear idea of what steps would actually resolve this.</div>
+          <div class="rate-options" data-q="p2"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">3. There's something realistic I could do about this in the next two weeks.</div>
+          <div class="rate-options" data-q="p3"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">4. Resolving this depends mostly on things I can control myself.</div>
+          <div class="rate-options" data-q="p4"></div>
+        </div>
+      </div>
+      <div class="stuck-nav">
+        <button class="stuck-back-btn" onclick="goToScreen(1)">← Back</button>
+        <button class="primary" onclick="goToScreen(3)" style="margin-top:0;">Next →</button>
+      </div>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen3">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="current"></span><span></span></div>
+      <span class="step-label">Step Three · Rate Each Statement</span>
+      <p class="lede" style="margin:0 0 6px; text-align:left;">Same as before, how true each one is right now.</p>
+
+      <div class="cluster-label sage" style="margin-top:0;">Distress / Talk-It-Through</div>
+      <div id="talk-items">
+        <div class="rate-group">
+          <div class="rate-q">5. This shows up across a lot of different situations, not just one.</div>
+          <div class="rate-options" data-q="t1"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">6. I can't fully pin down why I feel this way, even after thinking about it a lot.</div>
+          <div class="rate-options" data-q="t2"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">7. This has been interfering with my day-to-day functioning, like sleep, eating, or concentration.</div>
+          <div class="rate-options" data-q="t3"></div>
+        </div>
+        <div class="rate-group">
+          <div class="rate-q">8. The feeling itself is intense enough that it's hard to think past it.</div>
+          <div class="rate-options" data-q="t4"></div>
+        </div>
+      </div>
+
+      <p class="disclaimer" style="margin:18px auto 4px;">Once you've rated all eight, tap "See my results" below for your next step.</p>
+      <div class="stuck-nav">
+        <button class="stuck-back-btn" onclick="goToScreen(2)">← Back</button>
+        <button class="primary" onclick="calculateScore()" style="margin-top:0;">See my results</button>
+      </div>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen4">
+    <div class="card" id="results">
+      <span class="step-label">Your Results</span>
+      <div class="score-row">
+        <div class="score-pill">
+          <div class="num" id="planScoreDisplay">0/8</div>
+          <div class="lab">Plan-Orientation</div>
+        </div>
+        <div class="score-pill sage-bg">
+          <div class="num" id="talkScoreDisplay">0/8</div>
+          <div class="lab">Distress / Talk-It-Through</div>
+        </div>
+      </div>
+      <div class="spiral-echo" id="spiralEcho" style="display:none;">
+        <span class="spiral-echo-label">What you named</span>
+        <p id="spiralEchoText"></p>
+      </div>
+      <p class="verdict-text" id="verdictText"></p>
+      <div class="flag" id="flag">
+        <b>Worth noting</b>
+        Item 6 scored consistently high on its own, sustained effects on sleep, appetite, concentration, or functioning. Treat this as a flag regardless of your totals; it's one of the clearer signs it's worth talking to a professional, even if the rest of the picture looks like a plan problem.
+      </div>
+    </div>
+
+    <div class="path" id="path-plan">
+      <div class="card">
+        <span class="step-label">Step Four · If It's a Plan Problem</span>
+        <p class="prompt" style="font-weight:400; margin-bottom:16px;">Your answers lean toward needing a next step more than a conversation. Let's make it specific.</p>
+        <span class="prompt">The one thing I'm avoiding or putting off is:</span>
+        <input type="text" id="q2" placeholder="Be specific">
+
+        <span class="prompt" style="margin-top:22px;">The smallest version of dealing with it, this week, is:</span>
+        <input type="text" id="q3" placeholder="One small, doable thing">
+        <p class="why-note">Why this helps: breaking a task down to its smallest possible version is the core idea behind <em>behavioral activation</em>, a well-studied approach that treats avoidance itself as what keeps a problem feeling bigger than it is. Acting on a small piece tends to reduce the stuck feeling faster than waiting to feel ready (Jacobson et al., 1996).</p>
+
+        <span class="prompt" style="margin-top:22px;">I'll do it by (specific day/time):</span>
+        <input type="text" id="q4" placeholder="Day or time">
+        <p class="why-note">Why this helps: attaching a concrete day and time turns a vague intention into what researchers call an <em>implementation intention</em>, a simple "if this time comes, then I do this" plan. Studies find this one small step meaningfully increases the odds of actually following through, compared to just intending to do something (Gollwitzer, 1999).</p>
+
+        <div class="idea-menu">
+          <b style="display:block; font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--rose-deep); margin-bottom:6px;">If it helps to say it out loud</b>
+          <ul>
+            <li>"I know what I need to do next. I just haven't done it yet, and that's okay."</li>
+            <li>"I don't need to solve the whole thing today. I just need to do the smallest piece."</li>
+            <li>"This has an end point. I'm not stuck forever, I'm stuck right now."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="path" id="path-talk">
+      <div class="card">
+        <span class="step-label">Step Five · If It's a Talk-It-Through Problem</span>
+        <p class="prompt" style="font-weight:400; margin-bottom:6px;">Your answers lean toward wanting a person more than a plan. You don't have to decide on therapy today, a few lower-stakes starting points. Tap anything you'd like to try:</p>
+        <div class="toggle-list" id="checklist5" style="margin-top:14px;">
+          <div>
+            <label class="toggle-item"><input type="checkbox" value="k1"><span>Say the specific thing out loud to one person you trust this week, not the whole story, just the one thing.</span></label>
+            <p class="why-note">Why this helps: naming a feeling out loud in specific words, rather than staying inside the vague version in your head, is linked to lower emotional intensity almost immediately. Researchers call this <em>affect labeling</em>; brain imaging studies show it calms the brain's threat response even before anything is resolved (Lieberman et al., 2007).</p>
+          </div>
+          <div>
+            <label class="toggle-item"><input type="checkbox" value="k2"><span>Write it out unfiltered for 10 minutes, no editing, then read it back once.</span></label>
+            <p class="why-note">Why this helps: this is the "expressive writing" method, one of the most replicated findings in this area. Writing honestly about something difficult for a short stretch of time is linked to improved mood and lower stress in the weeks after, even with no one else reading it (Pennebaker & Beall, 1986).</p>
+          </div>
+          <div>
+            <label class="toggle-item"><input type="checkbox" value="k3"><span>Look up one therapist or counselor's intro page, just look, no commitment.</span></label>
+            <p class="why-note">Why this helps: the biggest barrier to getting support is usually the size of the first step, not the decision itself. Making the first step this small, just looking, nothing else, lowers the activation energy enough that it actually gets done, which matters more than it sounds like it should.</p>
+          </div>
+          <div>
+            <label class="toggle-item"><input type="checkbox" value="k4"><span>Notice if this feeling is still here in two weeks. If it is, that's useful information.</span></label>
+            <p class="why-note">Why this helps: giving a feeling a short, defined window to resolve on its own, while staying alert to whether it does, is the same logic behind "watchful waiting," an approach used in stepped-care mental health models. It's not about waiting passively; it's treating time itself as one more piece of information.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center;" id="togglesWrap"></p>
+
+    <div class="savebar" style="justify-content:center; margin-top:8px;">
+      <button class="save" onclick="saveWorksheet()">Save my answers</button>
+      <button class="download" onclick="downloadWorksheet()">Download a copy</button>
+      <span class="status" id="status">Saved ✓</span>
+    </div>
+    <p class="note" style="text-align:center;">Saved privately for you on this device. Come back anytime, it'll still be here. Download a copy if you want to keep it, print it, or bring it with you.</p>
+    <div class="stuck-nav" style="justify-content:flex-start; margin-top:20px;">
+      <button class="stuck-back-btn" onclick="goToScreen(3)">← Back</button>
+    </div>
+  </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <details class="about">
+      <summary>About the scoring</summary>
+      Built on established, published constructs, not a clinically validated instrument in its own right, and it hasn't been tested for reliability the way the scales below have.
+      <ul>
+        <li>Lazarus, R. S., &amp; Folkman, S. (1984). <em>Stress, Appraisal, and Coping.</em> Springer, problem-focused vs. emotion-focused coping.</li>
+        <li>Folkman, S. (1984). Personal control and stress and coping processes: A theoretical analysis. <em>Journal of Personality and Social Psychology, 46</em>(4), 839–852, perceived control as a predictor of coping style.</li>
+        <li>Carver, C. S. (1997). You want to measure coping but your protocol's too long: Consider the Brief COPE. <em>International Journal of Behavioral Medicine, 4</em>(1), 92–100.</li>
+        <li>Kessler, R. C., et al. (2002). Short screening scales to monitor population prevalences and trends in non-specific psychological distress (K6/K10). <em>Psychological Medicine, 32</em>(6), 959–976, functional-impairment flagging.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="crisis-card">
+      <b>Before you go</b>
+      This worksheet is a self-help tool and does not diagnose or treat any condition. If you're in crisis or thinking about harming yourself, please contact a crisis line or emergency services in your area. This tool isn't built for that moment.
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const STORAGE_KEY = 'worksheet-therapy-or-plan-scored';
+  const RATE_LABELS = ['Not true', 'Somewhat true', 'Very true'];
+  const QIDS = ['p1','p2','p3','p4','t1','t2','t3','t4'];
+
+  document.querySelectorAll('.rate-options').forEach(container=>{
+    const q = container.dataset.q;
+    RATE_LABELS.forEach((label, val)=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'rate-opt';
+      const id = 'opt_'+q+'_'+val;
+      wrap.innerHTML = '<input type="radio" name="'+q+'" id="'+id+'" value="'+val+'"><label for="'+id+'">'+label+' ('+val+')</label>';
+      container.appendChild(wrap);
+    });
+  });
+
+  function getScore(id){
+    const el = document.querySelector('input[name="'+id+'"]:checked');
+    return el ? parseInt(el.value) : null;
+  }
+
+  function calculateScore(){
+    const vals = {};
+    let missing = false;
+    const missingIds = [];
+    QIDS.forEach(id=>{
+      const v = getScore(id);
+      if(v === null){ missing = true; missingIds.push(id); }
+      vals[id] = v || 0;
+    });
+
+    if(missing){
+      const planMissing = missingIds.some(id=>id.startsWith('p'));
+      if(planMissing){
+        goToScreen(2);
+        const btn2 = document.querySelector('#screen2 button.primary');
+        const orig2 = btn2.textContent;
+        btn2.textContent = 'A few up above are still unrated';
+        btn2.style.background = 'var(--muted)';
+        setTimeout(()=>{ btn2.textContent = orig2; btn2.style.background = ''; }, 2400);
+      } else {
+        const btn = document.querySelector('#screen3 button.primary');
+        const originalText = btn.textContent;
+        btn.textContent = 'A few are still unrated, scroll up ↑';
+        btn.style.background = 'var(--muted)';
+        setTimeout(()=>{ btn.textContent = originalText; btn.style.background = ''; }, 2200);
+      }
+      return;
+    }
+
+    const spiralText = document.getElementById('q_spiral').value.trim();
+    const echo = document.getElementById('spiralEcho');
+    if(spiralText){
+      document.getElementById('spiralEchoText').textContent = '"' + spiralText + '"';
+      echo.style.display = 'block';
+    } else {
+      echo.style.display = 'none';
+    }
+
+    const planScore = vals.p1 + vals.p2 + vals.p3 + vals.p4;
+    const talkScore = vals.t1 + vals.t2 + vals.t3 + vals.t4;
+
+    document.getElementById('planScoreDisplay').textContent = planScore + '/8';
+    document.getElementById('talkScoreDisplay').textContent = talkScore + '/8';
+
+    let verdict = '';
+    let showPlan = false, showTalk = false;
+
+    if(planScore >= 5 && talkScore <= 4){
+      verdict = '<b>This is usually a Plan problem.</b> You likely need a next step more than a place to process. That\'s good news, it means the way out is doing, not waiting. Head to Step Four below and build the smallest possible next move.';
+      showPlan = true;
+    } else if(talkScore >= 5 && planScore <= 4){
+      verdict = '<b>This is usually a Talk-It-Through problem.</b> You likely need a person, not just a plan. That doesn\'t mean therapy today, it means saying the thing out loud to someone before trying to solve it alone. Head to Step Five below for a few low-stakes ways to start.';
+      showTalk = true;
+    } else {
+      verdict = '<b>This looks like a mixed spiral.</b> That\'s normal, most stuck feelings have both a practical piece and an emotional one. Start with whichever section below feels more doable today, and come back to the other if it\'s still unresolved in two weeks.';
+      showPlan = true; showTalk = true;
+    }
+
+    document.getElementById('verdictText').innerHTML = verdict;
+
+    const flag = document.getElementById('flag');
+    if(vals.t3 === 2){
+      flag.classList.add('show');
+    } else {
+      flag.classList.remove('show');
+    }
+
+    const planPath = document.getElementById('path-plan');
+    const talkPath = document.getElementById('path-talk');
+    planPath.classList.toggle('show', showPlan);
+    talkPath.classList.toggle('show', showTalk);
+
+    buildToggles(showPlan, showTalk);
+
+    goToScreen(4);
+  }
+
+  function goToScreen(n){
+    document.querySelectorAll('.stuck-screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen'+n).classList.add('active');
+    document.querySelector('#worksheet .wrap').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function buildToggles(showPlan, showTalk){
+    const wrap = document.getElementById('togglesWrap');
+    wrap.innerHTML = '';
+    if(!showPlan){
+      const a = document.createElement('span');
+      a.className = 'toggle-link';
+      a.textContent = 'See the Plan path anyway';
+      a.onclick = ()=>{ document.getElementById('path-plan').classList.add('show'); a.style.display='none'; };
+      wrap.appendChild(a);
+    }
+    if(!showTalk){
+      const a = document.createElement('span');
+      a.className = 'toggle-link';
+      a.style.marginLeft = '18px';
+      a.textContent = 'See the Talk-It-Through path anyway';
+      a.onclick = ()=>{ document.getElementById('path-talk').classList.add('show'); a.style.display='none'; };
+      wrap.appendChild(a);
+    }
+  }
+
+  document.querySelectorAll('.toggle-item').forEach(item=>{
+    const input = item.querySelector('input[type=checkbox]');
+    item.addEventListener('click', (e)=>{
+      e.preventDefault();
+      input.checked = !input.checked;
+      item.classList.toggle('checked', input.checked);
+    });
+  });
+
+  function loadWorksheet(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const data = JSON.parse(raw);
+        document.getElementById('q_spiral').value = data.q_spiral || '';
+        document.getElementById('q_duration').value = data.q_duration || '';
+        document.getElementById('q2').value = data.q2 || '';
+        document.getElementById('q3').value = data.q3 || '';
+        document.getElementById('q4').value = data.q4 || '';
+        QIDS.forEach(id=>{
+          if(data.ratings && data.ratings[id] !== undefined){
+            const el = document.querySelector('input[name="'+id+'"][value="'+data.ratings[id]+'"]');
+            if(el) el.checked = true;
+          }
+        });
+        (data.checks5 || []).forEach(v=>{
+          const el = document.querySelector('#checklist5 input[value="'+v+'"]');
+          if(el){
+            el.checked = true;
+            el.closest('.toggle-item').classList.add('checked');
+          }
+        });
+        if(data.ratings && QIDS.every(id=>data.ratings[id] !== undefined)){
+          calculateScore();
+        }
+      }
+    }catch(e){
+      // no saved data yet
+    }
+  }
+
+  function saveWorksheet(){
+    const ratings = {};
+    QIDS.forEach(id=>{ ratings[id] = getScore(id); });
+    const checks5 = Array.from(document.querySelectorAll('#checklist5 input:checked')).map(b=>b.value);
+
+    const data = {
+      q_spiral: document.getElementById('q_spiral').value,
+      q_duration: document.getElementById('q_duration').value,
+      q2: document.getElementById('q2').value,
+      q3: document.getElementById('q3').value,
+      q4: document.getElementById('q4').value,
+      ratings: ratings,
+      checks5: checks5,
+      savedAt: new Date().toISOString()
+    };
+    const status = document.getElementById('status');
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      status.textContent = 'Saved ✓';
+      status.classList.add('show');
+      setTimeout(()=>status.classList.remove('show'), 2200);
+    }catch(e){
+      status.textContent = 'Could not save';
+      status.classList.add('show');
+    }
+  }
+
+  const QLABELS = {
+    p1: 'This is tied to one specific, identifiable situation, not several things at once.',
+    p2: 'I have a reasonably clear idea of what steps would actually resolve this.',
+    p3: "There's something realistic I could do about this in the next two weeks.",
+    p4: 'Resolving this depends mostly on things I can control myself.',
+    t1: 'This shows up across a lot of different situations, not just one.',
+    t2: "I can't fully pin down why I feel this way, even after thinking about it a lot.",
+    t3: 'This has been interfering with my day-to-day functioning, like sleep, eating, or concentration.',
+    t4: "The feeling itself is intense enough that it's hard to think past it."
+  };
+  const RATE_LABELS_MAP = {0:'Not true', 1:'Somewhat true', 2:'Very true'};
+  const K_LABELS = {
+    k1: 'Say the specific thing out loud to one person you trust this week.',
+    k2: 'Write it out unfiltered for 10 minutes, no editing, then read it back once.',
+    k3: "Look up one therapist or counselor's intro page, just look, no commitment.",
+    k4: 'Notice if this feeling is still here in two weeks.'
+  };
+
+  function downloadWorksheet(){
+    const vals = {};
+    QIDS.forEach(id=>{ vals[id] = getScore(id); });
+    const planScore = (vals.p1||0) + (vals.p2||0) + (vals.p3||0) + (vals.p4||0);
+    const talkScore = (vals.t1||0) + (vals.t2||0) + (vals.t3||0) + (vals.t4||0);
+    const checks5 = Array.from(document.querySelectorAll('#checklist5 input:checked')).map(b=>b.value);
+
+    let out = 'CONCRETE PERSPECTIVE LAB\n';
+    out += 'Process or Progress? : my answers\n';
+    out += new Date().toLocaleDateString() + '\n';
+    out += '\n----------------------------------------\n\n';
+
+    out += 'STEP ONE: Name the spiral\n\n';
+    out += "What's looping: " + (document.getElementById('q_spiral').value || '(not answered)') + '\n';
+    out += 'How long: ' + (document.getElementById('q_duration').value || '(not answered)') + '\n\n';
+
+    out += 'STEP TWO: Ratings\n\n';
+    QIDS.forEach(id=>{
+      const v = vals[id];
+      out += '- ' + QLABELS[id] + '  [' + (v !== null ? RATE_LABELS_MAP[v] : 'not answered') + ']\n';
+    });
+    out += '\nPlan-Orientation score: ' + planScore + '/8\n';
+    out += 'Distress / Talk-It-Through score: ' + talkScore + '/8\n\n';
+
+    out += 'STEP THREE: What this means\n\n';
+    const verdictEl = document.getElementById('verdictText');
+    const verdictPlain = verdictEl ? verdictEl.textContent.trim() : '';
+    out += (verdictPlain || 'Answer all six ratings above and click "See my results" to get your verdict.') + '\n\n';
+
+    const q2 = document.getElementById('q2').value;
+    const q3 = document.getElementById('q3').value;
+    const q4 = document.getElementById('q4').value;
+    if(q2 || q3 || q4){
+      out += "STEP FOUR: If it's a Plan problem\n\n";
+      out += "The thing I'm avoiding: " + (q2 || '(not answered)') + '\n';
+      out += 'Smallest version this week: ' + (q3 || '(not answered)') + '\n';
+      out += "I'll do it by: " + (q4 || '(not answered)') + '\n\n';
+    }
+
+    if(checks5.length){
+      out += "STEP FIVE: If it's a Talk-It-Through problem\n\n";
+      out += 'Things I want to try:\n';
+      checks5.forEach(k=>{ out += '- ' + (K_LABELS[k] || k) + '\n'; });
+      out += '\n';
+    }
+
+    out += '----------------------------------------\n';
+    out += 'This is a self-reflection tool, not a diagnostic one. concreteperspectivelab.com\n';
+
+    const blob = new Blob([out], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'process-or-progress-answers.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Each visit starts blank by design — saved answers live on the "Your Saved Answers" page instead.
+
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Saved Answers | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  /* results */
+  #results{display:none;}
+  #results.show{display:block;}
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .spiral-echo{background:#F8F1EF; border-radius:12px; padding:16px 18px; margin-bottom:18px;}
+  .spiral-echo-label{display:block; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .spiral-echo p{font-size:14.5px; color:var(--ink); font-weight:400; font-style:italic; line-height:1.6;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 44px; text-align:center; background:linear-gradient(180deg, rgba(199,191,214,0.10), rgba(217,166,160,0.06)); position:relative;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+  .foot-feather{height:26px; width:auto; margin:0 auto 18px; display:block; opacity:0.85;}
+  .foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin-bottom:6px;}
+  .foot-links a{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:500; transition:color .15s ease;}
+  .foot-links a:hover{color:var(--rose-deep);}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .entry-card{margin-bottom:22px;}
+  .entry-head{display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px;}
+  .entry-tool{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink);}
+  .entry-date{font-size:12px; color:var(--muted); font-weight:300;}
+  .entry-field{margin-top:14px;}
+  .entry-label{display:block; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:4px;}
+  .entry-value{font-size:14.5px; color:var(--ink); font-weight:300; line-height:1.6;}
+  .entry-value.empty{color:#BDB2AE; font-style:italic;}
+  .entry-actions{display:flex; gap:14px; margin-top:20px; flex-wrap:wrap;}
+  .entry-actions a, .entry-actions button{
+    font-family:'Jost', sans-serif; font-size:12.5px; letter-spacing:0.04em; font-weight:500;
+    text-decoration:none; cursor:pointer; border:none; background:none; padding:0;
+    color:var(--muted); transition:color .15s ease;
+  }
+  .entry-actions a:hover, .entry-actions button:hover{color:var(--rose-deep);}
+  .entry-actions .danger:hover{color:#B5544A;}
+  .empty-state{text-align:center; padding:40px 20px; color:var(--muted); font-size:14.5px; font-weight:300;}
+
+  .journal-day{margin-bottom:14px; border:1px solid var(--border); border-radius:16px; background:var(--surface); box-shadow:var(--shadow); overflow:hidden;}
+  .journal-day summary{
+    list-style:none; cursor:pointer; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .journal-day summary::-webkit-details-marker{display:none;}
+  .journal-day-left{display:flex; align-items:center; gap:12px;}
+  .journal-day-emoji{display:flex; align-items:center; justify-content:center; width:22px; height:22px;}
+  .journal-day-date{font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);}
+  .journal-day-sub{font-size:12.5px; color:var(--muted); font-weight:300;}
+  .journal-day-arrow{font-size:12px; color:var(--muted); transition:transform .15s ease;}
+  .journal-day[open] .journal-day-arrow{transform:rotate(90deg);}
+  .journal-day-body{padding:0 22px 20px;}
+  .empty-state a{color:var(--rose-deep); text-decoration:underline; text-underline-offset:3px;}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Your Space</span>
+      <h2>My journal</h2>
+      <p class="lede">Every daily check-in you've saved, newest first. Tap a day to open it.</p>
+    </div>
+
+    <div id="journalWrap"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Your Space</span>
+      <h2>Your saved answers</h2>
+      <p class="lede">Everything you've saved from any tool, gathered in one place.</p>
+      <p class="disclaimer" style="margin:14px auto 0;">Saved privately on this device only. Not sent anywhere, not visible to anyone else. Clearing your browser data will remove it too, so download a copy from any tool if you want to keep it long-term.</p>
+    </div>
+
+    <div id="entriesWrap"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const SOURCES = [
+    {
+      key: 'worksheet-therapy-or-plan-scored',
+      tool: 'Process or Progress?',
+      link: 'therapy-or-plan.html',
+      fields: [
+        {k:'q_spiral', label:"What's looping"},
+        {k:'q_duration', label:'How long'},
+        {k:'q2', label:"The thing I'm avoiding"},
+        {k:'q3', label:'Smallest version this week'},
+        {k:'q4', label:"I'll do it by"}
+      ],
+      ratingsKey: 'ratings',
+      ratingLabels: {p1:'Plan-Orientation', p2:'Plan-Orientation', p3:'Plan-Orientation', p4:'Plan-Orientation', t1:'Distress / Talk', t2:'Distress / Talk', t3:'Distress / Talk', t4:'Distress / Talk'}
+    },
+    {
+      key: 'anchor-journal-is-this-true',
+      tool: '"Is This True?"',
+      link: 'is-this-true.html',
+      fields: [
+        {k:'noise', label:'The noise'},
+        {k:'evfor', label:'Evidence for'},
+        {k:'evagainst', label:'Evidence against'},
+        {k:'shift', label:'The grounded version'},
+        {k:'integration', label:'If-then plan'}
+      ]
+    },
+    {
+      key: 'coping-environment',
+      tool: 'Stressed! Is It the Environment, or Is It Me?',
+      link: 'coping-environment.html',
+      fields: [
+        {k:'env', label:"What they named"}
+      ]
+    },
+    {
+      key: 'why-am-i-stuck',
+      tool: 'Feeling Stuck?',
+      link: 'why-am-i-stuck.html',
+      transform: function(data){
+        const TYPE_LABELS = {fear:'Fear-Based', foggy:'Foggy / Unclear', frozen:'Frozen / Overwhelmed', practical:'Practical'};
+        const out = {
+          stuckOn: data.stuckOn || '',
+          type: TYPE_LABELS[data.type] || '',
+          detail1: '', detail2: '', detail3: '',
+          chosenStep: data.chosenStep || '',
+          _labels: {}
+        };
+        if(data.type === 'fear'){
+          out._labels = {detail1:'Confidence handling it going wrong', detail2:'Smallest reversible version', detail3:'Advice to a friend'};
+          out.detail1 = (data.fear_confidence !== null && data.fear_confidence !== undefined) ? data.fear_confidence + '/10' : '';
+          out.detail2 = data.fear_smallest || '';
+          out.detail3 = data.fear_friend || '';
+        } else if(data.type === 'foggy'){
+          out._labels = {detail1:'If the fog lifted', detail2:'A time it felt clearer', detail3:"Something they don't want"};
+          out.detail1 = data.foggy_miracle || '';
+          out.detail2 = data.foggy_exception || '';
+          out.detail3 = data.foggy_notwant || '';
+        } else if(data.type === 'frozen'){
+          out._labels = {detail1:'Body state', detail2:'Where felt most', detail3:'How intense it felt'};
+          out.detail1 = data.frozen_state || '';
+          out.detail2 = data.frozen_location || '';
+          out.detail3 = (data.frozen_charge !== null && data.frozen_charge !== undefined) ? data.frozen_charge + '/10' : '';
+        } else if(data.type === 'practical'){
+          out._labels = {detail1:'The missing thing', detail2:'Who might help', detail3:'How solvable it feels'};
+          out.detail1 = data.practical_missing || '';
+          out.detail2 = data.practical_who || '';
+          out.detail3 = (data.practical_solvable !== null && data.practical_solvable !== undefined) ? data.practical_solvable + '/10' : '';
+        }
+        return out;
+      },
+      fields: [
+        {k:'stuckOn', label:'What they named'},
+        {k:'type', label:'Type identified'},
+        {k:'detail1', label:'Detail'},
+        {k:'detail2', label:'Detail'},
+        {k:'detail3', label:'Detail'},
+        {k:'chosenStep', label:'One small step chosen'}
+      ]
+    }
+  ];
+
+  function formatDate(iso){
+    if(!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) + ' at ' + d.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+  }
+
+  function renderEntries(){
+    const wrap = document.getElementById('entriesWrap');
+    wrap.innerHTML = '';
+    let any = false;
+
+    SOURCES.forEach(src=>{
+      let raw;
+      try{ raw = localStorage.getItem(src.key); }catch(e){ raw = null; }
+      if(!raw) return;
+      let data;
+      try{ data = JSON.parse(raw); }catch(e){ return; }
+      any = true;
+
+      const card = document.createElement('div');
+      card.className = 'card entry-card';
+
+      let html = '<div class="entry-head"><span class="entry-tool">' + src.tool + '</span><span class="entry-date">Saved ' + formatDate(data.savedAt) + '</span></div>';
+
+      const displayData = src.transform ? src.transform(data) : data;
+      const dynamicLabels = displayData._labels || {};
+      src.fields.forEach(f=>{
+        const val = (displayData[f.k] || '').trim();
+        const label = dynamicLabels[f.k] || f.label;
+        html += '<div class="entry-field"><span class="entry-label">' + label + '</span><p class="entry-value' + (val ? '' : ' empty') + '">' + (val ? escapeHtml(val) : 'Not answered') + '</p></div>';
+      });
+
+      if(data.ratings && typeof data.ratings.p1 !== 'undefined'){
+        const p = (data.ratings.p1||0) + (data.ratings.p2||0) + (data.ratings.p3||0) + (data.ratings.p4||0);
+        const t = (data.ratings.t1||0) + (data.ratings.t2||0) + (data.ratings.t3||0) + (data.ratings.t4||0);
+        html += '<div class="entry-field"><span class="entry-label">Scores</span><p class="entry-value">Plan-Orientation ' + p + '/8 &middot; Distress / Talk-It-Through ' + t + '/8</p></div>';
+      }
+      if(data.ratings && typeof data.ratings.e1 !== 'undefined'){
+        const ext = (data.ratings.e1||0) + (data.ratings.e2||0) + (data.ratings.e3||0) + (data.ratings.e4||0);
+        const intr = (data.ratings.i1||0) + (data.ratings.i2||0) + (data.ratings.i3||0) + (data.ratings.i4||0);
+        html += '<div class="entry-field"><span class="entry-label">Scores</span><p class="entry-value">The Space Itself ' + ext + '/8 &middot; My Body\'s Response ' + intr + '/8</p></div>';
+      }
+      if(typeof data.intensityBefore !== 'undefined'){
+        html += '<div class="entry-field"><span class="entry-label">Stress of thought</span><p class="entry-value">Before: ' + (data.intensityBefore || 'not set') + ' &middot; After: ' + (data.intensityAfter || 'not set') + '</p></div>';
+      }
+
+      html += '<div class="entry-actions"><a href="' + src.link + '">Take it again →</a><button class="danger" data-clear-key="' + src.key + '">Clear this entry</button></div>';
+
+      card.innerHTML = html;
+      wrap.appendChild(card);
+    });
+
+    if(!any){
+      wrap.innerHTML = '<div class="card empty-state">Nothing saved yet. Answers you save on any tool will show up here. <a href="index.html#materials">Browse the library →</a></div>';
+    }
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function clearEntry(key){
+    if(!confirm("Clear this saved entry? This can't be undone.")) return;
+    try{ localStorage.removeItem(key); }catch(e){}
+    renderEntries();
+  }
+
+  document.getElementById('entriesWrap').addEventListener('click', function(e){
+    const btn = e.target.closest('[data-clear-key]');
+    if(btn) clearEntry(btn.getAttribute('data-clear-key'));
+  });
+
+  renderEntries();
+
+  /* ---------- My Journal ---------- */
+  const EMOTION_ICON_PATHS = {
+    Happy: '<circle cx="12" cy="7" r="3"/><circle cx="12" cy="17" r="3"/><circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><circle cx="12" cy="12" r="3"/>',
+    Surprised: '<path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z"/>',
+    Bad: '<path d="M6 18a4 4 0 0 1 0-8 5 5 0 0 1 9.8-1.5A4.5 4.5 0 0 1 17 18H6z"/>',
+    Fearful: '<path d="M12 2l7 3v6c0 5-3 9-7 11-4-2-7-6-7-11V5z"/>',
+    Angry: '<path d="M12 2c-3 4-6 7-6 11a6 6 0 0 0 12 0c0-2-1-3-2-4 0 2-1 3-2 3a2 2 0 0 1-1-3.5C13.5 6.5 12 4 12 2z"/>',
+    Disgusted: '<path d="M12 4c4 3 6 8 3 13-2 3-6 4-8 2-2-3 0-7 3-9-2 0-4-1-5-3 3-1 5 0 7-3z"/>',
+    Sad: '<path d="M12 3c3 5 6 9 6 12a6 6 0 0 1-12 0c0-3 3-7 6-12z"/>'
+  };
+  const EMOTION_ICON_COLORS = {
+    Happy: '#C68B85', Surprised: '#D9A66E', Bad: '#ADA79C', Fearful: '#7C93A8',
+    Angry: '#C2705A', Disgusted: '#9B9B6B', Sad: '#8B7FA3'
+  };
+  const WORD_ICON_SHAPES = {
+    'heart-full': '<path d="M12 20s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 5c-2.5 4.5-9.5 9-9.5 9z"/>',
+    'starburst': '<path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z"/>',
+    'trophy': '<path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M6 5H4a2 2 0 0 0 2 4"/><path d="M18 5h2a2 2 0 0 1-2 4"/><path d="M11 12v3h2v-3"/><path d="M9 18h6v2H9z"/>',
+    'eye-open': '<path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/>',
+    'lightning': '<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>',
+    'question-swirl': '<path d="M9 8a3 3 0 1 1 4 2.8c-.7.3-1 1-1 1.7v.5"/><circle cx="12" cy="17.5" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9"/>',
+    'wide-surprise': '<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.1" fill="currentColor" stroke="none"/><ellipse cx="12" cy="15" rx="2" ry="2.6"/>',
+    'hourglass': '<path d="M6 3h12M6 21h12M7 3c0 5 5 7 5 9s-5 4-5 9M17 3c0 5-5 7-5 9s5 4 5 9"/>',
+    'spiral-dizzy': '<path d="M12 12c0-2 2-3 3-1s0 4-2 4-4-2-4-5 3-6 6-5"/><circle cx="12" cy="12" r="9"/>',
+    'brick-weight': '<rect x="4" y="10" width="7" height="5"/><rect x="13" y="10" width="7" height="5"/><rect x="8.5" y="15" width="7" height="5"/>',
+    'crack-shield': '<path d="M12 2l7 3v6c0 5-3 9-7 11-4-2-7-6-7-11V5z"/><path d="M12 6l-2 5 3 1-2 6"/>',
+    'wave-tremble': '<path d="M2 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+    'shrink-arrow': '<path d="M12 3v10"/><path d="M8 9l4 4 4-4"/><circle cx="12" cy="19" r="2"/>',
+    'door-closed': '<rect x="6" y="3" width="12" height="18"/><circle cx="14" cy="12" r="1" fill="currentColor" stroke="none"/>',
+    'dagger': '<path d="M12 2v14M9 4l3-2 3 2M8 16l4 2 4-2M12 20v2"/>',
+    'mask': '<path d="M4 8c0-3 3-5 8-5s8 2 8 5-2 8-8 10c-6-2-8-7-8-10z"/><path d="M9 10h.01M15 10h.01"/><path d="M9 15c1-1 2-1.5 3-1.5s2 .5 3 1.5"/>',
+    'fist': '<path d="M7 10V8a2 2 0 0 1 4 0M11 9V7a2 2 0 0 1 4 0M15 9V8a2 2 0 0 1 4 0v6a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5v-2a2 2 0 0 1 4 0"/>',
+    'turn-away': '<path d="M15 4l6 8-6 8"/><path d="M3 12h16"/>',
+    'rain-cloud': '<path d="M6 12a4 4 0 0 1 0-8 5 5 0 0 1 9.8-1.5A4.5 4.5 0 0 1 17 12H6z"/><path d="M8 16v2M12 17v3M16 16v2"/>',
+    'anchor': '<circle cx="12" cy="5" r="2"/><path d="M12 7v13M8 12H4a8 8 0 0 0 8 8 8 8 0 0 0 8-8h-4"/>',
+    'broken-heart': '<path d="M12 20s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 5c-2.5 4.5-9.5 9-9.5 9z"/><path d="M12 8l-2 4 2.5 2-1.5 4"/>',
+    'island-dot': '<circle cx="12" cy="14" r="4"/><path d="M4 20c2-4 5-6 8-6s6 2 8 6" stroke-dasharray="1,3"/>',
+    'queasy-wave': '<path d="M4 12c2-3 4-3 6 0s4 3 6 0 4-3 4-3M4 17c2-3 4-3 6 0s4 3 6 0 4-3 4-3"/>'
+  };
+  const WORD_ICON_MAP = {
+    Playful:'starburst', Aroused:'lightning', Cheeky:'starburst',
+    Content:'heart-full', Free:'heart-full', Joyful:'starburst',
+    Interested:'eye-open', Curious:'eye-open', Inquisitive:'eye-open',
+    Proud:'trophy', Successful:'trophy', Confident:'trophy',
+    Accepted:'heart-full', Respected:'trophy', Valued:'heart-full',
+    Powerful:'trophy', Courageous:'trophy', Creative:'starburst',
+    Peaceful:'heart-full', Loving:'heart-full', Thankful:'heart-full',
+    Trusting:'heart-full', Sensitive:'heart-full', Intimate:'heart-full',
+    Optimistic:'starburst', Hopeful:'starburst', Inspired:'lightning',
+    Startled:'wide-surprise', Shocked:'lightning', Dismayed:'question-swirl',
+    Confused:'question-swirl', Disillusioned:'question-swirl', Perplexed:'question-swirl',
+    Amazed:'wide-surprise', Astonished:'wide-surprise', Awe:'starburst',
+    Excited:'lightning', Eager:'lightning', Energetic:'lightning',
+    Bored:'hourglass', Unfocused:'spiral-dizzy', Sleepy:'hourglass',
+    Busy:'spiral-dizzy', 'Out of control':'spiral-dizzy', Rushed:'lightning',
+    Stressed:'brick-weight', Pressured:'brick-weight', Overwhelmed:'spiral-dizzy',
+    Tired:'hourglass', Apathetic:'hourglass', Indifferent:'turn-away',
+    Scared:'crack-shield', Helpless:'shrink-arrow', Frightened:'wide-surprise',
+    Anxious:'wave-tremble', Worried:'wave-tremble',
+    Insecure:'shrink-arrow', Inadequate:'shrink-arrow', Inferior:'shrink-arrow',
+    Weak:'shrink-arrow', Worthless:'broken-heart', Insignificant:'shrink-arrow',
+    Rejected:'door-closed', Excluded:'door-closed', Persecuted:'crack-shield',
+    Threatened:'crack-shield', Nervous:'wave-tremble', Exposed:'shrink-arrow',
+    'Let down':'dagger', Betrayed:'dagger', Disrespected:'mask',
+    Humiliated:'mask', Ridiculed:'mask', Indignant:'fist',
+    Bitter:'mask', Violated:'dagger', Furious:'fist',
+    Mad:'fist', Jealous:'mask', Provoked:'fist',
+    Aggressive:'fist', Hostile:'fist', Infuriated:'fist',
+    Frustrated:'brick-weight', Annoyed:'turn-away', Withdrawn:'turn-away',
+    Distant:'turn-away', Numb:'turn-away', Skeptical:'question-swirl',
+    Critical:'mask', Dismissive:'turn-away', Judgmental:'mask',
+    Disapproving:'mask', Embarrassed:'mask', Appalled:'wide-surprise',
+    Disappointed:'rain-cloud', Revolted:'queasy-wave',
+    Awful:'queasy-wave', Nauseated:'queasy-wave', Detestable:'mask',
+    Repelled:'turn-away', Horrified:'wide-surprise', Hesitant:'question-swirl',
+    Hurt:'broken-heart', Depressed:'anchor', Empty:'anchor',
+    Guilty:'broken-heart', Ashamed:'broken-heart', Remorseful:'rain-cloud',
+    Despair:'rain-cloud', Powerless:'anchor', Grief:'rain-cloud',
+    Vulnerable:'shrink-arrow', Fragile:'shrink-arrow', Victimized:'broken-heart',
+    Lonely:'island-dot', Abandoned:'island-dot', Isolated:'island-dot'
+  };
+  function feelingIconSvg(feelingPath){
+    const parts = (feelingPath || '').split(' → ').map(s=>s.trim()).filter(Boolean);
+    const baseKey = parts[0];
+    const deepestWord = parts[parts.length - 1];
+    const color = EMOTION_ICON_COLORS[baseKey];
+    if(!color) return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#B9AFA9" stroke-width="1.3"><circle cx="12" cy="12" r="8"/></svg>';
+    const shapeKey = WORD_ICON_MAP[deepestWord];
+    const path = (shapeKey && WORD_ICON_SHAPES[shapeKey]) || EMOTION_ICON_PATHS[baseKey];
+    return '<svg viewBox="0 0 24 24" width="22" height="22" fill="' + color + '" stroke="' + color + '" stroke-width="1.3">' + path + '</svg>';
+  }
+  const SC_LABELS = {moved:'Moved my body', ate:'Ate something nourishing', outside:'Spent time outside', talked:'Talked to someone', break:'Took a break', enjoyed:'Did something I enjoy'};
+  const NEED_LABELS = {rest:'Rest', space:'Space', talk:'Talk', hug:'Hug', cry:'Cry', movement:'Movement', quiet:'Quiet', fun:'Fun', creativity:'Creativity', nature:'Nature', music:'Music', other:'Other'};
+
+  function journalField(label, val){
+    const v = (val || '').toString().trim();
+    return '<div class="entry-field"><span class="entry-label">' + label + '</span><p class="entry-value' + (v ? '' : ' empty') + '">' + (v ? escapeHtml(v) : 'Not answered') + '</p></div>';
+  }
+
+  function renderJournal(){
+    const wrap = document.getElementById('journalWrap');
+    let entries = [];
+    try{
+      const raw = localStorage.getItem('daily-checkin-entries');
+      if(raw) entries = JSON.parse(raw);
+    }catch(e){ entries = []; }
+
+    if(!entries.length){
+      wrap.innerHTML = '<div class="card empty-state">No check-ins saved yet. <a href="daily-checkin.html">Start today\'s check-in →</a></div>';
+      return;
+    }
+
+    entries.sort((a,b)=> b.date.localeCompare(a.date));
+    wrap.innerHTML = '';
+
+    entries.forEach(e=>{
+      const emoji = feelingIconSvg(e.feelingPath || e.feeling);
+      const details = document.createElement('details');
+      details.className = 'journal-day';
+
+      let body = '';
+      body += journalField("How I was feeling", (e.feelingPath || e.feeling || '') + (e.feelingOther ? ((e.feelingPath || e.feeling) ? ', ' : '') + e.feelingOther : ''));
+      body += journalField('Mood', e.mood ? e.mood + '/5' : '');
+      body += journalField("What's on my mind", e.onMyMind);
+      body += journalField('Grateful for', (e.gratitude||[]).join(', '));
+      body += journalField('Self-care', (e.selfcare||[]).map(s=>SC_LABELS[s]||s).concat(e.selfcareOther?[e.selfcareOther]:[]).join(', '));
+      body += journalField('Energy / Sleep / Stress', [e.energy,e.sleep,e.stress].map(v=>v||'not set').join(', '));
+      body += journalField('What went well', e.wentWell);
+      body += journalField('What was challenging', e.challenging);
+      body += journalField('What I need right now', (e.needs||[]).map(n=>NEED_LABELS[n]||n).concat(e.needOther?[e.needOther]:[]).join(', '));
+      body += journalField('Affirmation', e.affirmation);
+      body += journalField('Tomorrow I will', e.tomorrow);
+      body += journalField('Notes', e.notes);
+      body += '<div class="entry-actions"><a href="daily-checkin.html">New check-in →</a><button class="danger" data-clear-journal-date="' + e.date + '">Delete this entry</button></div>';
+
+      details.innerHTML =
+        '<summary><span class="journal-day-left"><span class="journal-day-emoji">' + emoji + '</span><span><span class="journal-day-date">' + e.dateLabel + '</span><br><span class="journal-day-sub">Mood ' + (e.mood||'not set') + '/5</span></span></span><span class="journal-day-arrow">▸</span></summary>' +
+        '<div class="journal-day-body">' + body + '</div>';
+
+      wrap.appendChild(details);
+    });
+  }
+
+  function clearJournalEntry(date){
+    if(!confirm("Delete this journal entry? This can't be undone.")) return;
+    let entries = [];
+    try{
+      const raw = localStorage.getItem('daily-checkin-entries');
+      if(raw) entries = JSON.parse(raw);
+    }catch(e){ entries = []; }
+    entries = entries.filter(e=> e.date !== date);
+    try{ localStorage.setItem('daily-checkin-entries', JSON.stringify(entries)); }catch(e){}
+    renderJournal();
+  }
+
+  document.getElementById('journalWrap').addEventListener('click', function(e){
+    const btn = e.target.closest('[data-clear-journal-date]');
+    if(btn) clearJournalEntry(btn.getAttribute('data-clear-journal-date'));
+  });
+
+  renderJournal();
+
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feeling Stuck? | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .why-visual{display:flex; flex-direction:column; gap:14px; margin:16px 0 12px; padding:18px; background:#F8F1EF; border-radius:14px;}
+  .why-item{display:flex; align-items:flex-start; gap:12px;}
+  .why-icon{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .why-icon svg{width:17px; height:17px;}
+  .why-icon.rose-bg{background:#F0DAD6;}
+  .why-icon.rose-bg svg{stroke:var(--rose-deep);}
+  .why-icon.sage-bg2{background:#DCE6DB;}
+  .why-icon.sage-bg2 svg{stroke:var(--sage-deep);}
+  .why-item p{font-size:13.5px; color:var(--ink); font-weight:300; line-height:1.55; margin:0;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  /* results */
+  /* results visibility now controlled by .stuck-screen wrapper */
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .spiral-echo{background:#F8F1EF; border-radius:12px; padding:16px 18px; margin-bottom:18px;}
+  .spiral-echo-label{display:block; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .spiral-echo p{font-size:14.5px; color:var(--ink); font-weight:400; font-style:italic; line-height:1.6;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 80px; text-align:center;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+
+  .type-grid{display:flex; flex-direction:column; gap:12px; margin-top:16px;}
+  .type-card{
+    display:block; border:1.5px solid var(--border); border-radius:16px; padding:18px 20px;
+    cursor:pointer; transition:all .15s ease; background:var(--surface);
+  }
+  .type-card:hover{border-color:var(--rose);}
+  .type-card.selected{border-color:var(--rose-deep); background:#FBF3F1;}
+  .type-card h4{font-family:'Cormorant Garamond', serif; font-size:18px; font-weight:600; color:var(--ink); margin-bottom:5px;}
+  .type-card.selected h4{color:var(--rose-deep);}
+  .type-card p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.55; margin:0;}
+
+  .type-examples{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .type-card.selected .type-examples{max-height:260px; margin-top:14px;}
+  .type-examples-label{display:block; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:8px;}
+  .type-examples ul{margin:0; padding-left:18px;}
+  .type-examples li{font-size:13px; color:var(--ink); font-weight:300; line-height:1.55; margin-bottom:6px;}
+
+  .stuck-intro-art{text-align:center; padding:8px 10px 26px;}
+  .stuck-intro-art .line{font-family:'Cormorant Garamond', serif; font-size:19px; color:var(--muted); font-weight:400; line-height:1.3;}
+  .stuck-intro-art .big{font-family:'Cormorant Garamond', serif; font-size:38px; font-style:italic; color:var(--rose-deep); font-weight:600; line-height:1.2; margin:2px 0;}
+
+  .stuck-screen{display:none;}
+  .stuck-screen.active{display:block;}
+  .stuck-nav{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;}
+  .stuck-nav-hint{font-size:12.5px; color:var(--muted); font-style:italic; text-align:center; margin-top:14px;}
+  .stuck-back-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13.5px; letter-spacing:0.02em;
+    background:transparent; color:var(--muted); border:1.5px solid var(--border); padding:11px 22px;
+    border-radius:30px; cursor:pointer; transition:all .15s ease;
+  }
+  .stuck-back-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+
+  .scale-field{margin-top:10px;}
+  .scale-slider{width:100%; accent-color:var(--rose-deep); height:6px; margin-top:10px;}
+  .scale-readout{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:4px;}
+  .scale-readout b{color:var(--rose-deep); font-size:15px;}
+
+  .mini-select-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .mini-select{
+    border:1.5px solid var(--border); border-radius:999px; padding:9px 16px; font-size:13px;
+    color:var(--ink); font-weight:400; cursor:pointer; transition:all .15s ease; background:var(--surface);
+  }
+  .mini-select:hover{border-color:var(--rose);}
+  .mini-select.selected{border-color:var(--rose-deep); background:#FBF3F1; color:var(--rose-deep); font-weight:500;}
+
+  .step-two-panel{display:none;}
+  .step-two-panel.active{display:block;}
+
+  .result-block{margin-bottom:16px;}
+  .result-label{display:block; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .result-text{font-size:14.5px; color:var(--ink); font-weight:300; line-height:1.65;}
+  .result-text em{font-style:normal; background:#F6E6E3; padding:1px 4px; border-radius:4px; color:var(--rose-deep); font-weight:500;}
+
+  .step-grid{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
+  .step-opt{
+    border:1.5px solid var(--border); border-radius:14px; padding:14px 16px; cursor:pointer;
+    transition:all .15s ease; font-size:14px; color:var(--ink); font-weight:300; background:var(--surface); line-height:1.5;
+  }
+  .step-opt:hover{border-color:var(--rose);}
+  .step-opt.selected{border-color:var(--sage-deep); background:#EAF0E9; font-weight:400;}
+  .step-opt.selected::before{content:"✓ "; color:var(--sage-deep); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section id="worksheet">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">A Scored Check-In</span>
+      <h2>Feeling stuck?</h2>
+      <p class="lede">Different kinds of stuck need different ways out. This sorts out which one you're in, then works from there.</p>
+    </div>
+
+    <div class="stuck-screen active" id="screen1">
+      <div class="card">
+        <div class="stuck-intro-art">
+          <p class="line">Research shows there are</p>
+          <p class="big">four types</p>
+          <p class="line">of being stuck.</p>
+        </div>
+        <span class="step-label">Step One · Let's Identify the Type</span>
+        <p class="lede" style="margin:0 0 4px; text-align:left;">Tap each one to read more. Land on whichever fits, then tap Next.</p>
+        <div class="type-grid" id="typeGrid">
+          <div class="type-card" data-type="fear">
+            <h4>Fear-Based</h4>
+            <p>Picking wrong has started to feel dangerous, so you avoid picking at all. Common with big, reversible-feeling choices, careers, relationships, moves.</p>
+            <div class="type-examples">
+              <span class="type-examples-label">This might look like</span>
+              <ul>
+                <li>Rewriting the same email five times and still not sending it</li>
+                <li>Asking everyone you know for their opinion, hoping someone else just decides for you</li>
+                <li>Knowing every pro and con by heart, and somehow no closer to picking</li>
+              </ul>
+            </div>
+          </div>
+          <div class="type-card" data-type="foggy">
+            <h4>Foggy / Unclear</h4>
+            <p>You don't actually know what you want yet, so there's nothing concrete to move toward.</p>
+            <div class="type-examples">
+              <span class="type-examples-label">This might look like</span>
+              <ul>
+                <li>Someone asks what you actually want, and you genuinely don't have an answer</li>
+                <li>You've tried writing out goals and it just feels hollow</li>
+                <li>Everything feels like a maybe, nothing feels like a yes</li>
+              </ul>
+            </div>
+          </div>
+          <div class="type-card" data-type="frozen">
+            <h4>Frozen / Overwhelmed</h4>
+            <p>This one's physiological, not motivational. Your body has hit a wired or shut-down state, and it's easy to mistake for laziness.</p>
+            <div class="type-examples">
+              <span class="type-examples-label">This might look like</span>
+              <ul>
+                <li>You know exactly what to do, and still can't make yourself start</li>
+                <li>Even small tasks feel like they take more energy than you have</li>
+                <li>It's been called laziness, maybe even by you, but it feels more like being stuck than not caring</li>
+              </ul>
+            </div>
+          </div>
+          <div class="type-card" data-type="practical">
+            <h4>Practical</h4>
+            <p>Real external constraints, money, time, support. Not a mindset problem, so it doesn't need a mindset fix.</p>
+            <div class="type-examples">
+              <span class="type-examples-label">This might look like</span>
+              <ul>
+                <li>You know exactly what you'd do with $500 more, or 5 more hours in a day</li>
+                <li>The plan is solid, the resource to actually run it isn't there yet</li>
+                <li>People keep telling you to "just" do the thing that needs something you don't have access to</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">What are you stuck on?</span>
+        <textarea id="stuckOn" rows="2" placeholder="A word or two is plenty..."></textarea>
+        <div class="stuck-nav" style="justify-content:flex-end;">
+          <button class="primary" onclick="goToScreen(2)" style="margin-top:0;">Next →</button>
+        </div>
+        <p class="stuck-nav-hint">Tap Next once you've found the one that fits.</p>
+      </div>
+    </div>
+
+    <div class="stuck-screen" id="screen2">
+    <div class="card" id="stepTwoCard">
+      <span class="step-label">Step Two · A Few Questions</span>
+
+      <div class="step-two-panel" id="panel-fear">
+        <span class="prompt">How confident are you that you could handle it if this choice turned out wrong?</span>
+        <div class="scale-field">
+          <input type="range" min="1" max="10" value="5" class="scale-slider" id="fear_confidence">
+          <div class="scale-readout"><span>Not at all</span><b id="fear_confidence_val">5</b><span>Completely</span></div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">What's the smallest, most reversible version of this choice you could try this week?</span>
+        <textarea id="fear_smallest" rows="2" placeholder="..."></textarea>
+        <span class="prompt" style="margin-top:22px;">If a close friend were facing this exact choice, what would you tell them?</span>
+        <textarea id="fear_friend" rows="2" placeholder="..."></textarea>
+      </div>
+
+      <div class="step-two-panel" id="panel-foggy">
+        <span class="prompt">If you woke up tomorrow and the fog was just gone, what's the first small thing you'd notice yourself doing differently?</span>
+        <textarea id="foggy_miracle" rows="2" placeholder="..."></textarea>
+        <span class="prompt" style="margin-top:22px;">Has there been any moment recently, even briefly, where this felt a little clearer? What was different then?</span>
+        <textarea id="foggy_exception" rows="2" placeholder="..."></textarea>
+        <span class="prompt" style="margin-top:22px;">What's one thing you're now sure you don't want, even if you don't know what you do want yet?</span>
+        <textarea id="foggy_notwant" rows="2" placeholder="..."></textarea>
+      </div>
+
+      <div class="step-two-panel" id="panel-frozen">
+        <span class="prompt">Does it feel more wired and keyed-up, or more heavy and shut-down?</span>
+        <div class="mini-select-row" id="frozen_state">
+          <div class="mini-select" data-v="wired">Wired / keyed-up</div>
+          <div class="mini-select" data-v="heavy">Heavy / shut-down</div>
+          <div class="mini-select" data-v="both">Both</div>
+          <div class="mini-select" data-v="unsure">Not sure</div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">Where in your body do you feel this most right now?</span>
+        <div class="mini-select-row" id="frozen_location">
+          <div class="mini-select" data-v="head">Head</div>
+          <div class="mini-select" data-v="jaw">Jaw / Neck</div>
+          <div class="mini-select" data-v="shoulders">Shoulders</div>
+          <div class="mini-select" data-v="chest">Chest</div>
+          <div class="mini-select" data-v="stomach">Stomach</div>
+          <div class="mini-select" data-v="back">Lower Back</div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">On a scale of 1–10, how intense does that feeling in your body get right now?</span>
+        <div class="scale-field">
+          <input type="range" min="1" max="10" value="5" class="scale-slider" id="frozen_charge">
+          <div class="scale-readout"><span>Barely there</span><b id="frozen_charge_val">5</b><span>Overwhelming</span></div>
+        </div>
+      </div>
+
+      <div class="step-two-panel" id="panel-practical">
+        <span class="prompt">What's the one specific thing you're missing, as concretely as you can name it?</span>
+        <textarea id="practical_missing" rows="2" placeholder="A number, a name, a resource..."></textarea>
+        <span class="prompt" style="margin-top:22px;">Who's one person who might have access to that, even if you're not sure they'd help?</span>
+        <textarea id="practical_who" rows="2" placeholder="..."></textarea>
+        <span class="prompt" style="margin-top:22px;">On a scale of 1–10, how solvable does this feel if you only had to solve the smallest piece?</span>
+        <div class="scale-field">
+          <input type="range" min="1" max="10" value="5" class="scale-slider" id="practical_solvable">
+          <div class="scale-readout"><span>Not at all</span><b id="practical_solvable_val">5</b><span>Very</span></div>
+        </div>
+      </div>
+
+      <div class="stuck-nav">
+        <button class="stuck-back-btn" onclick="goToScreen(1)">← Back</button>
+        <button class="primary" onclick="calculateStuckResult()" style="margin-top:0;">See what this means</button>
+      </div>
+      <p class="stuck-nav-hint">Tap "See what this means" for what this suggests and what might help.</p>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen3">
+    <div class="card" id="results">
+      <span class="step-label">Your Results</span>
+      <div class="result-block">
+        <span class="result-label">What This Means</span>
+        <p class="result-text" id="resultMeaning"></p>
+      </div>
+      <div class="result-block">
+        <span class="result-label">What Research Suggests</span>
+        <p class="result-text" id="resultResearch"></p>
+      </div>
+      <div class="result-block">
+        <span class="result-label">How To Work With It</span>
+        <p class="result-text" id="resultFix"></p>
+      </div>
+      <div class="result-block">
+        <span class="result-label">One Small Step</span>
+        <p class="lede" style="margin:0 0 10px; text-align:left;">Tap whichever one you'd actually do.</p>
+        <div class="step-grid" id="stepOptions"></div>
+      </div>
+      <div class="stuck-nav" style="justify-content:flex-start;">
+        <button class="stuck-back-btn" onclick="goToScreen(2)">← Back</button>
+      </div>
+    </div>
+
+    <div class="savebar" style="justify-content:center; margin-top:8px;">
+      <button class="save" onclick="saveStuckCheck()">Save my answers</button>
+      <button class="download" onclick="downloadStuckCheck()">Download a copy</button>
+      <span class="status" id="status">Saved ✓</span>
+    </div>
+    <p class="note" style="text-align:center;">Saved privately for you on this device. Come back anytime, it'll still be here.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <details class="about">
+      <summary>About the research</summary>
+      <ul>
+        <li>Schwartz, B. (2002). Maximizing versus satisficing: Happiness is a matter of choice. <em>Journal of Personality and Social Psychology, 83</em>(5), 1178–1197, choosing "good enough" over "the best possible."</li>
+        <li>Neipp, M-C., et al. (2021). Solution-focused versus problem-focused questions: Differential effects of miracles, exceptions and scales. <em>Journal of Family Therapy</em>, miracle and exception questions reduce negative affect; scaling questions generate more concrete action steps.</li>
+        <li>Psychology Today (2023). Feeling stuck? Two types of procrastination, the wired (sympathetic) vs. shut-down (parasympathetic) freeze response.</li>
+        <li>D'Zurilla, T. J., &amp; Goldfried, M. R. Structured problem-solving research, breaking a real constraint into its smallest solvable piece.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <div class="crisis-card">
+      <b>Before you go</b>
+      This is a self-reflection tool, not a diagnostic one, and it can't tell you which kind of stuck you're "really" in, only which one you recognize. If this stuck feeling has lasted a long time, or comes with hopelessness that scares you, that's worth bringing to a person, not just a page. If you're in crisis or having thoughts of self-harm, please contact a crisis line or emergency services in your area.
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+
+<script>
+  const STORAGE_KEY = 'why-am-i-stuck';
+  let selectedType = null;
+  let selectedStep = null;
+
+  document.querySelectorAll('.type-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedType = card.dataset.type;
+
+      document.querySelectorAll('.step-two-panel').forEach(p=>p.classList.remove('active'));
+      document.getElementById('panel-'+selectedType).classList.add('active');
+    });
+  });
+
+  function goToScreen(n){
+    if(n === 2 && !selectedType){
+      document.getElementById('typeGrid').scrollIntoView({behavior:'smooth', block:'center'});
+      const grid = document.getElementById('typeGrid');
+      grid.style.transition = 'none';
+      grid.style.transform = 'translateX(-6px)';
+      setTimeout(()=>{ grid.style.transition = 'transform .15s ease'; grid.style.transform = 'translateX(0)'; }, 10);
+      return;
+    }
+    document.querySelectorAll('.stuck-screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen'+n).classList.add('active');
+    document.getElementById('worksheet').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  const touchedSliders = new Set();
+  document.querySelectorAll('.scale-slider').forEach(slider=>{
+    const readout = document.getElementById(slider.id+'_val');
+    if(readout) readout.textContent = '–';
+    slider.addEventListener('input', ()=>{
+      touchedSliders.add(slider.id);
+      if(readout) readout.textContent = slider.value;
+    });
+  });
+  function sliderAnswer(id){
+    const el = document.getElementById(id);
+    return touchedSliders.has(id) ? parseInt(el.value) : null;
+  }
+
+  function setupMiniSelect(containerId){
+    const container = document.getElementById(containerId);
+    container.querySelectorAll('.mini-select').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        container.querySelectorAll('.mini-select').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+  }
+  setupMiniSelect('frozen_state');
+  setupMiniSelect('frozen_location');
+
+  function getMiniSelected(containerId){
+    const el = document.querySelector('#'+containerId+' .selected');
+    return el ? el.dataset.v : null;
+  }
+
+  const BODY_REMEDY = {
+    head: 'Press gently, in small circles, on the fleshy part of your hand between your thumb and index finger, for 20–30 seconds.',
+    jaw: 'Find the two small hollows at the base of your skull, right where your neck meets your head, and press there gently for 20–30 seconds. Let your jaw hang open while you do it.',
+    shoulders: 'Press the middle of the muscle at the top of your shoulder, halfway between your neck and the edge of your shoulder, for 20–30 seconds. Follow with a few slow shoulder rolls.',
+    chest: 'Try the physiological sigh: two short inhales through your nose, back to back, then one long, slow exhale through your mouth.',
+    stomach: 'On the inside of your wrist, press about three finger-widths down from the crease, between the two tendons you can feel there, for 20–30 seconds on each side.',
+    back: 'A gentle standing hip-flexor stretch, or just standing and shifting your weight side to side for a minute.'
+  };
+  const LOCATION_LABELS = {head:'head', jaw:'jaw and neck', shoulders:'shoulders', chest:'chest', stomach:'stomach', back:'lower back'};
+
+  let currentStepOptions = [];
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function calculateStuckResult(){
+    const stuckOn = document.getElementById('stuckOn').value.trim();
+    const stuckLabel = stuckOn ? '"' + escapeHtml(stuckOn) + '"' : "whatever's going on right now";
+    let meaning = '', research = '', fix = '', steps = [];
+
+    if(selectedType === 'fear'){
+      const conf = sliderAnswer('fear_confidence');
+      const smallest = document.getElementById('fear_smallest').value.trim();
+      const friendAdvice = document.getElementById('fear_friend').value.trim();
+      const confTone = conf === null ? '' : conf <= 4 ? ", that's a real fear, not a small one" : conf <= 7 ? ", that's a real but workable amount of doubt" : ", you're more ready than the stuck feeling is letting on";
+      const confPhrase = conf === null ? '' : ' A <em>' + conf + '/10</em> on handling it going wrong' + confTone + '.';
+
+      meaning = 'You said you\'re stuck on ' + stuckLabel + '.' + confPhrase;
+      research = 'Research on decision-making found something counterintuitive: people who chase the "best possible" choice are consistently less happy and more regretful than people who pick "good enough" and move on (Schwartz, 2002).';
+      fix = 'The way through isn\'t more certainty, it\'s a smaller, undoable version of the choice.';
+
+      if(smallest) steps.push('Do this, this week: <em>' + escapeHtml(smallest) + '</em>');
+      if(friendAdvice) steps.push('Try taking your own advice: <em>' + escapeHtml(friendAdvice) + '</em>');
+      steps.push('Set a real deadline to decide, on paper, no matter what');
+      steps.push('Write down what you\'d actually do if it went wrong, most "worst cases" are more survivable and specific than they feel right now');
+
+    } else if(selectedType === 'foggy'){
+      const miracle = document.getElementById('foggy_miracle').value.trim();
+      const exception = document.getElementById('foggy_exception').value.trim();
+      const notWant = document.getElementById('foggy_notwant').value.trim();
+
+      meaning = miracle
+        ? 'You said if the fog lifted, you\'d <em>"' + escapeHtml(miracle) + '"</em>. That\'s not nothing, that\'s the clearest sign of direction you\'ve given yourself all day.'
+        : 'You\'re stuck on ' + stuckLabel + ', and there\'s no clear direction to move toward yet, that\'s the fog itself, not a personal failing.';
+      if(exception) meaning += ' You also mentioned it felt clearer when <em>"' + escapeHtml(exception) + '"</em>, that\'s worth paying attention to, it\'s already worked once.';
+
+      research = 'Solution-focused therapy research found that imagining the problem already solved, and noticing moments when it\'s already a little better, measurably reduces the stuck feeling itself, not just clarifies goals (Neipp et al., 2021).';
+      fix = 'You don\'t need the whole answer yet. Elimination and small recreation both move you faster than waiting for clarity to arrive on its own.';
+
+      if(miracle) steps.push('Do the smallest version of: <em>' + escapeHtml(miracle) + '</em>, today');
+      if(exception) steps.push('Recreate what was different during: <em>"' + escapeHtml(exception) + '"</em>, on purpose, this week');
+      if(notWant) steps.push('Cross <em>"' + escapeHtml(notWant) + '"</em> off for good, then name one more thing you don\'t want');
+      steps.push('Ask one person who knows you well: "what have you noticed me light up about lately?"');
+
+    } else if(selectedType === 'frozen'){
+      const state = getMiniSelected('frozen_state');
+      const location = getMiniSelected('frozen_location');
+      const stateLabel = {wired:'Wired and keyed-up', heavy:'Heavy and shut-down', both:'A mix of wired and heavy', unsure:'Hard to name'}[state] || 'This';
+      const stateMeaning = state === 'wired' ? "your body's version of \"brace, danger\""
+        : state === 'heavy' ? "your body's version of \"not now, too much\""
+        : state === 'both' ? "your body running both alarms at once"
+        : "still worth noticing, even without a clear label";
+      const charge = sliderAnswer('frozen_charge');
+
+      const locPhrase = location ? ', in the ' + (LOCATION_LABELS[location]||location) : '';
+
+      meaning = stateLabel + locPhrase + ', that\'s ' + stateMeaning + '.';
+      if(charge !== null){
+        const chargeTone = charge >= 7 ? 'that\'s a lot to be carrying right now' : charge >= 4 ? 'a real, workable amount' : 'lower than it might feel from inside it';
+        meaning += ' A <em>' + charge + '/10</em> on how intense it feels, ' + chargeTone + '.';
+      }
+
+      research = 'Procrastination research splits this into two different nervous-system states, not one: a wired, anxious version, and a genuinely different heavy, can\'t-start freeze that gets mistaken for laziness (Psychology Today, 2023).';
+      fix = 'You can\'t think your way out of a body that\'s braced. Regulate first, then act, in that order, or the action won\'t stick.';
+
+      if(state === 'wired' || state === 'both'){
+        steps.push('Try the physiological sigh: two short inhales through the nose, one long exhale through the mouth');
+        steps.push('30 seconds of something physical, jumping jacks, a fast walk, to burn off the charge');
+      }
+      if(state === 'heavy' || state === 'both' || !state){
+        steps.push('Let your eyes slowly wander the room for a full minute, nothing else');
+        steps.push('Stand up and stretch, nothing more than that');
+      }
+      if(location && BODY_REMEDY[location]) steps.push('For the ' + LOCATION_LABELS[location] + ' specifically: ' + BODY_REMEDY[location]);
+      steps.push('Set a timer for 2 minutes, do only the smallest visible piece of ' + stuckLabel);
+
+    } else if(selectedType === 'practical'){
+      const missing = document.getElementById('practical_missing').value.trim();
+      const who = document.getElementById('practical_who').value.trim();
+      const solvable = sliderAnswer('practical_solvable');
+
+      meaning = missing
+        ? '<em>' + escapeHtml(missing) + '</em> is the actual wall here, not you.'
+        : 'There\'s a real, external piece missing here, not you.';
+      if(solvable !== null){
+        const solvTone = solvable >= 7 ? 'that\'s genuinely solvable, even if it doesn\'t feel that way yet' : solvable >= 4 ? 'a real but workable amount' : 'worth breaking down even smaller than you have so far';
+        meaning += ' A <em>' + solvable + '/10</em> on how solvable the smallest piece feels, ' + solvTone + '.';
+      }
+
+      research = 'Structured problem-solving research found that breaking a real constraint into its smallest solvable piece works better than trying to power through the whole thing at once (D\'Zurilla & Goldfried).';
+      fix = 'This isn\'t a mindset problem, so treating it like one just adds shame on top of a logistics problem. Name the piece, then find who or what supplies just that piece.';
+
+      if(who) steps.push('Send <em>' + escapeHtml(who) + '</em> one message asking about it, today');
+      if(missing) steps.push('Write the exact number or detail behind <em>"' + escapeHtml(missing) + '"</em>, the real one, not the safety-margin one');
+      steps.push('Look up one other place this could realistically come from, besides who you already named');
+      steps.push('Give yourself a deadline: by a specific date, you\'ll have asked at least one person');
+    }
+
+    document.getElementById('resultMeaning').innerHTML = meaning;
+    document.getElementById('resultResearch').innerHTML = research;
+    document.getElementById('resultFix').innerHTML = fix;
+
+    currentStepOptions = steps;
+    const stepGrid = document.getElementById('stepOptions');
+    stepGrid.innerHTML = '';
+    steps.forEach((s, i)=>{
+      const div = document.createElement('div');
+      div.className = 'step-opt';
+      div.innerHTML = s;
+      div.addEventListener('click', ()=>{
+        stepGrid.querySelectorAll('.step-opt').forEach(o=>o.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedStep = s.replace(/<[^>]*>/g, '');
+      });
+      stepGrid.appendChild(div);
+    });
+
+    goToScreen(3);
+  }
+
+  function collectStuckData(){
+    return {
+      type: selectedType,
+      stuckOn: document.getElementById('stuckOn').value,
+      fear_confidence: sliderAnswer('fear_confidence'),
+      fear_smallest: document.getElementById('fear_smallest').value,
+      fear_friend: document.getElementById('fear_friend').value,
+      foggy_miracle: document.getElementById('foggy_miracle').value,
+      foggy_exception: document.getElementById('foggy_exception').value,
+      foggy_notwant: document.getElementById('foggy_notwant').value,
+      frozen_state: getMiniSelected('frozen_state'),
+      frozen_location: getMiniSelected('frozen_location'),
+      frozen_charge: sliderAnswer('frozen_charge'),
+      practical_missing: document.getElementById('practical_missing').value,
+      practical_who: document.getElementById('practical_who').value,
+      practical_solvable: sliderAnswer('practical_solvable'),
+      chosenStep: selectedStep,
+      savedAt: new Date().toISOString()
+    };
+  }
+
+  function saveStuckCheck(){
+    const data = collectStuckData();
+    const status = document.getElementById('status');
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      status.textContent = 'Saved ✓';
+      status.classList.add('show');
+      setTimeout(()=>status.classList.remove('show'), 2200);
+    }catch(e){
+      status.textContent = 'Could not save';
+      status.classList.add('show');
+    }
+  }
+
+  const TYPE_LABELS = {fear:'Fear-Based', foggy:'Foggy / Unclear', frozen:'Frozen / Overwhelmed', practical:'Practical'};
+
+  function downloadStuckCheck(){
+    const d = collectStuckData();
+    let out = 'CONCRETE PERSPECTIVE LAB\n';
+    out += 'Feeling Stuck? : my answers\n';
+    out += new Date().toLocaleDateString() + '\n\n----------------------------------------\n\n';
+    out += 'Stuck on: ' + (d.stuckOn || '(not answered)') + '\n';
+    out += 'Type identified: ' + (TYPE_LABELS[d.type] || 'not selected') + '\n\n';
+
+    if(d.type === 'fear'){
+      out += 'Confidence handling it going wrong: ' + (d.fear_confidence !== null ? d.fear_confidence + '/10' : 'not set') + '\n';
+      out += 'Smallest reversible version: ' + (d.fear_smallest || 'not answered') + '\n';
+      out += 'Advice to a friend: ' + (d.fear_friend || 'not answered') + '\n';
+    } else if(d.type === 'foggy'){
+      out += 'If the fog lifted: ' + (d.foggy_miracle || 'not answered') + '\n';
+      out += 'A time it felt clearer: ' + (d.foggy_exception || 'not answered') + '\n';
+      out += "Something you don't want: " + (d.foggy_notwant || 'not answered') + '\n';
+    } else if(d.type === 'frozen'){
+      out += 'Body state: ' + (d.frozen_state || 'not answered') + '\n';
+      out += 'Where felt most: ' + (d.frozen_location || 'not answered') + '\n';
+      out += 'How intense it felt: ' + (d.frozen_charge !== null ? d.frozen_charge + '/10' : 'not set') + '\n';
+    } else if(d.type === 'practical'){
+      out += 'The missing thing: ' + (d.practical_missing || 'not answered') + '\n';
+      out += 'Who might help: ' + (d.practical_who || 'not answered') + '\n';
+      out += 'How solvable it feels: ' + (d.practical_solvable !== null ? d.practical_solvable + '/10' : 'not set') + '\n';
+    }
+
+    out += '\nOne small step chosen: ' + (d.chosenStep || '(not chosen yet)') + '\n\n';
+    out += '----------------------------------------\nconcreteperspectivelab.com\n';
+
+    const blob = new Blob([out], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'feeling-stuck-answers.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Each visit starts blank by design — saved answers live on the "Your Saved Answers" page instead.
+
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+</body>
+</html>

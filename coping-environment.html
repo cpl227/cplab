@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stressed! Is It the Environment, or Is It Me? | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  /* results */
+  /* results visibility now controlled by .stuck-screen wrapper */
+  .stuck-screen{display:none;}
+  .stuck-screen.active{display:block;}
+  .stuck-nav{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;}
+  .stuck-back-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13.5px; letter-spacing:0.02em;
+    background:transparent; color:var(--muted); border:1.5px solid var(--border); padding:11px 22px;
+    border-radius:30px; cursor:pointer; transition:all .15s ease;
+  }
+  .stuck-back-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .progress-dots{display:flex; justify-content:center; gap:7px; margin-bottom:18px;}
+  .progress-dots span{width:7px; height:7px; border-radius:50%; background:var(--border); transition:all .2s ease;}
+  .progress-dots span.done{background:var(--sage-deep);}
+  .progress-dots span.current{background:var(--rose-deep); width:20px; border-radius:4px;}
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .spiral-echo{background:#F8F1EF; border-radius:12px; padding:16px 18px; margin-bottom:18px;}
+  .spiral-echo-label{display:block; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .spiral-echo p{font-size:14.5px; color:var(--ink); font-weight:400; font-style:italic; line-height:1.6;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .bodymap-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .bodymap-opt{
+    display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 8px;
+    border:1.5px solid var(--border); border-radius:14px; cursor:pointer; transition:all .15s ease; background:var(--surface);
+  }
+  .bodymap-opt svg{width:26px; height:26px; stroke:#B9AFA9; transition:stroke .15s ease;}
+  .bodymap-opt span{font-size:11.5px; color:var(--muted); font-weight:400; text-align:center; line-height:1.3;}
+  .bodymap-opt:hover{border-color:var(--rose);}
+  .bodymap-opt.selected{border-color:var(--rose-deep); background:#FBF3F1;}
+  .bodymap-opt.selected svg{stroke:var(--rose-deep);}
+  .bodymap-opt.selected span{color:var(--rose-deep); font-weight:500;}
+  .bodymap-panel{margin-top:18px; padding:18px 20px; background:#F8F1EF; border-radius:14px;}
+  .bodymap-panel-label{display:block; font-family:'Cormorant Garamond', serif; font-size:18px; font-weight:600; color:var(--rose-deep); margin-bottom:8px;}
+  .bodymap-why{font-size:14px; color:var(--ink); font-weight:300; line-height:1.6; margin-bottom:10px;}
+  .bodymap-try{font-size:14px; color:var(--ink); font-weight:300; line-height:1.6;}
+  .bodymap-try b{color:var(--sage-deep); font-weight:600;}
+  .bodymap-caution{font-size:12.5px; color:#A9704F; font-style:italic; margin-top:8px;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 44px; text-align:center; background:linear-gradient(180deg, rgba(199,191,214,0.10), rgba(217,166,160,0.06)); position:relative;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+  .foot-feather{height:26px; width:auto; margin:0 auto 18px; display:block; opacity:0.85;}
+  .foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin-bottom:6px;}
+  .foot-links a{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:500; transition:color .15s ease;}
+  .foot-links a:hover{color:var(--rose-deep);}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .env-outcome{margin-top:18px; padding:18px 20px; background:#F8F1EF; border-radius:12px;}
+  .env-outcome h4{font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--rose-deep); margin-bottom:6px;}
+  .env-outcome p{font-size:14px; color:var(--ink); font-weight:300; line-height:1.65;}
+  .examples-toggle{margin-bottom:14px; margin-top:14px;}
+  .examples-toggle summary{
+    list-style:none; cursor:pointer; display:flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:500; color:var(--rose-deep); letter-spacing:0.02em;
+    padding:12px 16px; border:1.5px solid var(--rose); border-radius:12px; background:var(--surface);
+    transition:all .15s ease; user-select:none;
+  }
+  .examples-toggle summary::-webkit-details-marker{display:none;}
+  .examples-toggle summary::before{content:"▸"; font-size:11px; transition:transform .15s ease;}
+  .examples-toggle[open] summary::before{transform:rotate(90deg);}
+  .examples-toggle summary:hover{background:#FBF0EE;}
+  .examples-toggle[open] summary{border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:none;}
+  .examples-scroll{
+    max-height:230px; overflow-y:auto; border:1.5px solid var(--rose); border-top:none;
+    border-bottom-left-radius:12px; border-bottom-right-radius:12px; padding:6px 16px;
+    background:var(--surface);
+  }
+  .example-box{background:transparent; border-bottom:1px solid #F4EEEB; padding:12px 0;}
+  .example-box:last-child{border-bottom:none;}
+  .example-tag{font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; display:block; margin-bottom:4px;}
+  .example-box p{font-size:14px; color:var(--ink); font-weight:300; line-height:1.6;}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section id="worksheet">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Stressed! Is it the environment, or is it me?</h2>
+      <p class="lede">A scored check-in for when your surroundings feel like too much. Sort out what's actually driving it, and what to do about each piece.</p>
+    </div>
+
+    <div class="stuck-screen active" id="screen1">
+    <div class="card">
+      <div class="progress-dots"><span class="current"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Before You Begin</span>
+      <p class="body-copy">Stress usually comes from two different places at once: the space itself (noise, chaos, no privacy, no control) and how your body is holding up under it. They need different responses. This sorts out which one needs your attention first.</p>
+      <p class="body-copy" style="margin-top:14px;">This isn't about fixing your whole situation today. It's about the next small thing you can actually do.</p>
+    </div>
+
+    <div class="stuck-nav" style="justify-content:flex-end;">
+      <button class="primary" onclick="goToScreen(2)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen2">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="current"></span><span class=""></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Step One · Name It</span>
+      <span class="prompt">What about your environment feels like too much right now?</span>
+      <textarea id="q_env" rows="3" placeholder="Whatever comes to mind..."></textarea>
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(1)">← Back</button>
+      <button class="primary" onclick="goToScreen(3)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen3">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="current"></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Step Two · Rate Each Statement</span>
+      <p class="lede" style="margin:0 0 6px; text-align:left;">Rate how true each has felt lately, not how you feel about it being true.</p>
+
+      <div class="cluster-label">The Space Itself</div>
+      <div class="rate-group"><div class="rate-q">1. My space feels unpredictable, I can't tell what's coming next.</div><div class="rate-options" data-q="e1"></div></div>
+      <div class="rate-group"><div class="rate-q">2. There's more noise or clutter around me than I can actually control.</div><div class="rate-options" data-q="e2"></div></div>
+      <div class="rate-group"><div class="rate-q">3. I don't have anywhere quiet or private to go when I need a break.</div><div class="rate-options" data-q="e3"></div></div>
+      <div class="rate-group"><div class="rate-q">4. Other people's needs or presence in this space are constant, with little room that's just mine.</div><div class="rate-options" data-q="e4"></div></div>
+
+      <div class="cluster-label sage">My Body's Response</div>
+      <div class="rate-group"><div class="rate-q">5. My body feels physically tense, jaw, shoulders, or stomach, even when nothing specific is happening.</div><div class="rate-options" data-q="i1"></div></div>
+      <div class="rate-group"><div class="rate-q">6. I've been more irritable or quick to react than usual.</div><div class="rate-options" data-q="i2"></div></div>
+      <div class="rate-group"><div class="rate-q">7. It's hard to concentrate or think clearly in this space.</div><div class="rate-options" data-q="i3"></div></div>
+      <div class="rate-group"><div class="rate-q">8. My breathing feels shallow or my chest feels tight when I'm here.</div><div class="rate-options" data-q="i4"></div></div>
+
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(2)">← Back</button>
+      <button class="primary" onclick="goToScreen(4)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen4">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="done"></span><span class="current"></span><span class=""></span></div>
+      <span class="step-label">Step Three · Where Do You Feel It?</span>
+      <p class="lede" style="margin:0 0 14px; text-align:left;">Tap wherever it's showing up in your body right now. This part's separate from your score, just its own thing to check in on.</p>
+      <div class="bodymap-grid" id="bodyMapGrid">
+        <div class="bodymap-opt" data-loc="head"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12h.01M15 12h.01"/></svg><span>Head / Temples</span></div>
+        <div class="bodymap-opt" data-loc="jaw"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9c0-3 2.5-5 6-5s6 2 6 5v3c0 4-2.5 7-6 7s-6-3-6-7z"/><path d="M9 15.5c1 1 2 1.5 3 1.5s2-.5 3-1.5"/></svg><span>Jaw / Neck</span></div>
+        <div class="bodymap-opt" data-loc="shoulders"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16c1-5 4-8 9-8s8 3 9 8"/><circle cx="12" cy="6" r="2.4"/></svg><span>Shoulders</span></div>
+        <div class="bodymap-opt" data-loc="chest"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-4-3-8-6.5-8-10.5A5 5 0 0 1 12 6a5 5 0 0 1 8 3.5c0 4-4 7.5-8 10.5z"/></svg><span>Chest</span></div>
+        <div class="bodymap-opt" data-loc="stomach"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 10c0 2 1.5 3 3 3s3-1 3-3"/></svg><span>Stomach / Gut</span></div>
+        <div class="bodymap-opt" data-loc="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c0 4 8 4 8 8s-8 4-8 8"/></svg><span>Lower Back / Hips</span></div>
+      </div>
+      <div class="bodymap-panel" id="bodyMapPanel" style="display:none;">
+        <span class="bodymap-panel-label" id="bodyMapTitle"></span>
+        <p class="bodymap-why" id="bodyMapWhy"></p>
+        <p class="bodymap-try" id="bodyMapTry"></p>
+        <p class="bodymap-caution" id="bodyMapCaution" style="display:none;"></p>
+      </div>
+    </div>
+
+    <div class="stuck-nav" style="justify-content:flex-end;">
+      <button class="primary" onclick="calculateEnvScore(); goToScreen(5);" style="margin-top:0;">See my results →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen5">
+    <div class="card" id="results">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="current"></span></div>
+      <span class="step-label">Your Results</span>
+      <div class="score-row">
+        <div class="score-pill"><div class="num" id="extScoreDisplay">0/8</div><div class="lab">The Space Itself</div></div>
+        <div class="score-pill sage-bg"><div class="num" id="intScoreDisplay">0/8</div><div class="lab">My Body's Response</div></div>
+      </div>
+      <div class="spiral-echo" id="envEcho" style="display:none;">
+        <span class="spiral-echo-label">What you named</span>
+        <p id="envEchoText"></p>
+      </div>
+      <p class="verdict-text" id="envVerdict"></p>
+
+      <div class="env-outcome" id="settleBlock">
+        <h4>Settling Your Body Right Now</h4>
+        <p>Try the physiological sigh: two short inhales through the nose, then one long, slow exhale through the mouth. Repeat for 60–90 seconds. The double inhale fully re-opens collapsed air sacs in your lungs, and the long exhale is what actually signals your nervous system to downshift. A 2023 Stanford study found this outperformed both meditation and other breathing styles for lowering stress in the moment (Balban et al., 2023).</p>
+        <p style="margin-top:10px;">Or try 5-4-3-2-1 grounding: name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. It pulls attention out of the spiral and into the room, which is often enough to bring intensity down a notch.</p>
+      </div>
+
+      <div class="env-outcome" id="spaceBlock">
+        <h4>Changing What You Can In the Space</h4>
+        <p>You don't need to fix the whole environment, one small, reliable piece is enough. A single "reset spot", even just one chair, one corner, one set of headphones, gives your nervous system somewhere predictable to land.</p>
+        <p style="margin-top:10px;">Time-box your exposure where you can: "I'm in this for the next 40 minutes" is easier for your body to tolerate than an open-ended unknown. Classic research on stress found that even the perceived ability to predict or control a stressor reduces its impact, even when that control is never actually used (Glass &amp; Singer, 1972).</p>
+
+        <details class="examples-toggle">
+          <summary>Tap for examples: reset spots that don't need much</summary>
+          <div class="examples-scroll">
+            <div class="example-box"><span class="example-tag">Shared housing</span><p>Noise-cancelling headphones with no audio playing, just for the silence. Doesn't require a separate room.</p></div>
+            <div class="example-box"><span class="example-tag">Open office</span><p>A specific 10-minute walk route outside, same one each time, so it takes zero decision-making.</p></div>
+            <div class="example-box"><span class="example-tag">Parenting, kids around</span><p>A single chair that's "yours" for 5 minutes, with an understanding that 5 minutes there means no interruptions.</p></div>
+            <div class="example-box"><span class="example-tag">No private space at all</span><p>A closed bathroom door for 3 minutes, running the tap, just to have one sense (sound) fully in your control.</p></div>
+            <div class="example-box"><span class="example-tag">Commuting / in transit</span><p>One specific song or podcast segment you always return to, so your brain has one predictable anchor point.</p></div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="savebar" style="justify-content:center; margin-top:8px;">
+      <button class="save" onclick="saveEnvCheck()">Save my answers</button>
+      <button class="download" onclick="downloadEnvCheck()">Download a copy</button>
+      <span class="status" id="status">Saved ✓</span>
+    </div>
+    <p class="note" style="text-align:center;">Saved privately for you on this device. Come back anytime, it'll still be here.</p>
+    <div class="stuck-nav" style="justify-content:flex-start; margin-top:20px;">
+      <button class="stuck-back-btn" onclick="goToScreen(4)">← Back</button>
+    </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <div class="crisis-card">
+      <b>About the scoring</b>
+      <p style="margin-bottom:10px;">This tool sorts your answers using established research on environmental stress and coping, but it isn't a clinically validated instrument, and it hasn't been tested for accuracy the way a diagnostic screener would be. Treat your score as a prompt for reflection, not a measurement.</p>
+      <p style="margin-bottom:10px;">The body check-in draws on where research shows people commonly hold stress, and on acupressure points with some supporting research, mostly for headache, tension, and nausea. That evidence is real but modest, and mainly shows up in how a symptom feels rather than in larger physical measures, so treat these as things worth trying, not guaranteed fixes.</p>
+      <p>If your environment doesn't feel safe, physically or otherwise, that's a different and more urgent situation than this tool is built for. Please reach out to someone you trust or a local support service.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goToScreen(n){
+    document.querySelectorAll('.stuck-screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen'+n).classList.add('active');
+    document.querySelector('#worksheet .wrap').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  const STORAGE_KEY = 'coping-environment';
+  const RATE_LABELS = ['Not true', 'Somewhat true', 'Very true'];
+  const QIDS = ['e1','e2','e3','e4','i1','i2','i3','i4'];
+
+  document.querySelectorAll('.rate-options').forEach(container=>{
+    const q = container.dataset.q;
+    RATE_LABELS.forEach((label, val)=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'rate-opt';
+      const id = 'opt_'+q+'_'+val;
+      wrap.innerHTML = '<input type="radio" name="'+q+'" id="'+id+'" value="'+val+'"><label for="'+id+'">'+label+' ('+val+')</label>';
+      container.appendChild(wrap);
+    });
+  });
+
+  function getScore(id){
+    const el = document.querySelector('input[name="'+id+'"]:checked');
+    return el ? parseInt(el.value) : null;
+  }
+
+  /* ---------- Body Map ---------- */
+  const BODY_MAP = {
+    head: {
+      title: 'Head / Temples',
+      why: "Tension headaches usually come from sustained muscle contraction around the scalp and neck, often triggered by stress, dehydration, or too many hours on a screen.",
+      tryHtml: '<b>Try:</b> Gently press LI4, the point between your thumb and index finger, in small circles for 20–30 seconds. It\'s one of the more consistently studied acupressure points for headache and upper-body tension. Pair it with a glass of water and a few minutes away from screens.',
+      tryPlain: "Try: Press LI4 (between thumb and index finger) in small circles for 20-30 seconds. Also: water, and a few minutes away from screens.",
+      caution: "Skip LI4 if you're pregnant, it's traditionally avoided during pregnancy."
+    },
+    jaw: {
+      title: 'Jaw / Neck',
+      why: "Clenching or grinding, sometimes called bruxism, is one of the most common physical stress responses, and it often happens without you noticing, especially overnight.",
+      tryHtml: '<b>Try:</b> Find the two hollows at the base of your skull, where your neck muscles meet it (GB20), and press gently for 20–30 seconds. Let your jaw hang open like a yawn, and rest your tongue on the roof of your mouth with your teeth apart.',
+      tryPlain: "Try: Press GB20 (the two hollows at the base of your skull) for 20-30 seconds. Let your jaw hang open, teeth apart.",
+      caution: ''
+    },
+    shoulders: {
+      title: 'Shoulders',
+      why: 'Shoulders are one of the most common places people brace under pressure, it\'s almost the literal posture of "carrying weight."',
+      tryHtml: '<b>Try:</b> Press GB21, the midpoint at the top of your shoulder, halfway between your neck and the shoulder joint, for 20–30 seconds. Pair it with a few slow shoulder rolls, then let them drop down and back.',
+      tryPlain: "Try: Press GB21 (top of the shoulder, halfway between neck and joint) for 20-30 seconds, then a few slow shoulder rolls.",
+      caution: ''
+    },
+    chest: {
+      title: 'Chest',
+      why: "Stress often shifts breathing up into the chest instead of the belly, which can feel tight or like you can't get a full breath, and it actually reinforces the stress response in a loop.",
+      tryHtml: '<b>Try:</b> The physiological sigh, two short inhales through the nose, then one long exhale through the mouth, is one of the fastest ways to interrupt that loop (Balban et al., 2023). Try resting a hand on your belly and breathing so it rises, not your chest.',
+      tryPlain: "Try: Physiological sigh (two short inhales through the nose, one long exhale through the mouth). Hand on belly, breathe so it rises.",
+      caution: ''
+    },
+    stomach: {
+      title: 'Stomach / Gut',
+      why: "Your gut and brain are directly wired together, so stress hormones can slow digestion or cause that \"nervous stomach\" knot almost immediately.",
+      tryHtml: '<b>Try:</b> Press P6, three finger-widths below your wrist crease, between the two central tendons, for 20–30 seconds on each wrist. It\'s one of the better-evidenced acupressure points, mostly studied for nausea, but often used for stress too. A warm drink and slow belly breathing can help too.',
+      tryPlain: "Try: Press P6 (three finger-widths below the wrist crease, between the tendons) for 20-30 seconds each side. Also: a warm drink, slow belly breathing.",
+      caution: ''
+    },
+    back: {
+      title: 'Lower Back / Hips',
+      why: "Hips and lower back often hold a kind of bracing pattern, especially from long stretches of sitting, or a general sense of needing to stay on guard.",
+      tryHtml: "<b>Try:</b> A gentle standing hip-flexor stretch, or simply standing up and shifting your weight side to side for a minute, can help release that guarding pattern.",
+      tryPlain: "Try: A gentle standing hip-flexor stretch, or just standing and shifting your weight side to side for a minute.",
+      caution: ''
+    }
+  };
+  let selectedBodyLoc = null;
+
+  document.querySelectorAll('.bodymap-opt').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      document.querySelectorAll('.bodymap-opt').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+      const loc = opt.dataset.loc;
+      selectedBodyLoc = loc;
+      const info = BODY_MAP[loc];
+      document.getElementById('bodyMapTitle').textContent = info.title;
+      document.getElementById('bodyMapWhy').textContent = info.why;
+      document.getElementById('bodyMapTry').innerHTML = info.tryHtml;
+      const cautionEl = document.getElementById('bodyMapCaution');
+      if(info.caution){
+        cautionEl.textContent = info.caution;
+        cautionEl.style.display = 'block';
+      } else {
+        cautionEl.style.display = 'none';
+      }
+      document.getElementById('bodyMapPanel').style.display = 'block';
+    });
+  });
+
+  function calculateEnvScore(){
+    const vals = {};
+    QIDS.forEach(id=>{ vals[id] = getScore(id) || 0; });
+
+    const extScore = vals.e1 + vals.e2 + vals.e3 + vals.e4;
+    const intScore = vals.i1 + vals.i2 + vals.i3 + vals.i4;
+
+    document.getElementById('extScoreDisplay').textContent = extScore + '/8';
+    document.getElementById('intScoreDisplay').textContent = intScore + '/8';
+
+    const envText = document.getElementById('q_env').value.trim();
+    const echo = document.getElementById('envEcho');
+    if(envText){
+      document.getElementById('envEchoText').textContent = '"' + envText + '"';
+      echo.style.display = 'block';
+    } else {
+      echo.style.display = 'none';
+    }
+
+    let verdict = '';
+    const settleBlock = document.getElementById('settleBlock');
+    const spaceBlock = document.getElementById('spaceBlock');
+    const resultsCard = document.getElementById('results');
+    settleBlock.style.display = 'block';
+    spaceBlock.style.display = 'block';
+
+    if(extScore >= 5 && intScore <= 4){
+      verdict = '<b>The space itself is genuinely taxing right now.</b> Your body is handling it reasonably well so far. Focus on the space below, that\'s where your energy will go furthest.';
+      resultsCard.insertBefore(spaceBlock, settleBlock);
+    } else if(intScore >= 5 && extScore <= 4){
+      verdict = '<b>The load looks like it\'s coming more from inside than outside.</b> The space may be fine, but your nervous system needs settling first. Start with the section below.';
+      resultsCard.insertBefore(settleBlock, spaceBlock);
+    } else if(extScore >= 5 && intScore >= 5){
+      verdict = '<b>Both are stretched right now.</b> That\'s a lot at once. Settle your body first, a calmer nervous system makes it much easier to actually change anything about the space.';
+      resultsCard.insertBefore(settleBlock, spaceBlock);
+    } else {
+      verdict = '<b>Neither looks especially high right now.</b> That\'s a good sign. Keep the ideas below in your back pocket for when things shift.';
+      resultsCard.insertBefore(settleBlock, spaceBlock);
+    }
+
+    document.getElementById('envVerdict').innerHTML = verdict;
+  }
+
+  function saveEnvCheck(){
+    const ratings = {};
+    QIDS.forEach(id=>{ ratings[id] = getScore(id); });
+    const data = {
+      env: document.getElementById('q_env').value,
+      ratings: ratings,
+      savedAt: new Date().toISOString()
+    };
+    const status = document.getElementById('status');
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      status.textContent = 'Saved ✓';
+      status.classList.add('show');
+      setTimeout(()=>status.classList.remove('show'), 2200);
+    }catch(e){
+      status.textContent = 'Could not save';
+      status.classList.add('show');
+    }
+  }
+
+  function downloadEnvCheck(){
+    const vals = {};
+    QIDS.forEach(id=>{ vals[id] = getScore(id); });
+    const extScore = (vals.e1||0)+(vals.e2||0)+(vals.e3||0)+(vals.e4||0);
+    const intScore = (vals.i1||0)+(vals.i2||0)+(vals.i3||0)+(vals.i4||0);
+    const RL = {0:'Not true',1:'Somewhat true',2:'Very true'};
+    const QLABELS = {
+      e1: "My space feels unpredictable.",
+      e2: "There's more noise or clutter than I can control.",
+      e3: "I don't have anywhere quiet or private to go.",
+      e4: "Other people's needs or presence are constant, little room that's mine.",
+      i1: "My body feels physically tense, even when nothing specific is happening.",
+      i2: "I've been more irritable or quick to react than usual.",
+      i3: "It's hard to concentrate in this space.",
+      i4: "My breathing feels shallow or my chest feels tight here."
+    };
+
+    let out = 'CONCRETE PERSPECTIVE LAB\n';
+    out += 'Stressed! Is It the Environment, or Is It Me? : my answers\n';
+    out += new Date().toLocaleDateString() + '\n\n----------------------------------------\n\n';
+    out += 'What I named: ' + (document.getElementById('q_env').value || '(not answered)') + '\n\n';
+    out += 'RATINGS\n\n';
+    QIDS.forEach(id=>{
+      out += '- ' + QLABELS[id] + '  [' + (vals[id] !== null ? RL[vals[id]] : 'not answered') + ']\n';
+    });
+    out += '\nThe Space Itself: ' + extScore + '/8\n';
+    out += "My Body's Response: " + intScore + '/8\n\n';
+    const verdictEl = document.getElementById('envVerdict');
+    out += (verdictEl.textContent.trim() || 'Complete the ratings above and click "See my results" first.') + '\n\n';
+    if(selectedBodyLoc){
+      out += 'BODY CHECK-IN: ' + BODY_MAP[selectedBodyLoc].title + '\n';
+      out += BODY_MAP[selectedBodyLoc].why + '\n';
+      out += BODY_MAP[selectedBodyLoc].tryPlain + '\n\n';
+    }
+    out += '----------------------------------------\nconcreteperspectivelab.com\n';
+
+    const blob = new Blob([out], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'my-environment-check-answers.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Each visit starts blank by design — saved answers live on the "Your Saved Answers" page instead.
+
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+</body>
+</html>

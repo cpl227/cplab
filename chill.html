@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calm-tivities | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  /* results */
+  #results{display:none;}
+  #results.show{display:block;}
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .spiral-echo{background:#F8F1EF; border-radius:12px; padding:16px 18px; margin-bottom:18px;}
+  .spiral-echo-label{display:block; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-deep); font-weight:600; margin-bottom:6px;}
+  .spiral-echo p{font-size:14.5px; color:var(--ink); font-weight:400; font-style:italic; line-height:1.6;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 44px; text-align:center; background:linear-gradient(180deg, rgba(199,191,214,0.10), rgba(217,166,160,0.06)); position:relative;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+  .foot-feather{height:26px; width:auto; margin:0 auto 18px; display:block; opacity:0.85;}
+  .foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin-bottom:6px;}
+  .foot-links a{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:500; transition:color .15s ease;}
+  .foot-links a:hover{color:var(--rose-deep);}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .tab-row{display:flex; gap:10px; margin-bottom:26px; flex-wrap:wrap; justify-content:center;}
+  .tab-btn{
+    font-family:'Jost', sans-serif; font-size:13.5px; font-weight:500; letter-spacing:0.02em;
+    padding:10px 20px; border-radius:999px; border:1.5px solid var(--border); background:var(--surface);
+    color:var(--muted); cursor:pointer; transition:all .15s ease;
+  }
+  .tab-btn.active{border-color:var(--rose-deep); color:var(--rose-deep); background:#FBF3F1;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .game-wrap{display:flex; flex-direction:column; align-items:center; gap:16px;}
+  #lineCanvas, #mazeCanvas{border-radius:16px; border:1.5px solid var(--border); background:#FBF7F4; touch-action:none; max-width:100%;}
+  .line-msg{font-size:14px; color:var(--ink); font-weight:400; min-height:20px; text-align:center;}
+  .maze-controls{display:grid; grid-template-columns:52px 52px 52px; grid-template-rows:52px 52px; gap:6px; justify-content:center; margin-top:4px;}
+  #snakeCanvas{border-radius:16px; border:1.5px solid var(--border); background:#FBF7F4; touch-action:none; max-width:100%;}
+  .snake-score{font-size:14px; color:var(--muted); font-weight:400;}
+  .snake-controls{display:grid; grid-template-columns:52px 52px 52px; grid-template-rows:52px 52px; gap:6px; justify-content:center; margin-top:4px;}
+  .snake-btn{
+    border-radius:12px; border:1.5px solid var(--border); background:var(--surface); font-size:18px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--rose-deep); user-select:none;
+  }
+  .snake-btn:active{background:#FBF3F1;}
+  .snake-msg{font-size:14px; color:var(--ink); font-weight:400; min-height:20px;}
+  .restart-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13.5px; background:var(--ink); color:var(--bg);
+    border:none; padding:10px 24px; border-radius:30px; cursor:pointer; margin-top:40px;
+  }
+
+  .puzzle-grid{display:grid; grid-template-columns:repeat(3, 90px); grid-template-rows:repeat(2, 90px); gap:4px; margin:0 auto;}
+  .puzzle-piece{
+    width:90px; height:90px; border-radius:8px; cursor:pointer; background-image:var(--puzzle-bg);
+    background-size:270px 180px; border:2px solid transparent; transition:border-color .15s ease;
+  }
+  .puzzle-piece.selected{border-color:var(--rose-deep);}
+  .puzzle-msg{text-align:center; font-size:14px; color:var(--sage-deep); font-weight:500; min-height:20px; margin-top:14px;}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section id="worksheet">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Calm-tivities</span>
+      <h2>No score, no goal, just something to do</h2>
+      <p class="lede">Five small, pointless-on-purpose things for when your hands need something to do and your mind needs a break from doing anything useful.</p>
+    </div>
+
+    <div class="tab-row" id="mainTabRow">
+      <button class="tab-btn active" data-tab="snake" onclick="showTab('snake')">Snake</button>
+      <button class="tab-btn" data-tab="puzzle" onclick="showTab('puzzle')">6-Piece Puzzle</button>
+      <button class="tab-btn" data-tab="line" onclick="showTab('line')">Follow the Spiral</button>
+      <button class="tab-btn" data-tab="maze" onclick="showTab('maze')">Maze</button>
+      <button class="tab-btn" data-tab="jump" onclick="showTab('jump')">Little Jump</button>
+    </div>
+
+    <div class="card tab-panel active" id="panel-snake">
+      <div class="game-wrap">
+        <canvas id="snakeCanvas" width="300" height="300"></canvas>
+        <div class="snake-score">Score: <span id="snakeScore">0</span></div>
+        <div class="snake-msg" id="snakeMsg">Tap a direction, or use arrow keys, to start.</div>
+        <div class="snake-controls">
+          <div></div>
+          <div class="snake-btn" data-dir="up">↑</div>
+          <div></div>
+          <div class="snake-btn" data-dir="left">←</div>
+          <div class="snake-btn" data-dir="down">↓</div>
+          <div class="snake-btn" data-dir="right">→</div>
+        </div>
+        <button class="restart-btn" onclick="restartSnake()">Restart</button>
+      </div>
+    </div>
+
+    <div class="card tab-panel" id="panel-puzzle">
+      <p class="lede" style="margin-bottom:18px;">Tap two pieces to swap them. Put the little scene back together, no timer, no wrong answers along the way.</p>
+      <div class="puzzle-grid" id="puzzleGrid"></div>
+      <p class="puzzle-msg" id="puzzleMsg"></p>
+      <div style="text-align:center; margin-top:14px;">
+        <button class="restart-btn" onclick="shufflePuzzle()">Shuffle Again</button>
+      </div>
+    </div>
+
+    <div class="card tab-panel" id="panel-line">
+      <p class="lede" style="margin-bottom:14px;">Trace the spiral from the center out to the end, nice and steady. Drag with your finger or mouse, no rush.</p>
+      <div class="game-wrap">
+        <canvas id="lineCanvas" width="280" height="280"></canvas>
+        <p class="line-msg" id="lineMsg">Start at the dot in the middle.</p>
+        <button class="restart-btn" onclick="resetLineGame()">Try Again</button>
+      </div>
+    </div>
+
+    <div class="card tab-panel" id="panel-maze">
+      <p class="lede" style="margin-bottom:14px;">Find your way from the rose dot to the sage flag. No timer, bump a wall and just try another way.</p>
+      <div class="game-wrap">
+        <canvas id="mazeCanvas" width="280" height="280"></canvas>
+        <p class="line-msg" id="mazeMsg"></p>
+        <div class="maze-controls">
+          <div></div>
+          <div class="snake-btn" data-mdir="up">↑</div>
+          <div></div>
+          <div class="snake-btn" data-mdir="left">←</div>
+          <div class="snake-btn" data-mdir="down">↓</div>
+          <div class="snake-btn" data-mdir="right">→</div>
+        </div>
+        <button class="restart-btn" onclick="newMaze()">New Maze</button>
+      </div>
+    </div>
+
+    <div class="card tab-panel" id="panel-jump">
+      <p class="lede" style="margin-bottom:14px;">Tap, click, or press space to hop over. No rush, it just keeps going until you'd like to stop.</p>
+      <div class="game-wrap">
+        <canvas id="jumpCanvas" width="300" height="180"></canvas>
+        <div class="snake-score">Best: <span id="jumpBest">0</span> &middot; This round: <span id="jumpScore">0</span></div>
+        <p class="line-msg" id="jumpMsg">Tap the picture to start.</p>
+        <button class="restart-btn" onclick="resetJump()">Try Again</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ---------- Tabs ---------- */
+  function showTab(name){
+    document.querySelectorAll('#mainTabRow .tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+name).classList.add('active');
+    if(name === 'snake') drawSnakeFrame(1);
+    if(name === 'line') drawSpiralBase();
+    if(name === 'maze') drawMaze();
+    if(name === 'jump') drawJumpScene();
+  }
+
+  /* ---------- Snake ---------- */
+  const snakeCanvas = document.getElementById('snakeCanvas');
+  const sctx = snakeCanvas.getContext('2d');
+  const GRID = 15, CELL = 300 / GRID;
+  let snake, dir, nextDir, food, snakeScore, snakeTimer, snakeRunning;
+  let prevSnake = [], lastTickTime = 0, tickDuration = 220, renderLoopRunning = false;
+
+  function resetSnakeState(){
+    snake = [{x:7,y:7},{x:6,y:7},{x:5,y:7}];
+    prevSnake = snake.map(s=>({...s}));
+    dir = 'right'; nextDir = 'right';
+    snakeScore = 0;
+    document.getElementById('snakeScore').textContent = '0';
+    document.getElementById('snakeMsg').textContent = 'Tap a direction, or use arrow keys, to start.';
+    placeFood();
+    snakeRunning = false;
+    drawSnakeFrame(1);
+  }
+
+  function placeFood(){
+    let ok = false;
+    while(!ok){
+      food = {x: Math.floor(Math.random()*GRID), y: Math.floor(Math.random()*GRID)};
+      ok = !snake.some(s => s.x === food.x && s.y === food.y);
+    }
+  }
+
+  function wrapDelta(a, b){
+    // shortest wrapped distance from a to b on the toroidal grid, for smooth edge-wrap animation
+    let d = b - a;
+    if(d > GRID/2) d -= GRID;
+    if(d < -GRID/2) d += GRID;
+    return d;
+  }
+
+  function drawSnakeFrame(progress){
+    sctx.fillStyle = '#FBF7F4';
+    sctx.fillRect(0,0,300,300);
+
+    sctx.strokeStyle = 'rgba(184,168,163,0.12)';
+    sctx.lineWidth = 1;
+    for(let i=1;i<GRID;i++){
+      sctx.beginPath(); sctx.moveTo(i*CELL,0); sctx.lineTo(i*CELL,300); sctx.stroke();
+      sctx.beginPath(); sctx.moveTo(0,i*CELL); sctx.lineTo(300,i*CELL); sctx.stroke();
+    }
+
+    // interpolated pixel-space points for each segment, blending prevSnake -> snake
+    const pts = snake.map((s,i)=>{
+      const p = prevSnake[i] || s;
+      const dx = wrapDelta(p.x, s.x), dy = wrapDelta(p.y, s.y);
+      const ix = p.x + dx*progress, iy = p.y + dy*progress;
+      return {x: ix*CELL + CELL/2, y: iy*CELL + CELL/2};
+    });
+
+    // subdivide between points for a smooth continuous body instead of blocky segments
+    const smooth = [];
+    for(let i=0;i<pts.length;i++){
+      smooth.push(pts[i]);
+      if(i < pts.length-1){
+        const a = pts[i], b = pts[i+1];
+        // skip subdivision across a wrap-around jump (large pixel distance)
+        if(Math.abs(a.x-b.x) < CELL*3 && Math.abs(a.y-b.y) < CELL*3){
+          for(let k=1;k<=2;k++){
+            const t = k/3;
+            smooth.push({x: a.x+(b.x-a.x)*t, y: a.y+(b.y-a.y)*t});
+          }
+        }
+      }
+    }
+
+    const maxR = CELL*0.46, minR = CELL*0.16;
+    for(let i=smooth.length-1;i>=0;i--){
+      const t = smooth.length > 1 ? i/(smooth.length-1) : 0;
+      const r = maxR - (maxR-minR)*t;
+      const cr = Math.round(217 - t*35), cg = Math.round(166 + t*10), cb = Math.round(160 + t*15);
+      sctx.fillStyle = `rgb(${cr},${cg},${cb})`;
+      sctx.beginPath();
+      sctx.arc(smooth[i].x, smooth[i].y, r, 0, Math.PI*2);
+      sctx.fill();
+    }
+
+    if(pts.length){
+      const head = pts[0];
+      const off = CELL*0.2;
+      let e1 = {x:head.x, y:head.y}, e2 = {x:head.x, y:head.y};
+      if(dir === 'up'){ e1={x:head.x-off,y:head.y-off*0.6}; e2={x:head.x+off,y:head.y-off*0.6}; }
+      else if(dir === 'down'){ e1={x:head.x-off,y:head.y+off*0.6}; e2={x:head.x+off,y:head.y+off*0.6}; }
+      else if(dir === 'left'){ e1={x:head.x-off*0.6,y:head.y-off}; e2={x:head.x-off*0.6,y:head.y+off}; }
+      else { e1={x:head.x+off*0.6,y:head.y-off}; e2={x:head.x+off*0.6,y:head.y+off}; }
+      sctx.fillStyle = '#3A3238';
+      [e1,e2].forEach(e=>{
+        sctx.beginPath();
+        sctx.arc(e.x, e.y, 1.6, 0, Math.PI*2);
+        sctx.fill();
+      });
+    }
+
+    const fx = food.x*CELL+CELL/2, fy = food.y*CELL+CELL/2;
+    sctx.fillStyle = '#A9BBA8';
+    sctx.beginPath();
+    sctx.arc(fx, fy+1, CELL/3.1, 0, Math.PI*2);
+    sctx.fill();
+    sctx.strokeStyle = '#7C9B79';
+    sctx.lineWidth = 1.3;
+    sctx.beginPath();
+    sctx.moveTo(fx, fy - CELL/3.1);
+    sctx.quadraticCurveTo(fx+3, fy - CELL/3.1 - 3, fx+5, fy - CELL/3.1 - 1);
+    sctx.stroke();
+  }
+
+  function renderLoop(now){
+    if(!snakeRunning){ renderLoopRunning = false; drawSnakeFrame(1); return; }
+    const progress = Math.min(1, (now - lastTickTime) / tickDuration);
+    drawSnakeFrame(progress);
+    requestAnimationFrame(renderLoop);
+  }
+
+  function snakeTick(){
+    dir = nextDir;
+    prevSnake = snake.map(s=>({...s}));
+    lastTickTime = performance.now();
+    const head = {...snake[0]};
+    if(dir === 'up') head.y -= 1;
+    if(dir === 'down') head.y += 1;
+    if(dir === 'left') head.x -= 1;
+    if(dir === 'right') head.x += 1;
+
+    if(head.x < 0) head.x = GRID - 1;
+    if(head.x >= GRID) head.x = 0;
+    if(head.y < 0) head.y = GRID - 1;
+    if(head.y >= GRID) head.y = 0;
+
+    if(snake.some(s=>s.x===head.x && s.y===head.y)){
+      clearInterval(snakeTimer);
+      snakeRunning = false;
+      document.getElementById('snakeMsg').textContent = 'That\'s it for that round. Score: ' + snakeScore + '. Tap Restart whenever.';
+      return;
+    }
+
+    snake.unshift(head);
+    if(head.x === food.x && head.y === food.y){
+      snakeScore++;
+      document.getElementById('snakeScore').textContent = snakeScore;
+      placeFood();
+    } else {
+      snake.pop();
+    }
+  }
+
+  function setDir(d){
+    const opposite = {up:'down', down:'up', left:'right', right:'left'};
+    if(opposite[d] === dir) return;
+    nextDir = d;
+    if(!snakeRunning){
+      snakeRunning = true;
+      document.getElementById('snakeMsg').textContent = '';
+      lastTickTime = performance.now();
+      snakeTimer = setInterval(snakeTick, tickDuration);
+      if(!renderLoopRunning){
+        renderLoopRunning = true;
+        requestAnimationFrame(renderLoop);
+      }
+    }
+  }
+
+  function restartSnake(){
+    clearInterval(snakeTimer);
+    resetSnakeState();
+  }
+
+  document.querySelectorAll('.snake-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>setDir(btn.dataset.dir));
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    const map = {ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right'};
+    if(map[e.key] && document.getElementById('panel-snake').classList.contains('active')){
+      e.preventDefault();
+      setDir(map[e.key]);
+    }
+  });
+
+  let touchStartX = 0, touchStartY = 0;
+  snakeCanvas.addEventListener('touchstart', (e)=>{
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, {passive:true});
+  snakeCanvas.addEventListener('touchend', (e)=>{
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if(Math.abs(dx) > Math.abs(dy)){
+      setDir(dx > 0 ? 'right' : 'left');
+    } else {
+      setDir(dy > 0 ? 'down' : 'up');
+    }
+  }, {passive:true});
+
+  resetSnakeState();
+
+  /* ---------- Puzzle ---------- */
+  const puzzleGrid = document.getElementById('puzzleGrid');
+  let puzzleOrder = [0,1,2,3,4,5];
+  let puzzleSelected = null;
+  let puzzleSceneIdx = 0;
+
+  const PUZZLE_SCENES = [
+    // Hills & sunset
+    `<svg xmlns="http://www.w3.org/2000/svg" width="270" height="180">
+      <defs><radialGradient id="sun1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F6DCD3"/><stop offset="100%" stop-color="#F0C9BE"/></radialGradient></defs>
+      <rect width="270" height="180" fill="#F3E9E6"/>
+      <circle cx="220" cy="42" r="28" fill="url(#sun1)"/>
+      <circle cx="220" cy="42" r="34" fill="none" stroke="#F0C9BE" stroke-width="1" opacity="0.4"/>
+      <ellipse cx="58" cy="58" rx="16" ry="9" fill="#FFFFFF" opacity="0.55"/>
+      <ellipse cx="92" cy="44" rx="11" ry="7" fill="#FFFFFF" opacity="0.45"/>
+      <path d="M0 128 Q70 90 140 128 T270 118 V180 H0 Z" fill="#D3E0D0"/>
+      <path d="M0 148 Q90 118 180 148 T270 143 V180 H0 Z" fill="#A9BBA8"/>
+      <path d="M0 165 Q100 150 200 165 T270 162 V180 H0 Z" fill="#7C9B79"/>
+      <path d="M40 118 L40 95 M35 105 Q40 92 45 105 M32 112 Q40 96 48 112" stroke="#7C9B79" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="150" cy="100" r="1.6" fill="#C68B85"/><circle cx="160" cy="96" r="1.6" fill="#C68B85"/><circle cx="170" cy="102" r="1.6" fill="#C68B85"/>
+    </svg>`,
+    // Beach
+    `<svg xmlns="http://www.w3.org/2000/svg" width="270" height="180">
+      <defs><linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EAF0EC"/><stop offset="100%" stop-color="#DCE9E4"/></linearGradient></defs>
+      <rect width="270" height="180" fill="url(#sky1)"/>
+      <circle cx="45" cy="38" r="22" fill="#F0C9BE"/>
+      <ellipse cx="230" cy="30" rx="15" ry="8" fill="#FFFFFF" opacity="0.6"/>
+      <ellipse cx="250" cy="42" rx="10" ry="6" fill="#FFFFFF" opacity="0.5"/>
+      <path d="M0 108 Q70 88 140 108 T270 102 V116 Q200 100 135 116 T0 112 Z" fill="#8FB5AC"/>
+      <path d="M0 118 Q70 100 140 118 T270 112 V128 Q200 112 135 128 T0 124 Z" fill="#B7D2CC"/>
+      <rect x="0" y="124" width="270" height="56" fill="#EDE0D0"/>
+      <circle cx="30" cy="150" r="1.4" fill="#D9CBB0"/><circle cx="55" cy="162" r="1.4" fill="#D9CBB0"/><circle cx="90" cy="145" r="1.4" fill="#D9CBB0"/><circle cx="230" cy="158" r="1.4" fill="#D9CBB0"/>
+      <path d="M205 58 L205 132" stroke="#8B7FA3" stroke-width="3" stroke-linecap="round"/>
+      <path d="M172 60 Q205 30 238 60 Z" fill="#D9A6A0"/>
+      <path d="M172 60 Q205 44 238 60" fill="none" stroke="#C68B85" stroke-width="1" opacity="0.5"/>
+    </svg>`,
+    // Barn
+    `<svg xmlns="http://www.w3.org/2000/svg" width="270" height="180">
+      <rect width="270" height="180" fill="#EDE7F0"/>
+      <circle cx="230" cy="34" r="19" fill="#F0C9BE"/>
+      <ellipse cx="45" cy="30" rx="18" ry="9" fill="#FFFFFF" opacity="0.6"/>
+      <ellipse cx="65" cy="40" rx="12" ry="7" fill="#FFFFFF" opacity="0.5"/>
+      <rect x="0" y="122" width="270" height="58" fill="#C7D8C4"/>
+      <path d="M0 122 Q60 112 130 122 T270 118 V122 H0 Z" fill="#A9BBA8"/>
+      <path d="M8 122 L8 100 M4 108 Q8 94 12 108 M1 114 Q8 96 15 114" stroke="#7C9B79" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M235 122 L235 105 M231 110 Q235 98 239 110" stroke="#7C9B79" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="70" y="80" width="110" height="70" fill="#C68B85"/>
+      <rect x="70" y="80" width="110" height="6" fill="#B9766F"/>
+      <path d="M60 80 L125 35 L190 80 Z" fill="#B9766F"/>
+      <rect x="82" y="95" width="20" height="20" fill="#F3E9E6" opacity="0.85"/>
+      <path d="M82 105 L102 105 M92 95 L92 115" stroke="#B9766F" stroke-width="1.5"/>
+      <path d="M110 150 Q125 118 140 150 Z" fill="#F3E9E6"/>
+      <circle cx="132" cy="138" r="1.8" fill="#B9766F"/>
+      <circle cx="150" cy="100" r="9" fill="#F3E9E6"/>
+      <path d="M150 91 L150 109 M141 100 L159 100" stroke="#B9766F" stroke-width="1.2"/>
+      <path d="M0 178 L270 178" stroke="#B08D6E" stroke-width="2" opacity="0.5"/>
+      <path d="M20 178 L20 168 M60 178 L60 168 M100 178 L100 168" stroke="#B08D6E" stroke-width="1.5" opacity="0.5"/>
+    </svg>`,
+    // Jungle
+    `<svg xmlns="http://www.w3.org/2000/svg" width="270" height="180">
+      <rect width="270" height="180" fill="#F1F0E4"/>
+      <circle cx="225" cy="38" r="20" fill="#F0C9BE" opacity="0.85"/>
+      <circle cx="225" cy="38" r="26" fill="none" stroke="#F0C9BE" stroke-width="1" opacity="0.4"/>
+      <path d="M-10 180 C10 90 70 60 90 40 C70 90 60 140 40 180 Z" fill="#8FA98C"/>
+      <path d="M-10 180 C10 90 70 60 90 40" fill="none" stroke="#7C9B79" stroke-width="1" opacity="0.4"/>
+      <path d="M60 180 C70 100 130 70 160 45 C130 100 120 150 100 180 Z" fill="#A9BBA8"/>
+      <path d="M150 180 C165 110 210 85 245 60 C215 110 205 150 190 180 Z" fill="#7C9B79"/>
+      <path d="M185 180 C193 140 215 120 230 105" fill="none" stroke="#5F7A5C" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <circle cx="205" cy="130" r="2" fill="#D9A6A0"/><circle cx="215" cy="115" r="2" fill="#D9A6A0"/>
+      <ellipse cx="35" cy="170" rx="20" ry="6" fill="#5F7A5C" opacity="0.25"/>
+    </svg>`,
+    // Fruit basket
+    `<svg xmlns="http://www.w3.org/2000/svg" width="270" height="180">
+      <defs><linearGradient id="table1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F8F1EF"/><stop offset="100%" stop-color="#F0E6E2"/></linearGradient></defs>
+      <rect width="270" height="180" fill="url(#table1)"/>
+      <path d="M65 110 L205 110 L185 175 L85 175 Z" fill="#C9A98C"/>
+      <path d="M65 110 L205 110" stroke="#B08D6E" stroke-width="2"/>
+      <path d="M75 122 L195 122 M78 136 L192 136 M81 150 L189 150 M84 163 L186 163" stroke="#B08D6E" stroke-width="1.2" opacity="0.5"/>
+      <path d="M75 110 L60 175 M105 110 L92 175 M135 110 L128 175 M165 110 L163 175 M195 110 L198 175" stroke="#B08D6E" stroke-width="1" opacity="0.35"/>
+      <circle cx="100" cy="90" r="24" fill="#D9A6A0"/>
+      <path d="M100 66 Q104 58 110 60" stroke="#7C9B79" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="92" cy="82" rx="6" ry="9" fill="#F0C9BE" opacity="0.5"/>
+      <circle cx="150" cy="82" r="26" fill="#F0C9BE"/>
+      <path d="M150 56 Q154 47 161 49" stroke="#7C9B79" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="141" cy="72" rx="7" ry="10" fill="#F6DCD3" opacity="0.6"/>
+      <circle cx="185" cy="100" r="12" fill="#C7BFD6"/>
+      <circle cx="198" cy="92" r="10" fill="#C7BFD6"/>
+      <circle cx="192" cy="108" r="10" fill="#C7BFD6"/>
+      <ellipse cx="181" cy="96" rx="3" ry="4" fill="#E0D9EC" opacity="0.7"/>
+      <circle cx="55" cy="95" r="9" fill="#D9A6A0" opacity="0.9"/>
+      <path d="M55 87 Q57 82 61 83" stroke="#7C9B79" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>`
+  ];
+
+  function setPuzzleScene(idx){
+    const svg = PUZZLE_SCENES[idx];
+    const dataUri = `data:image/svg+xml;utf8,` + encodeURIComponent(svg);
+    document.documentElement.style.setProperty('--puzzle-bg', `url("${dataUri}")`);
+  }
+  setPuzzleScene(0);
+
+  function positionStyle(originalIndex){
+    const col = originalIndex % 3;
+    const row = Math.floor(originalIndex / 3);
+    return `-${col*90}px -${row*90}px`;
+  }
+
+  function renderPuzzle(){
+    puzzleGrid.innerHTML = '';
+    puzzleOrder.forEach((originalIdx, slot)=>{
+      const div = document.createElement('div');
+      div.className = 'puzzle-piece';
+      div.style.backgroundPosition = positionStyle(originalIdx);
+      div.dataset.slot = slot;
+      div.addEventListener('click', ()=>puzzleClick(slot));
+      puzzleGrid.appendChild(div);
+    });
+    document.getElementById('puzzleMsg').textContent = '';
+  }
+
+  function puzzleClick(slot){
+    const pieces = document.querySelectorAll('.puzzle-piece');
+    if(puzzleSelected === null){
+      puzzleSelected = slot;
+      pieces[slot].classList.add('selected');
+    } else if(puzzleSelected === slot){
+      pieces[slot].classList.remove('selected');
+      puzzleSelected = null;
+    } else {
+      const tmp = puzzleOrder[puzzleSelected];
+      puzzleOrder[puzzleSelected] = puzzleOrder[slot];
+      puzzleOrder[slot] = tmp;
+      pieces[puzzleSelected].classList.remove('selected');
+      puzzleSelected = null;
+      renderPuzzle();
+      checkPuzzleSolved();
+    }
+  }
+
+  function checkPuzzleSolved(){
+    const solved = puzzleOrder.every((v,i)=>v===i);
+    if(solved){
+      document.getElementById('puzzleMsg').textContent = 'That\'s it, all back together.';
+    }
+  }
+
+  function shufflePuzzle(){
+    puzzleSceneIdx = (puzzleSceneIdx + 1) % PUZZLE_SCENES.length;
+    setPuzzleScene(puzzleSceneIdx);
+    do {
+      puzzleOrder = [0,1,2,3,4,5].sort(()=>Math.random()-0.5);
+    } while(puzzleOrder.every((v,i)=>v===i));
+    puzzleSelected = null;
+    renderPuzzle();
+  }
+
+  shufflePuzzle();
+
+  /* ---------- Follow the Spiral ---------- */
+  const lineCanvas = document.getElementById('lineCanvas');
+  const lctx = lineCanvas.getContext('2d');
+  const SPIRAL_CX = 140, SPIRAL_CY = 140, SPIRAL_TURNS = 2.5, SPIRAL_MAX_R = 110, SPIRAL_MIN_R = 14;
+  let spiralPoints = [];
+  let lineActive = false, lineFarthestT = 0, lastKnownT = 0;
+  const LINE_TOLERANCE = 16;
+  const T_BUCKETS = 100;
+  let bucketVisited, bucketOnTrack;
+
+  function buildSpiral(){
+    spiralPoints = [];
+    const steps = 800;
+    for(let i=0;i<=steps;i++){
+      const t = i/steps;
+      const angle = t * SPIRAL_TURNS * Math.PI * 2;
+      const r = SPIRAL_MIN_R + t * (SPIRAL_MAX_R - SPIRAL_MIN_R);
+      spiralPoints.push({x: SPIRAL_CX + r*Math.cos(angle), y: SPIRAL_CY + r*Math.sin(angle), t});
+    }
+  }
+  buildSpiral();
+
+  function drawSpiralBase(){
+    lctx.fillStyle = '#FBF7F4';
+    lctx.fillRect(0,0,280,280);
+    lctx.strokeStyle = '#D8CFC9';
+    lctx.lineWidth = 2;
+    lctx.beginPath();
+    spiralPoints.forEach((p,i)=> i===0 ? lctx.moveTo(p.x,p.y) : lctx.lineTo(p.x,p.y));
+    lctx.stroke();
+
+    lctx.fillStyle = '#D9A6A0';
+    lctx.beginPath();
+    lctx.arc(spiralPoints[0].x, spiralPoints[0].y, 6, 0, Math.PI*2);
+    lctx.fill();
+
+    const end = spiralPoints[spiralPoints.length-1];
+    lctx.fillStyle = '#A9BBA8';
+    lctx.beginPath();
+    lctx.arc(end.x, end.y, 6, 0, Math.PI*2);
+    lctx.fill();
+  }
+  drawSpiralBase();
+
+  // Searches only a local window around the last known position along the path,
+  // so the spiral's inner and outer loops (which pass spatially close together)
+  // never get confused for each other — this is what makes the tracking accurate.
+  function nearestSpiralTLocal(x,y,lastT){
+    const windowBack = 0.04, windowFwd = 0.14;
+    const loIdx = Math.max(0, Math.floor((lastT - windowBack) * (spiralPoints.length-1)));
+    const hiIdx = Math.min(spiralPoints.length-1, Math.ceil((lastT + windowFwd) * (spiralPoints.length-1)));
+    let best = Infinity, bestT = lastT;
+    for(let i=loIdx;i<=hiIdx;i++){
+      const p = spiralPoints[i];
+      const d = Math.hypot(p.x-x, p.y-y);
+      if(d < best){ best = d; bestT = p.t; }
+    }
+    return {dist: best, t: bestT};
+  }
+
+  function lineCanvasPos(e){
+    const rect = lineCanvas.getBoundingClientRect();
+    const scaleX = lineCanvas.width / rect.width, scaleY = lineCanvas.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY};
+  }
+
+  function resetLineGame(){
+    lineActive = false; lineFarthestT = 0; lastKnownT = 0;
+    bucketVisited = new Array(T_BUCKETS).fill(false);
+    bucketOnTrack = new Array(T_BUCKETS).fill(false);
+    document.getElementById('lineMsg').textContent = 'Start at the dot in the middle.';
+    drawSpiralBase();
+  }
+  resetLineGame();
+
+  function lineStart(e){
+    const pos = lineCanvasPos(e);
+    const start = spiralPoints[0];
+    if(Math.hypot(pos.x-start.x, pos.y-start.y) < 26){
+      lineActive = true;
+      lineFarthestT = 0; lastKnownT = 0;
+      bucketVisited = new Array(T_BUCKETS).fill(false);
+      bucketOnTrack = new Array(T_BUCKETS).fill(false);
+      document.getElementById('lineMsg').textContent = 'Following...';
+    }
+  }
+  function lineMove(e){
+    if(!lineActive) return;
+    e.preventDefault();
+    const pos = lineCanvasPos(e);
+    const near = nearestSpiralTLocal(pos.x, pos.y, lastKnownT);
+    lastKnownT = near.t;
+    if(near.t > lineFarthestT) lineFarthestT = near.t;
+
+    const bucket = Math.min(T_BUCKETS-1, Math.floor(near.t * T_BUCKETS));
+    const onTrack = near.dist <= LINE_TOLERANCE;
+    if(!bucketVisited[bucket]){
+      bucketVisited[bucket] = true;
+      bucketOnTrack[bucket] = onTrack;
+    } else if(onTrack){
+      bucketOnTrack[bucket] = true;
+    }
+
+    lctx.fillStyle = onTrack ? 'rgba(169,187,168,0.55)' : 'rgba(217,166,160,0.5)';
+    lctx.beginPath();
+    lctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
+    lctx.fill();
+
+    if(lineFarthestT > 0.96){
+      lineActive = false;
+      const visitedCount = bucketVisited.filter(Boolean).length;
+      const onTrackCount = bucketOnTrack.filter(Boolean).length;
+      const pct = visitedCount ? Math.round((onTrackCount/visitedCount)*100) : 100;
+      document.getElementById('lineMsg').textContent = 'You made it out. Nice and steady ' + pct + '% of the way.';
+    }
+  }
+  function lineEnd(){
+    if(lineActive){
+      lineActive = false;
+      document.getElementById('lineMsg').textContent = 'That\'s alright, tap the dot to start again whenever.';
+    }
+  }
+
+  lineCanvas.addEventListener('mousedown', lineStart);
+  lineCanvas.addEventListener('mousemove', lineMove);
+  window.addEventListener('mouseup', lineEnd);
+  lineCanvas.addEventListener('touchstart', lineStart, {passive:true});
+  lineCanvas.addEventListener('touchmove', lineMove, {passive:false});
+  lineCanvas.addEventListener('touchend', lineEnd);
+
+  /* ---------- Maze ---------- */
+  const mazeCanvas = document.getElementById('mazeCanvas');
+  const mctx = mazeCanvas.getContext('2d');
+  const MSIZE = 8, MCELL = 280/MSIZE;
+  let mazeCells, playerPos, mazeSolved;
+
+  function generateMaze(){
+    const cells = [];
+    for(let y=0;y<MSIZE;y++){
+      const row = [];
+      for(let x=0;x<MSIZE;x++) row.push({top:true,right:true,bottom:true,left:true,visited:false});
+      cells.push(row);
+    }
+    const stack = [{x:0,y:0}];
+    cells[0][0].visited = true;
+    while(stack.length){
+      const cur = stack[stack.length-1];
+      const neighbors = [];
+      const dirs = [
+        {dx:0,dy:-1,self:'top',opp:'bottom'},
+        {dx:1,dy:0,self:'right',opp:'left'},
+        {dx:0,dy:1,self:'bottom',opp:'top'},
+        {dx:-1,dy:0,self:'left',opp:'right'}
+      ];
+      dirs.forEach(d=>{
+        const nx = cur.x+d.dx, ny = cur.y+d.dy;
+        if(nx>=0 && nx<MSIZE && ny>=0 && ny<MSIZE && !cells[ny][nx].visited){
+          neighbors.push({x:nx,y:ny,self:d.self,opp:d.opp});
+        }
+      });
+      if(neighbors.length){
+        const next = neighbors[Math.floor(Math.random()*neighbors.length)];
+        cells[cur.y][cur.x][next.self] = false;
+        cells[next.y][next.x][next.opp] = false;
+        cells[next.y][next.x].visited = true;
+        stack.push({x:next.x, y:next.y});
+      } else {
+        stack.pop();
+      }
+    }
+    return cells;
+  }
+
+  function drawMaze(){
+    mctx.fillStyle = '#FBF7F4';
+    mctx.fillRect(0,0,280,280);
+    mctx.strokeStyle = '#B9AFA9';
+    mctx.lineWidth = 2;
+    mctx.lineCap = 'round';
+    for(let y=0;y<MSIZE;y++){
+      for(let x=0;x<MSIZE;x++){
+        const c = mazeCells[y][x];
+        const px = x*MCELL, py = y*MCELL;
+        mctx.beginPath();
+        if(c.top){ mctx.moveTo(px,py); mctx.lineTo(px+MCELL,py); }
+        if(c.right){ mctx.moveTo(px+MCELL,py); mctx.lineTo(px+MCELL,py+MCELL); }
+        if(c.bottom){ mctx.moveTo(px,py+MCELL); mctx.lineTo(px+MCELL,py+MCELL); }
+        if(c.left){ mctx.moveTo(px,py); mctx.lineTo(px,py+MCELL); }
+        mctx.stroke();
+      }
+    }
+    mctx.fillStyle = '#A9BBA8';
+    const ex = (MSIZE-1)*MCELL + MCELL/2, ey = (MSIZE-1)*MCELL + MCELL/2;
+    mctx.beginPath();
+    mctx.moveTo(ex-7, ey+8); mctx.lineTo(ex-7, ey-8); mctx.lineTo(ex+6, ey-3); mctx.lineTo(ex-7, ey+2);
+    mctx.fill();
+
+    mctx.fillStyle = '#D9A6A0';
+    mctx.beginPath();
+    mctx.arc(playerPos.x*MCELL+MCELL/2, playerPos.y*MCELL+MCELL/2, MCELL/3.4, 0, Math.PI*2);
+    mctx.fill();
+  }
+
+  function newMaze(){
+    mazeCells = generateMaze();
+    playerPos = {x:0,y:0};
+    mazeSolved = false;
+    document.getElementById('mazeMsg').textContent = '';
+    drawMaze();
+  }
+
+  function moveMaze(dir){
+    if(mazeSolved) return;
+    const c = mazeCells[playerPos.y][playerPos.x];
+    if(dir === 'up' && !c.top) playerPos.y -= 1;
+    if(dir === 'down' && !c.bottom) playerPos.y += 1;
+    if(dir === 'left' && !c.left) playerPos.x -= 1;
+    if(dir === 'right' && !c.right) playerPos.x += 1;
+    drawMaze();
+    if(playerPos.x === MSIZE-1 && playerPos.y === MSIZE-1){
+      mazeSolved = true;
+      document.getElementById('mazeMsg').textContent = 'You found your way. Tap New Maze for another.';
+    }
+  }
+
+  document.querySelectorAll('#panel-maze .snake-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>moveMaze(btn.dataset.mdir));
+  });
+  document.addEventListener('keydown', (e)=>{
+    const map = {ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right'};
+    if(map[e.key] && document.getElementById('panel-maze').classList.contains('active')){
+      e.preventDefault();
+      moveMaze(map[e.key]);
+    }
+  });
+
+  newMaze();
+
+  /* ---------- Little Jump ---------- */
+  const jumpCanvas = document.getElementById('jumpCanvas');
+  const jctx = jumpCanvas.getContext('2d');
+  const JW = 300, JH = 180, JGROUND = 148;
+  let jumpRunning = false, jumpAnimId = null;
+  let bunnyY, bunnyVY, jumping, obstacles, jumpSpeed, jumpScore, jumpBest = 0, jumpFrame, nextObstacleIn;
+  const GRAVITY = 0.9, JUMP_FORCE = -12.5, BUNNY_X = 46, BUNNY_R = 13;
+
+  function resetJump(){
+    if(jumpAnimId) cancelAnimationFrame(jumpAnimId);
+    bunnyY = JGROUND; bunnyVY = 0; jumping = false;
+    obstacles = []; jumpSpeed = 3.2; jumpScore = 0; jumpFrame = 0; nextObstacleIn = 70;
+    jumpRunning = false;
+    document.getElementById('jumpScore').textContent = '0';
+    document.getElementById('jumpMsg').textContent = 'Tap the picture to start.';
+    drawJumpScene();
+  }
+
+  function drawBunny(x,y){
+    jctx.fillStyle = '#D9A6A0';
+    jctx.beginPath(); jctx.ellipse(x, y-6, BUNNY_R, BUNNY_R-2, 0, 0, Math.PI*2); jctx.fill();
+    jctx.beginPath(); jctx.ellipse(x+9, y-16, 7, 7, 0, 0, Math.PI*2); jctx.fill();
+    jctx.beginPath(); jctx.ellipse(x+5, y-27, 2.6, 8, -0.3, 0, Math.PI*2); jctx.fill();
+    jctx.beginPath(); jctx.ellipse(x+12, y-28, 2.6, 8, 0.2, 0, Math.PI*2); jctx.fill();
+    jctx.fillStyle = '#3A3238';
+    jctx.beginPath(); jctx.arc(x+12, y-17, 1.3, 0, Math.PI*2); jctx.fill();
+  }
+
+  function drawObstacle(o){
+    jctx.fillStyle = o.type === 'bush' ? '#A9BBA8' : '#C9BFC6';
+    if(o.type === 'bush'){
+      jctx.beginPath();
+      jctx.ellipse(o.x, JGROUND-6, 12, 11, 0, 0, Math.PI*2);
+      jctx.ellipse(o.x-10, JGROUND-2, 8, 8, 0, 0, Math.PI*2);
+      jctx.ellipse(o.x+10, JGROUND-2, 8, 8, 0, 0, Math.PI*2);
+      jctx.fill();
+    } else {
+      jctx.beginPath();
+      jctx.moveTo(o.x-11, JGROUND+6);
+      jctx.lineTo(o.x-6, JGROUND-12);
+      jctx.lineTo(o.x+6, JGROUND-12);
+      jctx.lineTo(o.x+11, JGROUND+6);
+      jctx.closePath();
+      jctx.fill();
+    }
+  }
+
+  function drawJumpScene(){
+    jctx.fillStyle = '#FBF7F4';
+    jctx.fillRect(0,0,JW,JH);
+    jctx.strokeStyle = '#E4DAD5';
+    jctx.lineWidth = 1.5;
+    jctx.beginPath(); jctx.moveTo(0,JGROUND+6); jctx.lineTo(JW,JGROUND+6); jctx.stroke();
+    if(obstacles) obstacles.forEach(drawObstacle);
+    drawBunny(BUNNY_X, bunnyY);
+  }
+
+  function jumpTick(){
+    jumpFrame++;
+    if(jumping){
+      bunnyVY += GRAVITY;
+      bunnyY += bunnyVY;
+      if(bunnyY >= JGROUND){ bunnyY = JGROUND; bunnyVY = 0; jumping = false; }
+    }
+
+    nextObstacleIn--;
+    if(nextObstacleIn <= 0){
+      obstacles.push({x: JW+20, type: Math.random() < 0.5 ? 'bush' : 'rock', passed:false});
+      nextObstacleIn = 55 + Math.random()*45;
+    }
+
+    obstacles.forEach(o=> o.x -= jumpSpeed);
+    obstacles = obstacles.filter(o=> o.x > -20);
+
+    obstacles.forEach(o=>{
+      if(!o.passed && o.x < BUNNY_X){
+        o.passed = true;
+        jumpScore++;
+        document.getElementById('jumpScore').textContent = jumpScore;
+      }
+      const dx = Math.abs(o.x - BUNNY_X);
+      const bunnyBottom = bunnyY;
+      const bunnyTop = bunnyY - 28;
+      const obstacleTop = JGROUND - 12;
+      if(dx < 16 && bunnyBottom > obstacleTop + 2){
+        endJump();
+      }
+    });
+
+    if(jumpSpeed < 6.5) jumpSpeed += 0.0025;
+
+    drawJumpScene();
+    if(jumpRunning) jumpAnimId = requestAnimationFrame(jumpTick);
+  }
+
+  function endJump(){
+    jumpRunning = false;
+    if(jumpAnimId) cancelAnimationFrame(jumpAnimId);
+    if(jumpScore > jumpBest){
+      jumpBest = jumpScore;
+      document.getElementById('jumpBest').textContent = jumpBest;
+    }
+    document.getElementById('jumpMsg').textContent = 'That\'s alright, tap to try again.';
+  }
+
+  function startJump(){
+    if(!jumpRunning && bunnyY === JGROUND && obstacles.length === 0 && jumpScore === 0){
+      jumpRunning = true;
+      document.getElementById('jumpMsg').textContent = '';
+      jumpAnimId = requestAnimationFrame(jumpTick);
+    }
+  }
+
+  function doJump(){
+    if(!jumpRunning){
+      resetJump();
+      jumpRunning = true;
+      document.getElementById('jumpMsg').textContent = '';
+      jumpAnimId = requestAnimationFrame(jumpTick);
+      return;
+    }
+    if(!jumping && bunnyY >= JGROUND){
+      jumping = true;
+      bunnyVY = JUMP_FORCE;
+    }
+  }
+
+  jumpCanvas.addEventListener('mousedown', doJump);
+  jumpCanvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); doJump(); }, {passive:false});
+  document.addEventListener('keydown', (e)=>{
+    if(e.code === 'Space' && document.getElementById('panel-jump').classList.contains('active')){
+      e.preventDefault();
+      doJump();
+    }
+  });
+
+  resetJump();
+
+  /* ---------- Feedback modal (shared) ---------- */
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+</body>
+</html>

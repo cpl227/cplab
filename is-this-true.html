@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is This True? | Concrete Perspective Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF7F4;
+    --surface:#FFFFFF;
+    --ink:#3A3238;
+    --muted:#7C7075;
+    --border:#EAE0DC;
+    --rose:#D9A6A0;
+    --rose-deep:#C68B85;
+    --sage:#A9BBA8;
+    --sage-deep:#87A186;
+    --lavender:#C7BFD6;
+    --shadow: 0 2px 24px rgba(58,50,56,0.06);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Jost', sans-serif;
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .bg-blob{position:fixed; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none;}
+  .blob-1{width:420px; height:420px; background:var(--rose); opacity:0.16; top:-140px; right:-120px;}
+  .blob-2{width:380px; height:380px; background:var(--lavender); opacity:0.15; bottom:20%; left:-160px;}
+  .blob-3{width:300px; height:300px; background:var(--sage); opacity:0.13; bottom:-140px; right:10%;}
+
+  .wrap{max-width:660px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* nav */
+  .site-nav{
+    position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-brand{
+    font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
+    text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
+  }
+  .nav-feather{height:20px; width:auto; display:block;}
+  .nav-links{display:flex; gap:22px;}
+  .nav-links a{
+    font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; font-weight:400; transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--rose-deep);}
+  @media(max-width:480px){
+    .nav-brand{font-size:14px;}
+    .nav-links{gap:14px;}
+    .nav-links a{font-size:11px;}
+  }
+
+  header.hero{padding:88px 0 56px; text-align:center;}
+  .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
+  .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
+  .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
+  .disclaimer{font-size:12.5px; color:#A79C97; max-width:48ch; margin:18px auto 0; font-weight:300; font-style:italic; line-height:1.6;}
+
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
+
+  section{padding:8px 0 56px;}
+  .section-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
+  h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
+  .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
+  .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
+  textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
+  textarea::placeholder{color:#BDB2AE;}
+  textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  input[type=text]{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);}
+  input[type=text]::placeholder{color:#BDB2AE;}
+  input[type=text]:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+
+  /* rating groups */
+  .rate-group{padding:18px 0; border-bottom:1px solid #F4EEEB;}
+  .rate-group:last-child{border-bottom:none;}
+  .rate-q{font-size:15px; color:var(--ink); font-weight:400; margin-bottom:14px; line-height:1.55;}
+  .rate-options{display:flex; gap:8px; flex-wrap:wrap;}
+  .rate-opt{flex:1; min-width:96px;}
+  .rate-opt input{display:none;}
+  .rate-opt label{
+    display:block; text-align:center; padding:10px 8px; border-radius:10px; border:1px solid var(--border);
+    font-size:13px; color:var(--muted); cursor:pointer; transition:all .15s ease; font-weight:400;
+  }
+  .rate-opt input:checked + label{background:var(--rose); border-color:var(--rose); color:white;}
+  .rate-opt label:hover{border-color:var(--rose-deep);}
+
+  .cluster-label{font-family:'Cormorant Garamond', serif; font-size:19px; font-style:italic; color:var(--rose-deep); margin:26px 0 4px;}
+  .cluster-label:first-child{margin-top:0;}
+  .cluster-label.sage{color:var(--sage-deep);}
+
+  .checklist .check-item{padding:14px 0; border-bottom:1px solid #F4EEEB;}
+  .checklist .check-item:last-child{border-bottom:none;}
+  .checklist label{display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:15px; color:var(--ink); font-weight:300;}
+  .checklist input{appearance:none; -webkit-appearance:none; width:17px; height:17px; border-radius:5px; border:1.5px solid var(--rose); margin-top:2px; flex-shrink:0; cursor:pointer; display:grid; place-content:center;}
+  .checklist input:checked{background:var(--rose);}
+  .checklist input:checked::after{content:"✓"; color:white; font-size:11px; line-height:1;}
+
+  /* tappable toggle pills */
+  .toggle-list{display:flex; flex-direction:column; gap:10px; margin-top:4px;}
+  .toggle-item{
+    display:flex; align-items:center; gap:12px; padding:13px 16px; border:1.5px solid var(--border);
+    border-radius:12px; cursor:pointer; font-size:14.5px; color:var(--ink); font-weight:300;
+    background:var(--surface); transition:all .15s ease;
+  }
+  .toggle-item input{display:none;}
+  .toggle-item::before{
+    content:""; width:19px; height:19px; border-radius:6px; border:1.5px solid var(--rose);
+    flex-shrink:0; transition:all .15s ease; display:grid; place-content:center; color:white; font-size:11px;
+  }
+  .toggle-item.checked{background:#FBF0EE; border-color:var(--rose-deep);}
+  .toggle-item.checked::before{content:"✓"; background:var(--rose-deep); border-color:var(--rose-deep);}
+  .toggle-item.green::before{border-color:var(--sage);}
+  .toggle-item.green.checked{background:#EDF3EC; border-color:var(--sage-deep);}
+  .toggle-item.green.checked::before{background:var(--sage-deep); border-color:var(--sage-deep);}
+  .toggle-item:hover{border-color:var(--rose-deep);}
+  .toggle-item.green:hover{border-color:var(--sage-deep);}
+
+  .example-box{
+    background:#F8F1EF; border-radius:12px; padding:14px 16px; margin-bottom:14px;
+  }
+  .example-tag{font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; display:block; margin-bottom:6px;}
+  .example-box p{font-size:14px; color:var(--ink); font-weight:300; font-style:italic; line-height:1.6;}
+
+  .examples-toggle{margin-bottom:14px;}
+  .examples-toggle summary{
+    list-style:none; cursor:pointer; display:flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:500; color:var(--rose-deep); letter-spacing:0.02em;
+    padding:12px 16px; border:1.5px solid var(--rose); border-radius:12px; background:var(--surface);
+    transition:all .15s ease; user-select:none;
+  }
+  .examples-toggle summary::-webkit-details-marker{display:none;}
+  .examples-toggle summary::before{content:"▸"; font-size:11px; transition:transform .15s ease;}
+  .examples-toggle[open] summary::before{transform:rotate(90deg);}
+  .examples-toggle summary:hover{background:#FBF0EE;}
+  .examples-toggle[open] summary{border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:none;}
+  .examples-scroll{
+    max-height:230px; overflow-y:auto; border:1.5px solid var(--rose); border-top:none;
+    border-bottom-left-radius:12px; border-bottom-right-radius:12px; padding:6px 16px;
+    background:var(--surface);
+  }
+  .examples-scroll .example-box{background:transparent; border-bottom:1px solid #F4EEEB; border-radius:0; padding:12px 0; margin-bottom:0;}
+  .examples-scroll .example-box:last-child{border-bottom:none;}
+
+  .why-note{
+    font-size:12.5px; color:#A79C97; font-style:italic; font-weight:300;
+    line-height:1.6; margin-top:8px;
+  }
+  .why-note em{font-style:normal; color:var(--rose-deep); font-weight:400;}
+  .checklist .why-note{padding-left:29px; margin-top:6px;}
+
+  button.primary{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:14px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease; display:block; margin:8px auto 0;
+  }
+  button.primary:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  .savebar{display:flex; align-items:center; gap:16px; margin-top:8px; flex-wrap:wrap;}
+  button.save{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 28px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.save:hover{background:var(--rose-deep);}
+  button.download{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:transparent; color:var(--ink); border:1.5px solid var(--border); padding:11.5px 26px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  button.download:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .status{font-size:13px; color:var(--sage-deep); opacity:0; transition:opacity .3s ease;}
+  .status.show{opacity:1;}
+  .note{font-size:12.5px; color:#A79C97; margin-top:14px; font-weight:300;}
+
+  .stuck-screen{display:none;}
+  .stuck-screen.active{display:block;}
+  .stuck-nav{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:12px;}
+  .stuck-back-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13.5px; letter-spacing:0.02em;
+    background:transparent; color:var(--muted); border:1.5px solid var(--border); padding:11px 22px;
+    border-radius:30px; cursor:pointer; transition:all .15s ease;
+  }
+  .stuck-back-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .progress-dots{display:flex; justify-content:center; gap:7px; margin-bottom:18px;}
+  .progress-dots span{width:7px; height:7px; border-radius:50%; background:var(--border); transition:all .2s ease;}
+  .progress-dots span.done{background:var(--sage-deep);}
+  .progress-dots span.current{background:var(--rose-deep); width:20px; border-radius:4px;}
+
+  /* results */
+  #results{display:none;}
+  #results.show{display:block;}
+  .score-row{display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .score-pill{
+    flex:1; min-width:180px; background:#F8F1EF; border-radius:14px; padding:18px 20px; text-align:center;
+  }
+  .score-pill.sage-bg{background:#F0F4EF;}
+  .score-pill .num{font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--rose-deep); line-height:1;}
+  .score-pill.sage-bg .num{color:var(--sage-deep);}
+  .score-pill .lab{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:6px;}
+
+  .verdict-text{font-size:15.5px; color:var(--ink); font-weight:300; line-height:1.7; margin-bottom:6px;}
+  .verdict-text b{font-weight:600; color:var(--rose-deep);}
+
+  .flag{
+    margin-top:18px; padding:18px 20px; background:#FBF0E9; border-radius:12px; border-left:3px solid var(--rose-deep);
+    font-size:14px; color:var(--ink); font-weight:300; line-height:1.65; display:none;
+  }
+  .flag.show{display:block;}
+  .flag b{display:block; font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; color:var(--rose-deep); margin-bottom:4px;}
+
+  .path{display:none; margin-top:20px;}
+  .path.show{display:block;}
+  .path.dim{opacity:0.5;}
+  .toggle-link{
+    display:inline-block; margin-top:14px; font-size:13px; color:var(--sage-deep); cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; font-weight:400;
+  }
+
+  .about{
+    font-size:13px; color:#A79C97; font-weight:300; line-height:1.8; margin-top:8px;
+  }
+  .about summary{cursor:pointer; font-size:13.5px; color:var(--muted); font-weight:400; margin-bottom:10px;}
+  .about summary:hover{color:var(--rose-deep);}
+  .about ul{margin:10px 0 10px 18px;}
+  .about li{margin-bottom:6px;}
+
+  .body-copy{font-size:15px; color:var(--ink); font-weight:300; line-height:1.75;}
+
+  .intensity-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap;}
+  .intensity-field{flex:1; min-width:130px;}
+  .intensity-label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+  .intensity-field input{
+    width:100%; border:1px solid var(--border); border-radius:10px; background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:10px 12px; color:var(--ink); text-align:center;
+  }
+  .intensity-field input:focus{outline:none; border-color:var(--rose-deep);}
+
+  .idea-menu{margin-top:14px; padding:16px 18px; background:#F8F1EF; border-radius:12px; font-size:13px;}
+  .idea-menu summary{margin-bottom:8px;}
+  .idea-menu ul{margin:0 0 0 18px;}
+  .idea-menu li{margin-bottom:6px; line-height:1.6; color:var(--ink); font-weight:300;}
+
+  .crisis-card{
+    background:#F5F0F2; border-radius:16px; padding:24px 26px; text-align:left; font-size:14px;
+    color:var(--ink); font-weight:300; line-height:1.7; border:1px solid var(--border);
+  }
+  .crisis-card b{font-family:'Cormorant Garamond', serif; font-weight:600; font-size:16px; color:var(--rose-deep); display:block; margin-bottom:6px;}
+
+  .grid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr;}}
+  .mat{border:1px solid var(--border); border-radius:16px; padding:24px; background:var(--surface); display:flex; flex-direction:column; gap:8px; min-height:130px; box-shadow:var(--shadow); text-decoration:none; color:inherit; transition:all .2s ease; cursor:pointer;}
+  a.mat:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(58,50,56,0.1); border-color:var(--rose);}
+  .mat.locked{opacity:0.55; cursor:default;}
+  .mat-tag{font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--sage-deep); font-weight:500;}
+  .mat h3{font-family:'Cormorant Garamond', serif; font-size:19px; font-weight:600;}
+  .mat p{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6;}
+
+  footer{padding:56px 0 44px; text-align:center; background:linear-gradient(180deg, rgba(199,191,214,0.10), rgba(217,166,160,0.06)); position:relative;}
+  .foot-tagline{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted); font-size:17px; max-width:40ch; margin:0 auto 14px; line-height:1.6; font-weight:500;}
+  .foot-brand{font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-deep); font-weight:500;}
+  .foot-feather{height:26px; width:auto; margin:0 auto 18px; display:block; opacity:0.85;}
+  .foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin-bottom:6px;}
+  .foot-links a{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:500; transition:color .15s ease;}
+  .foot-links a:hover{color:var(--rose-deep);}
+
+  .email-capture{max-width:400px; margin:0 auto 32px; text-align:center;}
+  .email-capture-title{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  .email-capture-sub{font-size:13px; color:var(--muted); font-weight:300; margin-bottom:16px; line-height:1.5;}
+  .email-capture-form{display:flex; gap:8px; max-width:340px; margin:0 auto;}
+  .email-capture-form input{
+    flex:1; padding:11px 14px; border-radius:30px; border:1.5px solid var(--border); background:var(--surface);
+    font-family:'Jost', sans-serif; font-size:13.5px; color:var(--ink);
+  }
+  .email-capture-form input:focus{outline:none; border-color:var(--rose-deep);}
+  .email-capture-form button{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:13px; background:var(--ink); color:var(--bg);
+    border:none; padding:11px 20px; border-radius:30px; cursor:pointer; white-space:nowrap; transition:background .15s ease;
+  }
+  .email-capture-form button:hover{background:var(--rose-deep);}
+  .email-capture-status{font-size:12.5px; color:var(--sage-deep); margin-top:10px; min-height:16px;}
+
+  /* feedback invite */
+  .feedback-invite{text-align:center; padding:36px 30px; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);}
+  .feedback-eyebrow{font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; margin-bottom:12px;}
+  .feedback-heading{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:500; margin-bottom:8px;}
+  .feedback-btn{
+    font-family:'Jost', sans-serif; font-weight:500; font-size:14px; letter-spacing:0.03em;
+    background:var(--ink); color:var(--bg); border:none; padding:13px 30px;
+    cursor:pointer; border-radius:30px; transition:all .2s ease;
+  }
+  .feedback-btn:hover{background:var(--rose-deep); transform:translateY(-1px);}
+
+  /* feedback modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(58,50,56,0.35);
+    z-index:100; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--bg); border-radius:22px; padding:38px 32px; max-width:440px; width:100%;
+    box-shadow:0 12px 48px rgba(58,50,56,0.18); position:relative; max-height:88vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--muted); cursor:pointer; line-height:1; padding:4px;
+  }
+  .modal-close:hover{color:var(--rose-deep);}
+  .modal-title{font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:500; margin-bottom:6px;}
+  #feedbackForm input[type=text], #feedbackForm input[type=email]{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; color:var(--ink);
+  }
+  #feedbackForm textarea{
+    width:100%; border:none; border-bottom:1px solid var(--border); background:transparent;
+    font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px;
+    resize:vertical; min-height:70px; color:var(--ink); line-height:1.6;
+  }
+  #feedbackForm input:focus, #feedbackForm textarea:focus{outline:none; border-bottom:1px solid var(--rose-deep);}
+  #feedbackForm input::placeholder, #feedbackForm textarea::placeholder{color:#BDB2AE;}
+  .back-link{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none; font-weight:400; transition:color .15s ease;}
+  .back-link:hover{color:var(--rose-deep);}
+
+  .checkin-fab{
+    position:fixed; bottom:18px; right:18px; z-index:500;
+    width:44px; height:44px; border-radius:50%; background:var(--rose-deep);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(58,50,56,0.28);
+    text-decoration:none; transition:all .2s ease; opacity:0.88;
+  }
+  .checkin-fab:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(58,50,56,0.32); opacity:1;}
+  .checkin-fab svg{width:19px; height:19px; stroke:#FFFFFF;}
+</style>
+</head>
+<body>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<nav class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
+    <div class="nav-links">
+      <a href="index.html#materials" class="back-link">← Library</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><div class="divider" style="margin-top:48px;"></div></div>
+
+<section id="anchor-journal">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>"Is This True?"</h2>
+      <p class="lede">A guided tool for stopping an overthinking spiral. Calm the body first, then check the story your mind is telling you against the facts.</p>
+    </div>
+
+    <div class="stuck-screen active" id="screen1">
+    <div class="card">
+      <div class="progress-dots"><span class="current"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Before You Begin</span>
+      <p class="body-copy">When emotions rise, the mind fills in gaps with assumptions and worst-case scenarios. They can feel completely true, even when the facts don't fully support them. This tool walks through that in order: calm the body first, then gently sort the story from what's actually known, then turn what you find into one small action.</p>
+      <p class="body-copy" style="margin-top:14px;">Use it when a thought feels too loud to sit with, before a big reaction, or after a conflict, anytime you want to check whether the story in your head matches what's actually going on.</p>
+    </div>
+
+    <div class="stuck-nav" style="justify-content:flex-end;">
+      <button class="primary" onclick="goToScreen(2)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen2">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="current"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Step One · Calm the Body</span>
+      <p class="prompt">Before you can look at anything clearly, the noise in your head has to come down. Tap one or two to try right now, no need to do them all.</p>
+
+      <div class="cluster-label">Temperature</div>
+      <div class="toggle-list">
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="t1"><span>Cold water splashed on your face or wrists, 30 seconds</span></label>
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="t2"><span>Stand in front of an open freezer for 30–60 seconds</span></label>
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="t3"><span>Hold an ice cube, or a cold cloth on the back of your neck</span></label>
+      </div>
+      <p class="why-note">Why this helps: cold on the face triggers the body's dive reflex, which slows the heart rate and calms the nervous system quickly, before you try to think your way out of anything.</p>
+
+      <div class="cluster-label sage">Movement</div>
+      <div class="toggle-list">
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="i1"><span>30 seconds of jumping jacks or high knees</span></label>
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="i2"><span>A short, hard sprint in place</span></label>
+      </div>
+      <p class="why-note">Why this helps: 30–120 seconds of intense movement burns off the adrenaline behind that wired, keyed-up feeling. You only need a short burst, not a full workout.</p>
+
+      <div class="cluster-label">Breath</div>
+      <div class="toggle-list">
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="p1"><span>Inhale for 4, hold for 4, exhale for 6, a few rounds</span></label>
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="p2"><span>Slow, long exhales, longer out-breath than in-breath</span></label>
+      </div>
+      <p class="why-note">Why this helps: lengthening the exhale is one of the most direct ways to signal safety to your nervous system. It's a simple switch, not a mood you have to force.</p>
+
+      <div class="cluster-label sage">Muscle Release</div>
+      <div class="toggle-list">
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="m1"><span>Full-body clench for 5 seconds, then let go completely</span></label>
+        <label class="toggle-item" data-group="tipp"><input type="checkbox" value="m2"><span>Shoulders up to your ears, then drop</span></label>
+      </div>
+      <p class="why-note">Why this helps: tensing a muscle hard and releasing it teaches your body the felt difference between holding on and letting go, often more noticeable than trying to "relax" directly.</p>
+
+      <div class="intensity-row">
+        <div class="intensity-field">
+          <span class="intensity-label">Stress of thought before</span>
+          <input type="number" id="intensityBefore" min="0" max="10" placeholder="0–10">
+        </div>
+        <div class="intensity-field">
+          <span class="intensity-label">Stress of thought after</span>
+          <input type="number" id="intensityAfter" min="0" max="10" placeholder="0–10">
+        </div>
+      </div>
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(1)">← Back</button>
+      <button class="primary" onclick="goToScreen(3)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen3">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="current"></span><span class=""></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Step Two · The Noise</span>
+      <p class="prompt">Once the body's settled even a little, put the loudest thought into words, exactly how it sounds, no softening, no editing.</p>
+      <details class="examples-toggle">
+        <summary>Tap for examples</summary>
+        <div class="examples-scroll">
+          <div class="example-box"><span class="example-tag">Relationship</span><p>"My partner didn't wish me luck before my interview. I must not matter to them."</p></div>
+          <div class="example-box"><span class="example-tag">Work</span><p>"My manager didn't reply to my email right away. I must be in trouble."</p></div>
+          <div class="example-box"><span class="example-tag">Friendship</span><p>"She didn't like my post. She's probably annoyed with me."</p></div>
+          <div class="example-box"><span class="example-tag">Family</span><p>"My mom sounded short on the phone. She must be disappointed in me."</p></div>
+          <div class="example-box"><span class="example-tag">Self-Worth</span><p>"I stumbled over my words in the meeting. Everyone thinks I'm incompetent."</p></div>
+          <div class="example-box"><span class="example-tag">Money</span><p>"I overspent this week. I'm terrible with money and always will be."</p></div>
+          <div class="example-box"><span class="example-tag">Parenting</span><p>"My kid had a meltdown in public. I must be failing as a parent."</p></div>
+        </div>
+      </details>
+      <textarea id="ij_noise" rows="3" placeholder="Write it exactly how it sounds in your head..."></textarea>
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(2)">← Back</button>
+      <button class="primary" onclick="goToScreen(4)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen4">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="done"></span><span class="current"></span><span class=""></span><span class=""></span></div>
+      <span class="step-label">Step Three · The Evidence</span>
+      <p class="prompt">Now check that thought against what you actually know. Concrete, observable facts only, what a camera could see, not how it felt.</p>
+      <details class="examples-toggle">
+        <summary>Tap for examples: evidence for</summary>
+        <div class="examples-scroll">
+          <div class="example-box"><span class="example-tag">Relationship</span><p>"They didn't text me. They were online. I mentioned the interview yesterday."</p></div>
+          <div class="example-box"><span class="example-tag">Work</span><p>"It's been six hours with no reply. My last project needed a round of edits."</p></div>
+          <div class="example-box"><span class="example-tag">Friendship</span><p>"She usually likes my posts within a day. It's been two days now."</p></div>
+          <div class="example-box"><span class="example-tag">Family</span><p>"Her voice was flat. The call was shorter than usual."</p></div>
+          <div class="example-box"><span class="example-tag">Self-Worth</span><p>"I did pause a few times. One person glanced at their phone."</p></div>
+          <div class="example-box"><span class="example-tag">Money</span><p>"I spent more than I planned to on takeout this week."</p></div>
+        </div>
+      </details>
+      <span class="prompt">Evidence for:</span>
+      <textarea id="ij_evfor" rows="3" placeholder="Just the facts..."></textarea>
+
+      <details class="examples-toggle" style="margin-top:22px;">
+        <summary>Tap for examples: evidence against</summary>
+        <div class="examples-scroll">
+          <div class="example-box"><span class="example-tag">Relationship</span><p>"They mentioned it was a busy day. They've shown up for me before."</p></div>
+          <div class="example-box"><span class="example-tag">Work</span><p>"They're in back-to-back meetings today. They've never flagged my work as a problem."</p></div>
+          <div class="example-box"><span class="example-tag">Friendship</span><p>"She's mentioned being busy with a move this week. She replied warmly to my last text."</p></div>
+          <div class="example-box"><span class="example-tag">Family</span><p>"She mentioned a headache earlier. She's been short with everyone lately, not just me."</p></div>
+          <div class="example-box"><span class="example-tag">Self-Worth</span><p>"Two people nodded along. No one said anything negative afterward."</p></div>
+          <div class="example-box"><span class="example-tag">Money</span><p>"I've stuck to my budget the last three weeks. One off week isn't a pattern."</p></div>
+        </div>
+      </details>
+      <span class="prompt">Evidence against:</span>
+      <textarea id="ij_evagainst" rows="3" placeholder="Just the facts..."></textarea>
+      <p class="why-note">Why this helps: separating what actually happened from the story about what happened is the core move in cognitive processing approaches. Most emotional spirals are fueled by the story we elaborate in our heads, not the facts themselves.</p>
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(3)">← Back</button>
+      <button class="primary" onclick="goToScreen(5)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen5">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="current"></span><span class=""></span></div>
+      <span class="step-label">Step Four · The Shift</span>
+      <p class="prompt">Weigh both sides above and write the most honest, steady version of what's actually going on. Truth is usually quieter than the noise.</p>
+      <details class="examples-toggle">
+        <summary>Tap for examples</summary>
+        <div class="examples-scroll">
+          <div class="example-box"><span class="example-tag">Relationship</span><p>"There was distance today. That doesn't mean I don't matter to them."</p></div>
+          <div class="example-box"><span class="example-tag">Work</span><p>"The timing is probably about their schedule, not my performance."</p></div>
+          <div class="example-box"><span class="example-tag">Friendship</span><p>"She's likely just distracted right now, not upset with me."</p></div>
+          <div class="example-box"><span class="example-tag">Family</span><p>"She's probably not feeling well today, not upset with me specifically."</p></div>
+          <div class="example-box"><span class="example-tag">Self-Worth</span><p>"I stumbled a little. That's normal, and it doesn't erase what I know."</p></div>
+          <div class="example-box"><span class="example-tag">Money</span><p>"This week was off track. That doesn't undo the weeks I stayed on budget."</p></div>
+        </div>
+      </details>
+      <textarea id="ij_shift" rows="3" placeholder="The grounded version..."></textarea>
+
+      <p class="prompt" style="margin-top:22px; margin-bottom:6px;">Tap anything below that feels steady right now:</p>
+      <div class="toggle-list" id="shiftChecklist">
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s1"><span>I don't actually have enough information to draw that conclusion</span></label>
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s2"><span>One moment doesn't define the whole situation</span></label>
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s3"><span>Expressing a need doesn't make me "too much"</span></label>
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s4"><span>This is an "always / never" thought, those are rarely accurate</span></label>
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s5"><span>My body is activated right now, this may settle in 20 minutes</span></label>
+        <label class="toggle-item green" data-group="shift"><input type="checkbox" value="s6"><span>I don't need to act while I'm this worked up, I can respond later</span></label>
+      </div>
+    </div>
+
+    <div class="stuck-nav">
+      <button class="stuck-back-btn" onclick="goToScreen(4)">← Back</button>
+      <button class="primary" onclick="goToScreen(6)" style="margin-top:0;">Next →</button>
+    </div>
+    </div>
+
+    <div class="stuck-screen" id="screen6">
+    <div class="card">
+      <div class="progress-dots"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="current"></span></div>
+      <span class="step-label">Step Five · Turn It Into a Plan</span>
+      <p class="prompt">Take the grounded truth from Step Four and turn it into one small, doable thing. Clarity without action tends to slide right back into overthinking.</p>
+
+      <div class="flag show" style="margin-top:0;">
+        <b>The most reliable way to do this</b>
+        Build a simple "if this, then that" plan: <em>"If [this happens], I will [small action]."</em> Naming the exact moment and the exact response together is one of the most consistently replicated findings in behavior-change research. It roughly doubles the odds you'll actually follow through, compared to just meaning to (Gollwitzer, 1999).
+      </div>
+
+      <div class="example-box" style="margin-top:16px;">
+        <span class="example-tag">Example</span>
+        <p>"If I catch myself replaying this conversation tonight, I'll write down the thought instead of rehearsing it in my head."</p>
+      </div>
+
+      <span class="prompt" style="margin-top:22px;">Your if-then plan:</span>
+      <textarea id="ij_integration" rows="2" placeholder="If ___, I will ___..."></textarea>
+
+      <p class="prompt" style="margin-top:24px; margin-bottom:10px;">Need a starting point, or still not sure what to write? A few, in the same format:</p>
+      <details class="examples-toggle">
+        <summary>Tap for examples</summary>
+        <div class="examples-scroll">
+          <div class="example-box"><span class="example-tag">Relationship</span><p>"If I feel anxious after being left on read, I'll send: 'feeling a bit anxious, can we check in for 5 minutes tonight?'"</p></div>
+          <div class="example-box"><span class="example-tag">Work</span><p>"If I'm frozen looking at my task list, I'll do the smallest one first, one email, one reply."</p></div>
+          <div class="example-box"><span class="example-tag">Self-Worth</span><p>"If I start spiraling about a mistake, I'll name two things I handled well this month."</p></div>
+          <div class="example-box"><span class="example-tag">Conflict</span><p>"If someone pushes back on my boundary, I'll repeat it once, plainly, and stop explaining."</p></div>
+          <div class="example-box"><span class="example-tag">Family</span><p>"If I feel dismissed on a call home, I'll say it plainly instead of going quiet: 'that landed differently than you probably meant.'"</p></div>
+          <div class="example-box"><span class="example-tag">Friendship</span><p>"If I notice myself assuming a friend is upset with me, I'll just ask instead of guessing."</p></div>
+          <div class="example-box"><span class="example-tag">Money</span><p>"If I overspend one week, I'll look at the number once, without judgment, and reset the next day."</p></div>
+          <div class="example-box"><span class="example-tag">Parenting</span><p>"If my kid melts down in public, I'll remind myself this is a normal part of the age, not a reflection of my parenting."</p></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="savebar" style="justify-content:center; margin-top:8px;">
+      <button class="save" onclick="saveAnchorJournal()">Save my answers</button>
+      <button class="download" onclick="downloadAnchorJournal()">Download a copy</button>
+      <span class="status" id="statusAnchor">Saved ✓</span>
+    </div>
+    <p class="note" style="text-align:center;">Saved privately for you. Come back anytime, it'll still be here.</p>
+    <div class="stuck-nav" style="justify-content:flex-start; margin-top:20px;">
+      <button class="stuck-back-btn" onclick="goToScreen(5)">← Back</button>
+    </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section>
+  <div class="wrap">
+    <div class="crisis-card">
+      <b>Before you go</b>
+      This tool is educational, based on established clinical principles, and meant for self-reflection. It's built to complement professional care, not replace it. It isn't a substitute for therapy, medical advice, or diagnosis. If you're in crisis or having thoughts of self-harm, please contact a crisis line or emergency services in your area. This tool isn't built for that moment.
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="feedback-section">
+  <div class="wrap">
+    <div class="feedback-invite">
+      <p class="feedback-eyebrow">Still Growing</p>
+      <h2 class="feedback-heading">We're always refining the lab</h2>
+      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="email-capture">
+      <p class="email-capture-title">Get a note when something new drops</p>
+      <p class="email-capture-sub">No spam, just new tools as they're built. You'd be getting in early, that's kind of the point.</p>
+      <form id="emailCaptureForm" class="email-capture-form">
+        <input type="email" name="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="email-capture-status" id="emailCaptureStatus"></p>
+    </div>
+    <img src="feather-icon.png" alt="" class="foot-feather">
+    <nav class="foot-links">
+      <a href="index.html#materials">Library</a>
+      <a href="index.html#about">About</a>
+      <a href="saved-answers.html">Saved Answers</a>
+      <a href="daily-checkin.html">Daily Check-In</a>
+    </nav>
+    <div class="divider" style="max-width:340px; margin:24px auto;"></div>
+    <p class="foot-tagline">"You don't need the whole plan. Just a concrete next step."</p>
+    <p class="foot-brand">@concreteperspectivelab</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="feedbackOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <div id="feedbackFormWrap">
+      <p class="feedback-eyebrow">Your Perspective</p>
+      <h3 class="modal-title">Help shape what's next</h3>
+      <p class="lede" style="text-align:left; margin-bottom:22px;">A sentence or two is plenty. Name and email are optional.</p>
+
+      <form name="feedback" method="POST" id="feedbackForm">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <input type="text" name="name" placeholder="Name (optional)">
+        <input type="email" name="email" placeholder="Email (optional)" style="margin-top:16px;">
+        <textarea name="feedback" rows="4" placeholder="What's on your mind?" required style="margin-top:16px;"></textarea>
+
+        <button type="submit" class="feedback-btn" style="margin-top:22px; width:100%;">Send Feedback</button>
+      </form>
+    </div>
+
+    <div id="feedbackThanks" style="display:none; text-align:center; padding:20px 0;">
+      <p class="feedback-eyebrow">Thank You</p>
+      <h3 class="modal-title">Received, with gratitude</h3>
+      <p class="lede">Every note helps shape where this goes next.</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function goToScreen(n){
+    document.querySelectorAll('.stuck-screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen'+n).classList.add('active');
+    document.querySelector('#anchor-journal .wrap').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  const ANCHOR_KEY = 'anchor-journal-is-this-true';
+
+  // wire up tap-to-toggle behavior for all toggle-item pills
+  document.querySelectorAll('.toggle-item').forEach(item=>{
+    const input = item.querySelector('input[type=checkbox]');
+    item.addEventListener('click', (e)=>{
+      e.preventDefault();
+      input.checked = !input.checked;
+      item.classList.toggle('checked', input.checked);
+    });
+  });
+
+  function loadAnchorJournal(){
+    try{
+      const raw = localStorage.getItem(ANCHOR_KEY);
+      if(raw){
+        const data = JSON.parse(raw);
+        document.getElementById('intensityBefore').value = data.intensityBefore || '';
+        document.getElementById('intensityAfter').value = data.intensityAfter || '';
+        document.getElementById('ij_noise').value = data.noise || '';
+        document.getElementById('ij_evfor').value = data.evfor || '';
+        document.getElementById('ij_evagainst').value = data.evagainst || '';
+        document.getElementById('ij_shift').value = data.shift || '';
+        document.getElementById('ij_integration').value = data.integration || '';
+        (data.checks || []).forEach(v=>{
+          const el = document.querySelector('#anchor-journal input[type=checkbox][value="'+v+'"]');
+          if(el){
+            el.checked = true;
+            el.closest('.toggle-item').classList.add('checked');
+          }
+        });
+      }
+    }catch(e){
+      // no saved data yet
+    }
+  }
+
+  function saveAnchorJournal(){
+    const checks = Array.from(document.querySelectorAll('#anchor-journal input[type=checkbox]:checked')).map(b=>b.value);
+    const data = {
+      intensityBefore: document.getElementById('intensityBefore').value,
+      intensityAfter: document.getElementById('intensityAfter').value,
+      noise: document.getElementById('ij_noise').value,
+      evfor: document.getElementById('ij_evfor').value,
+      evagainst: document.getElementById('ij_evagainst').value,
+      shift: document.getElementById('ij_shift').value,
+      integration: document.getElementById('ij_integration').value,
+      checks: checks,
+      savedAt: new Date().toISOString()
+    };
+    const status = document.getElementById('statusAnchor');
+    try{
+      localStorage.setItem(ANCHOR_KEY, JSON.stringify(data));
+      status.textContent = 'Saved ✓';
+      status.classList.add('show');
+      setTimeout(()=>status.classList.remove('show'), 2200);
+    }catch(e){
+      status.textContent = 'Could not save';
+      status.classList.add('show');
+    }
+  }
+
+  function downloadAnchorJournal(){
+    const checks = Array.from(document.querySelectorAll('#anchor-journal input[type=checkbox]:checked')).map(b=>b.value);
+    const CHECK_LABELS = {
+      t1: 'Cold water splashed on your face or wrists, 30 seconds',
+      t2: 'Stand in front of an open freezer for 30–60 seconds',
+      t3: 'Hold an ice cube, or a cold cloth on the back of your neck',
+      i1: '30 seconds of jumping jacks or high knees',
+      i2: 'A short, hard sprint in place',
+      p1: 'Inhale for 4, hold for 4, exhale for 6, a few rounds',
+      p2: 'Slow, long exhales, longer out-breath than in-breath',
+      m1: 'Full-body clench for 5 seconds, then let go completely',
+      m2: 'Shoulders up to your ears, then drop',
+      s1: "I don't actually have enough information to draw that conclusion",
+      s2: "One moment doesn't define the whole situation",
+      s3: 'Expressing a need doesn\'t make me "too much"',
+      s4: 'This is an "always / never" thought, those are rarely accurate',
+      s5: 'My body is activated right now, this may settle in 20 minutes',
+      s6: "I don't need to act while I'm this worked up, I can respond later"
+    };
+    const CALM_VALUES = ['t1','t2','t3','i1','i2','p1','p2','m1','m2'];
+    const calmChecks = checks.filter(c=>CALM_VALUES.includes(c));
+    const shiftChecks = checks.filter(c=>!CALM_VALUES.includes(c));
+    const before = document.getElementById('intensityBefore').value;
+    const after = document.getElementById('intensityAfter').value;
+
+    let out = 'CONCRETE PERSPECTIVE LAB\n';
+    out += '"Is This True?": my answers\n';
+    out += new Date().toLocaleDateString() + '\n\n----------------------------------------\n\n';
+    out += 'Stress of thought before: ' + (before || 'not set') + '\n';
+    out += 'Stress of thought after: ' + (after || 'not set') + '\n\n';
+    out += 'Calming techniques tried:\n';
+    out += (calmChecks.length ? calmChecks.map(c=>'- '+(CHECK_LABELS[c]||c)).join('\n') : '(none selected)') + '\n\n';
+    out += 'The noise (the loudest thought):\n' + (document.getElementById('ij_noise').value || '(not answered)') + '\n\n';
+    out += 'Evidence for:\n' + (document.getElementById('ij_evfor').value || '(not answered)') + '\n\n';
+    out += 'Evidence against:\n' + (document.getElementById('ij_evagainst').value || '(not answered)') + '\n\n';
+    out += 'The shift (grounded version):\n' + (document.getElementById('ij_shift').value || '(not answered)') + '\n\n';
+    out += 'What feels steady right now:\n';
+    out += (shiftChecks.length ? shiftChecks.map(c=>'- '+(CHECK_LABELS[c]||c)).join('\n') : '(none selected)') + '\n\n';
+    out += 'If-then plan:\n' + (document.getElementById('ij_integration').value || '(not answered)') + '\n\n';
+    out += '----------------------------------------\nconcreteperspectivelab.com\n';
+
+    const blob = new Blob([out], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'is-this-true-answers.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Each visit starts blank by design — saved answers live on the "Your Saved Answers" page instead.
+
+  function openFeedback(){
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackFormWrap').style.display = 'block';
+    document.getElementById('feedbackThanks').style.display = 'none';
+  }
+  function closeFeedback(){
+    document.getElementById('feedbackOverlay').classList.remove('show');
+  }
+  document.getElementById('feedbackOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeFeedback();
+  });
+
+  const STATICFORMS_KEY = 'sf_910899f5dfc1b6000084473b';
+
+  const emailForm = document.getElementById('emailCaptureForm');
+  if(emailForm){
+    emailForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('emailCaptureStatus');
+      const email = emailForm.querySelector('input[name="email"]').value;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('accessKey', STATICFORMS_KEY);
+      formData.append('apiKey', STATICFORMS_KEY);
+      formData.append('subject', 'New email signup, Concrete Perspective Lab');
+      formData.append('type', 'newsletter signup');
+
+      fetch('https://api.staticforms.dev/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json().catch(()=>({success:true})))
+      .then(()=>{
+        status.textContent = "You're on the list. Thank you.";
+        emailForm.reset();
+      })
+      .catch(()=>{
+        status.textContent = "Something went wrong, mind trying again?";
+      });
+    });
+  }
+
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const form = e.target;
+
+    const honeypot = form.querySelector('[name="bot-field"]');
+    if(honeypot && honeypot.value){
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.delete('bot-field');
+    formData.append('accessKey', STATICFORMS_KEY);
+    formData.append('apiKey', STATICFORMS_KEY);
+    formData.append('subject', 'New feedback, Concrete Perspective Lab');
+
+    fetch('https://api.staticforms.dev/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json().catch(()=>({success:true})))
+    .then(()=>{
+      document.getElementById('feedbackFormWrap').style.display = 'none';
+      document.getElementById('feedbackThanks').style.display = 'block';
+      form.reset();
+      setTimeout(closeFeedback, 2600);
+    })
+    .catch(()=>{
+      alert("Something went wrong sending that. Mind trying again?");
+    });
+  });
+</script>
+
+
+<a href="daily-checkin.html" class="checkin-fab" aria-label="Daily Check-In" title="Daily Check-In">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>
+</a>
+</body>
+</html>
