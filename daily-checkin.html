@@ -13,8 +13,8 @@
     --ink:#3A3238;
     --muted:#7C7075;
     --border:#EAE0DC;
-    --rose:#D9A6A0;
-    --rose-deep:#C68B85;
+    --rose:#D9B08C;
+    --rose-deep:#B98259;
     --sage:#A9BBA8;
     --sage-deep:#87A186;
     --lavender:#C7BFD6;
@@ -50,15 +50,18 @@
   .nav-menu-btn:hover{color:var(--rose-deep);}
   .nav-menu-panel{
     position:absolute; top:100%; right:0; background:var(--surface); border:1px solid var(--border);
-    border-radius:14px; box-shadow:0 12px 32px rgba(58,50,56,0.14); padding:10px; display:none; flex-direction:column;
-    min-width:190px; z-index:60; margin-top:10px;
+    border-radius:18px; box-shadow:0 20px 48px rgba(58,50,56,0.16); padding:14px; display:none; flex-direction:column;
+    min-width:230px; z-index:60; margin-top:12px;
   }
   .nav-menu-panel.show{display:flex;}
-  .nav-menu-panel a{
-    padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--ink); text-decoration:none; transition:background .15s ease;
-    font-family:'Jost', sans-serif;
+  #navMenuPanel a{
+    padding:12px 14px; border-radius:11px; font-size:14.5px; color:var(--ink); text-decoration:none; transition:all .15s ease;
+    font-family:'Jost', sans-serif; text-transform:none !important; letter-spacing:normal !important; font-weight:450;
+    display:flex; align-items:center; gap:13px;
   }
-  .nav-menu-panel a:hover{background:var(--bg); color:var(--rose-deep);}
+  .nav-menu-panel a svg{width:18px; height:18px; color:var(--rose-deep); flex-shrink:0; opacity:0.75; transition:opacity .15s ease;}
+  .nav-menu-panel a:hover{background:#FBF3EE; color:var(--rose-deep); transform:translateX(2px);}
+  .nav-menu-panel a:hover svg{opacity:1;}
   .nav-search-input{
     width:100%; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; margin-bottom:8px;
     font-family:'Jost', sans-serif; font-size:13px; background:var(--bg); color:var(--ink); text-transform:none; letter-spacing:normal;
@@ -68,7 +71,7 @@
     display:block; padding:10px 14px; border-radius:9px; font-size:13px; color:var(--ink); text-decoration:none;
     text-transform:none; letter-spacing:normal; background:#FBF3F1; margin-bottom:4px;
   }
-  .nav-search-result:hover{background:#F6E6E3;}
+  .nav-search-result:hover{background:#F3E4D3;}
   .nav-search-result b{color:var(--rose-deep); font-weight:600;}
   .nav-search-empty{font-size:12px; color:var(--muted); padding:8px 14px; text-transform:none; letter-spacing:normal;}
   .nav-links a{
@@ -94,11 +97,16 @@
 
   section{padding:8px 0 56px;}
   .section-head{text-align:center; margin-bottom:36px;}
+  .mascot-intro{text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .mascot{margin-bottom:14px;}
+  .mascot-name{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:20px;}
+  .mascot-line{font-size:14.5px; color:var(--ink); font-weight:300; line-height:1.7; text-align:left; margin-bottom:14px; max-width:44ch;}
+  .mascot-line b{font-weight:600; color:var(--rose-deep);}
   .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
   h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
   .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
 
-  .card{background:var(--surface); border:1px solid var(--border); border-left:4px solid #C68B85; border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .card{background:var(--surface); border:1px solid var(--border); border-left:4px solid #B98259; border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
   .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
   .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
   textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
@@ -341,6 +349,21 @@
   .back-link:hover{color:var(--rose-deep);}
 
   .emoji-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;}
+  .wheel-wrap{display:flex; justify-content:center; margin:8px 0 4px;}
+  #feelingWheel{width:100%; max-width:320px; height:auto; touch-action:manipulation;}
+  .wheel-seg{cursor:pointer; transition:opacity .15s ease;}
+  .wheel-seg:hover{opacity:0.85;}
+  .wheel-seg-label{font-family:'Jost', sans-serif; font-size:11.5px; fill:#FFFFFF; font-weight:500; pointer-events:none;}
+  .wheel-center-label{font-family:'Cormorant Garamond', serif; fill:var(--ink); pointer-events:none;}
+  .wheel-center-sub{font-family:'Jost', sans-serif; fill:var(--muted); pointer-events:none;}
+  .wheel-back-btn{cursor:pointer;}
+  .wheel-back-btn:hover .wheel-back-circle{fill:#F0E6E2;}
+  .wheel-leaf-card{
+    display:flex; flex-direction:column; align-items:center; gap:12px; padding:36px 24px;
+    background:var(--surface); border:1.5px solid var(--border); border-radius:20px; margin-top:8px;
+  }
+  .wheel-leaf-word{font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:600; color:var(--ink);}
+  .wheel-leaf-change{font-size:12.5px; color:var(--rose-deep); cursor:pointer; text-decoration:underline; text-underline-offset:3px;}
   .wheel-breadcrumb{display:flex; align-items:center; flex-wrap:wrap; gap:6px; min-height:22px; margin-top:6px;}
   .wheel-crumb{font-size:12.5px; color:var(--rose-deep); font-weight:500; cursor:pointer; text-decoration:none;}
   .wheel-crumb:hover{text-decoration:underline;}
@@ -352,11 +375,13 @@
     display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 6px;
     border:1.5px solid var(--border); border-radius:14px; cursor:pointer; transition:all .15s ease; background:var(--surface);
   }
-  .emoji-opt span.e{font-size:24px; display:flex; align-items:center; justify-content:center;}
+  .emoji-opt span.e{display:flex; align-items:center; justify-content:center; color:var(--muted);}
+  .emoji-opt span.e svg{width:24px; height:24px;}
   .emo-icon{width:26px; height:26px;}
   .emoji-opt span.l{font-size:11.5px; color:var(--muted); font-weight:400;}
   .emoji-opt:hover{border-color:var(--rose);}
   .emoji-opt.selected{border-color:var(--rose-deep); background:#FBF3F1;}
+  .emoji-opt.selected span.e{color:var(--rose-deep);}
   .emoji-opt.selected span.l{color:var(--rose-deep); font-weight:500;}
 
   .scale-row{display:flex; gap:4px; justify-content:space-between; margin-top:14px;}
@@ -415,14 +440,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <div class="nav-menu-panel" id="navMenuPanel">
-        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search, e.g. \"stressed\" or \"overthinking\"" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="What's going on?" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
         <div id="navSearchResults"></div>
         <div id="navMenuLinks">
-          <a href="index.html#materials">Library</a>
-          <a href="community.html">Community</a>
-          <a href="deep-dives.html">Deep Dives</a>
-          <a href="saved-answers.html">Saved Answers</a>
-          <a href="daily-checkin.html">Daily Check-In</a>
+          <a href="index.html#materials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>Library</a>
+          <a href="community.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Community</a>
+          <a href="deep-dives.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Deep Dives</a>
+          <a href="saved-answers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z"/></svg>Saved Answers</a>
+          <a href="daily-checkin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>Daily Check-In</a>
         </div>
       </div>
     </div>
@@ -439,13 +464,43 @@
       <p class="lede" id="todayDate"></p>
     </div>
 
-    <div class="stuck-screen active" id="screen1">
+    <div class="stuck-screen active" id="screen0">
+      <div class="card mascot-intro">
+        <svg class="mascot" viewBox="0 0 140 160" width="96" height="110" fill="none">
+          <path d="M70 10c28 0 46 24 46 58s-18 82-46 82-46-48-46-82S42 10 70 10z" fill="var(--rose)"/>
+          <ellipse cx="45" cy="78" rx="7" ry="5" fill="var(--rose-deep)" opacity="0.35"/>
+          <ellipse cx="95" cy="78" rx="7" ry="5" fill="var(--rose-deep)" opacity="0.35"/>
+          <circle cx="52" cy="64" r="13" fill="none" stroke="#3A3238" stroke-width="2.5"/>
+          <circle cx="88" cy="64" r="13" fill="none" stroke="#3A3238" stroke-width="2.5"/>
+          <path d="M65 64h10" stroke="#3A3238" stroke-width="2.5"/>
+          <path d="M39 60l-8-4" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M101 60l8-4" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="52" cy="64" r="3" fill="#3A3238"/>
+          <circle cx="88" cy="64" r="3" fill="#3A3238"/>
+          <path d="M58 84q12 10 24 0" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M70 10c-2-8 4-14 10-12" stroke="var(--sage-deep)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M28 100q-14 4-16 20" stroke="var(--rose)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M112 100q14 4 16 20" stroke="var(--rose)" stroke-width="9" stroke-linecap="round"/>
+          <rect x="4" y="118" width="20" height="15" rx="2" fill="var(--sage-deep)"/>
+          <path d="M14 118v15" stroke="var(--bg)" stroke-width="1.2"/>
+        </svg>
+        <p class="mascot-name">Hey, it's Bean from the Lab 👋</p>
+        <p class="mascot-line"><b>What this is:</b> a short daily reflection, mood, gratitude, self-care, and a few honest check-ins with yourself.</p>
+        <p class="mascot-line"><b>Why it works:</b> research on journaling and mood tracking consistently shows that naming what you're feeling, even briefly, helps regulate emotion and builds real self-awareness over time.</p>
+        <p class="mascot-line"><b>What you'll get:</b> six quick screens, and a little plant that grows the more consistently you show up.</p>
+        <button class="primary" onclick="goToScreen(1)" style="margin-top:8px;">Let's go →</button>
+      </div>
+    </div>
+
+    <div class="stuck-screen" id="screen1">
     <div class="card">
       <div class="progress-dots"><span class="current"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div>
       <span class="step-label">How Are You?</span>
       <p class="lede" style="margin:0 0 10px; text-align:left;" id="wheelPrompt">Tap a feeling, then tap again to explore it further.</p>
       <div class="wheel-breadcrumb" id="wheelBreadcrumb"></div>
-      <div class="emoji-grid" id="feelingGrid"></div>
+      <div class="wheel-wrap">
+        <svg id="feelingWheel" viewBox="0 0 300 300"></svg>
+      </div>
       <input type="text" id="feelingOther" placeholder="Or describe it in your own words..." style="margin-top:14px;">
       <p class="why-note" style="margin-top:14px;">Based on the Feeling Wheel, developed by Dr. Gloria Willcox (1982, <em>Transactional Analysis Journal</em>).</p>
     </div>
@@ -597,18 +652,18 @@
       <span class="step-label">11 · What Do I Need Right Now?</span>
       <p class="lede" style="margin:0 0 8px; text-align:left;">What would help you feel supported and cared for?</p>
       <div class="emoji-grid" id="needGrid">
-        <div class="emoji-opt" data-v="rest"><span class="e">🛏️</span><span class="l">Rest</span></div>
-        <div class="emoji-opt" data-v="space"><span class="e">🫧</span><span class="l">Space</span></div>
-        <div class="emoji-opt" data-v="talk"><span class="e">💬</span><span class="l">Talk</span></div>
-        <div class="emoji-opt" data-v="hug"><span class="e">🤗</span><span class="l">Hug</span></div>
-        <div class="emoji-opt" data-v="cry"><span class="e">😢</span><span class="l">Cry</span></div>
-        <div class="emoji-opt" data-v="movement"><span class="e">🧘</span><span class="l">Movement</span></div>
-        <div class="emoji-opt" data-v="quiet"><span class="e">📖</span><span class="l">Quiet</span></div>
-        <div class="emoji-opt" data-v="fun"><span class="e">🎈</span><span class="l">Fun</span></div>
-        <div class="emoji-opt" data-v="creativity"><span class="e">🎨</span><span class="l">Creativity</span></div>
-        <div class="emoji-opt" data-v="nature"><span class="e">🌿</span><span class="l">Nature</span></div>
-        <div class="emoji-opt" data-v="music"><span class="e">🎵</span><span class="l">Music</span></div>
-        <div class="emoji-opt" data-v="other"><span class="e">🤍</span><span class="l">Other</span></div>
+        <div class="emoji-opt" data-v="rest"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13a7 7 0 1 1-7-9 6 6 0 0 0 7 9z"/></svg></span><span class="l">Rest</span></div>
+        <div class="emoji-opt" data-v="space"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="4"/><circle cx="16.5" cy="15" r="2.6"/><circle cx="10.5" cy="19" r="1.6"/></svg></span><span class="l">Space</span></div>
+        <div class="emoji-opt" data-v="talk"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16V16H9l-5 4V5.5z"/></svg></span><span class="l">Talk</span></div>
+        <div class="emoji-opt" data-v="hug"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20c0-4 2.5-7 6-7s6 3 6 7"/><path d="M4 13c1-2 2.5-3 4-3M20 13c-1-2-2.5-3-4-3"/></svg></span><span class="l">Hug</span></div>
+        <div class="emoji-opt" data-v="cry"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 5 6 9 6 12a6 6 0 0 1-12 0c0-3 3-7 6-12z"/></svg></span><span class="l">Cry</span></div>
+        <div class="emoji-opt" data-v="movement"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.2"/><path d="M12 7.5v6M8 11l4-1 4 1M9.5 20l2.5-6 2.5 6"/></svg></span><span class="l">Movement</span></div>
+        <div class="emoji-opt" data-v="quiet"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5c3-1 6-1 8 1 2-2 5-2 8-1V18c-3-1-6-1-8 1-2-2-5-2-8-1V5.5z"/></svg></span><span class="l">Quiet</span></div>
+        <div class="emoji-opt" data-v="fun"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M12 15v6M10 21h4"/></svg></span><span class="l">Fun</span></div>
+        <div class="emoji-opt" data-v="creativity"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3.5l2.5 2.5L9.5 17l-4 1 1-4L18 3.5z"/></svg></span><span class="l">Creativity</span></div>
+        <div class="emoji-opt" data-v="nature"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c5 2 8 6 8 10.5a8 8 0 0 1-16 0c0-4.5 3-8.5 8-10.5z"/><path d="M12 6v15"/></svg></span><span class="l">Nature</span></div>
+        <div class="emoji-opt" data-v="music"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="18" r="2.6"/><circle cx="17.5" cy="16" r="2.6"/><path d="M9 18V5l10-2v13"/></svg></span><span class="l">Music</span></div>
+        <div class="emoji-opt" data-v="other"><span class="e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7.5"/></svg></span><span class="l">Other</span></div>
       </div>
       <input type="text" id="needOther" placeholder="Other..." style="margin-top:14px;">
     </div>
@@ -1007,8 +1062,28 @@
     return node;
   }
 
+  function polarToXY(cx, cy, r, angle){
+    return [cx + r*Math.cos(angle), cy + r*Math.sin(angle)];
+  }
+
+  function wedgePath(cx, cy, rOuter, rInner, startAngle, endAngle){
+    const [x1,y1] = polarToXY(cx, cy, rOuter, startAngle);
+    const [x2,y2] = polarToXY(cx, cy, rOuter, endAngle);
+    const [x3,y3] = polarToXY(cx, cy, rInner, endAngle);
+    const [x4,y4] = polarToXY(cx, cy, rInner, startAngle);
+    const largeArc = (endAngle - startAngle) > Math.PI ? 1 : 0;
+    return `M ${x1} ${y1} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${rInner} ${rInner} 0 ${largeArc} 0 ${x4} ${y4} Z`;
+  }
+
+  function lightenHex(hex, amt){
+    const n = parseInt(hex.slice(1), 16);
+    let r = (n >> 16) + amt, g = ((n >> 8) & 0xff) + amt, b = (n & 0xff) + amt;
+    r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
+    return '#' + ((1<<24) + (r<<16) + (g<<8) + b).toString(16).slice(1);
+  }
+
   function renderWheel(){
-    const grid = document.getElementById('feelingGrid');
+    const svg = document.getElementById('feelingWheel');
     const crumbEl = document.getElementById('wheelBreadcrumb');
     const promptEl = document.getElementById('wheelPrompt');
     const node = wheelNodeAt(wheelPath);
@@ -1027,36 +1102,107 @@
       crumbEl.appendChild(change);
     }
 
-    grid.innerHTML = '';
+    svg.innerHTML = '';
 
     if(atLeaf){
       promptEl.textContent = "That's specific, and that's the point.";
+      svg.style.display = 'none';
+      let leafCard = document.getElementById('wheelLeafCard');
+      if(!leafCard){
+        leafCard = document.createElement('div');
+        leafCard.id = 'wheelLeafCard';
+        leafCard.className = 'wheel-leaf-card';
+        svg.parentElement.appendChild(leafCard);
+      }
       const baseKey = wheelPath[0];
-      const tile = document.createElement('div');
-      tile.className = 'emoji-opt leaf-selected';
-      tile.innerHTML = '<span class="e">' + emotionIconSvg(wheelPath[wheelPath.length-1], baseKey, 2) + '</span><span class="l">' + wheelPath[wheelPath.length-1] + '</span>';
-      tile.addEventListener('click', ()=>{ wheelPath = wheelPath.slice(0,-1); renderWheel(); });
-      grid.appendChild(tile);
+      const word = wheelPath[wheelPath.length-1];
+      leafCard.style.display = 'flex';
+      leafCard.innerHTML = '<span style="width:44px; height:44px;">' + emotionIconSvg(word, baseKey, 2) + '</span>'
+        + '<span class="wheel-leaf-word">' + word + '</span>'
+        + '<span class="wheel-leaf-change">tap to go back</span>';
+      leafCard.onclick = ()=>{ wheelPath = wheelPath.slice(0,-1); renderWheel(); };
       return;
     }
 
-    promptEl.textContent = wheelPath.length
-      ? "Tap again to go deeper, or your last pick already counts."
-      : "Tap a feeling, then tap again to explore it further.";
+    svg.style.display = 'block';
+    const oldLeaf = document.getElementById('wheelLeafCard');
+    if(oldLeaf) oldLeaf.style.display = 'none';
 
-    Object.keys(node.c).forEach(key=>{
-      const child = node.c[key];
+    promptEl.textContent = wheelPath.length
+      ? "Tap again to go deeper, or tap the center to go back."
+      : "Tap a feeling to explore what's inside it.";
+
+    const keys = Object.keys(node.c);
+    const cx = 150, cy = 150, rOuter = 145, rInner = wheelPath.length ? 46 : 30;
+    const anglePer = (Math.PI*2) / keys.length;
+    const ns = 'http://www.w3.org/2000/svg';
+
+    keys.forEach((key, i)=>{
       const baseKey = wheelPath.length ? wheelPath[0] : key;
-      const depth = wheelPath.length; // 0 = top-level tiles, 1 = mid-level tiles
-      const tile = document.createElement('div');
-      tile.className = 'emoji-opt';
-      tile.innerHTML = '<span class="e">' + emotionIconSvg(key, baseKey, depth) + '</span><span class="l">' + key + '</span>';
-      tile.addEventListener('click', ()=>{
-        wheelPath.push(key);
-        renderWheel();
-      });
-      grid.appendChild(tile);
+      const depth = wheelPath.length;
+      const startA = -Math.PI/2 + i*anglePer;
+      const endA = startA + anglePer;
+      const midA = (startA+endA)/2;
+      const baseColor = EMOTION_ICON_COLORS[baseKey] || '#B9AFA9';
+      const color = depth === 0 ? baseColor : lightenHex(baseColor, 35);
+
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', wedgePath(cx, cy, rOuter, rInner, startA, endA));
+      path.setAttribute('fill', color);
+      path.setAttribute('stroke', '#FBF7F4');
+      path.setAttribute('stroke-width', '2');
+      path.setAttribute('class', 'wheel-seg');
+      path.addEventListener('click', ()=>{ wheelPath.push(key); renderWheel(); });
+      svg.appendChild(path);
+
+      const labelR = (rOuter+rInner)/2;
+      const [lx, ly] = polarToXY(cx, cy, labelR, midA);
+      const text = document.createElementNS(ns, 'text');
+      text.setAttribute('x', lx);
+      text.setAttribute('y', ly);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dominant-baseline', 'middle');
+      text.setAttribute('class', 'wheel-seg-label');
+      text.textContent = key;
+      text.style.pointerEvents = 'none';
+      svg.appendChild(text);
     });
+
+    // center hub
+    const hubCircle = document.createElementNS(ns, 'circle');
+    hubCircle.setAttribute('cx', cx); hubCircle.setAttribute('cy', cy); hubCircle.setAttribute('r', rInner-4);
+    hubCircle.setAttribute('fill', '#FBF7F4');
+    hubCircle.setAttribute('class', wheelPath.length ? 'wheel-back-btn' : '');
+    if(wheelPath.length) hubCircle.addEventListener('click', ()=>{ wheelPath = wheelPath.slice(0,-1); renderWheel(); });
+    svg.appendChild(hubCircle);
+
+    if(wheelPath.length){
+      const backText = document.createElementNS(ns, 'text');
+      backText.setAttribute('x', cx); backText.setAttribute('y', cy-6);
+      backText.setAttribute('text-anchor', 'middle');
+      backText.setAttribute('class', 'wheel-center-label');
+      backText.setAttribute('font-size', '13');
+      backText.textContent = wheelPath[wheelPath.length-1];
+      backText.style.pointerEvents = 'none';
+      svg.appendChild(backText);
+      const backSub = document.createElementNS(ns, 'text');
+      backSub.setAttribute('x', cx); backSub.setAttribute('y', cy+12);
+      backSub.setAttribute('text-anchor', 'middle');
+      backSub.setAttribute('class', 'wheel-center-sub');
+      backSub.setAttribute('font-size', '10.5');
+      backSub.textContent = '\u2190 back';
+      backSub.style.pointerEvents = 'none';
+      svg.appendChild(backSub);
+    } else {
+      const introText = document.createElementNS(ns, 'text');
+      introText.setAttribute('x', cx); introText.setAttribute('y', cy);
+      introText.setAttribute('text-anchor', 'middle');
+      introText.setAttribute('class', 'wheel-center-sub');
+      introText.setAttribute('font-size', '10.5');
+      introText.textContent = 'today?';
+      introText.style.pointerEvents = 'none';
+      svg.appendChild(introText);
+    }
   }
   renderWheel();
 
@@ -1145,7 +1291,7 @@
     const leafColor = plant.isDead ? '#C4B79E' : (healthy ? '#8FAF8C' : '#B7AE84');
 
     // pot
-    pctx.fillStyle = '#D9A6A0';
+    pctx.fillStyle = '#D9B08C';
     pctx.beginPath();
     pctx.moveTo(80, potTopY);
     pctx.lineTo(160, potTopY);
@@ -1153,7 +1299,7 @@
     pctx.lineTo(90, 225);
     pctx.closePath();
     pctx.fill();
-    pctx.fillStyle = '#C68B85';
+    pctx.fillStyle = '#B98259';
     pctx.fillRect(75, potTopY-8, 90, 10);
 
     // soil (fluffed today = bumpy texture)
@@ -1209,7 +1355,7 @@
 
     // flower when blooming and healthy
     if(stage === 'blooming' && !plant.isDead){
-      const petalColor = healthy ? '#D9A6A0' : '#C7BFA0';
+      const petalColor = healthy ? '#D9B08C' : '#C7BFA0';
       pctx.fillStyle = petalColor;
       for(let a=0;a<6;a++){
         const ang = (a/6)*Math.PI*2;

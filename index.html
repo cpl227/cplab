@@ -13,8 +13,8 @@
     --ink:#3A3238;
     --muted:#7C7075;
     --border:#EAE0DC;
-    --rose:#D9A6A0;
-    --rose-deep:#C68B85;
+    --rose:#D9B08C;
+    --rose-deep:#B98259;
     --sage:#A9BBA8;
     --sage-deep:#87A186;
     --lavender:#C7BFD6;
@@ -50,15 +50,18 @@
   .nav-menu-btn:hover{color:var(--rose-deep);}
   .nav-menu-panel{
     position:absolute; top:100%; right:0; background:var(--surface); border:1px solid var(--border);
-    border-radius:14px; box-shadow:0 12px 32px rgba(58,50,56,0.14); padding:10px; display:none; flex-direction:column;
-    min-width:190px; z-index:60; margin-top:10px;
+    border-radius:18px; box-shadow:0 20px 48px rgba(58,50,56,0.16); padding:14px; display:none; flex-direction:column;
+    min-width:230px; z-index:60; margin-top:12px;
   }
   .nav-menu-panel.show{display:flex;}
-  .nav-menu-panel a{
-    padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--ink); text-decoration:none; transition:background .15s ease;
-    font-family:'Jost', sans-serif;
+  #navMenuPanel a{
+    padding:12px 14px; border-radius:11px; font-size:14.5px; color:var(--ink); text-decoration:none; transition:all .15s ease;
+    font-family:'Jost', sans-serif; text-transform:none !important; letter-spacing:normal !important; font-weight:450;
+    display:flex; align-items:center; gap:13px;
   }
-  .nav-menu-panel a:hover{background:var(--bg); color:var(--rose-deep);}
+  .nav-menu-panel a svg{width:18px; height:18px; color:var(--rose-deep); flex-shrink:0; opacity:0.75; transition:opacity .15s ease;}
+  .nav-menu-panel a:hover{background:#FBF3EE; color:var(--rose-deep); transform:translateX(2px);}
+  .nav-menu-panel a:hover svg{opacity:1;}
   .nav-search-input{
     width:100%; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; margin-bottom:8px;
     font-family:'Jost', sans-serif; font-size:13px; background:var(--bg); color:var(--ink); text-transform:none; letter-spacing:normal;
@@ -68,7 +71,7 @@
     display:block; padding:10px 14px; border-radius:9px; font-size:13px; color:var(--ink); text-decoration:none;
     text-transform:none; letter-spacing:normal; background:#FBF3F1; margin-bottom:4px;
   }
-  .nav-search-result:hover{background:#F6E6E3;}
+  .nav-search-result:hover{background:#F3E4D3;}
   .nav-search-result b{color:var(--rose-deep); font-weight:600;}
   .nav-search-empty{font-size:12px; color:var(--muted); padding:8px 14px; text-transform:none; letter-spacing:normal;}
   .nav-links a{
@@ -87,7 +90,7 @@
     .nav-links a{font-size:11px;}
   }
 
-  header.hero{padding:64px 0 40px; text-align:center;}
+  header.hero{padding:88px 0 56px; text-align:center;}
   .eyebrow{font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:22px;}
 
   .brand-mark{
@@ -99,7 +102,7 @@
     content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
     width:36px; height:2px; background:var(--rose-deep); opacity:0.5;
   }
-  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:16px;}
+  h1.title{font-family:'Cormorant Garamond', serif; font-size:clamp(32px, 5.6vw, 48px); font-weight:500; letter-spacing:-0.01em; line-height:1.2; margin-bottom:44px;}
   .subtitle{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; color:var(--rose-deep); margin-bottom:18px;}
   .tagline{font-size:15.5px; color:var(--muted); max-width:48ch; margin:0 auto; line-height:1.75; font-weight:300;}
   .hero-cta{display:inline-block; margin-top:30px; text-decoration:none;}
@@ -127,9 +130,9 @@
   }
   .hero-secondary-link:hover{color:var(--sage-deep); border-color:var(--sage-deep);}
 
-  .divider{width:44px; height:1px; background:var(--rose); margin:32px auto; opacity:0.6;}
+  .divider{width:44px; height:1px; background:var(--rose); margin:48px auto; opacity:0.6;}
 
-  section{padding:8px 0 56px;}
+  section{padding:16px 0 76px;}
   .section-tint{
     background:linear-gradient(180deg, rgba(217,166,160,0.08), rgba(199,191,214,0.10));
     padding:56px 0 64px; margin:0; position:relative;
@@ -448,14 +451,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <div class="nav-menu-panel" id="navMenuPanel">
-        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search, e.g. \"stressed\" or \"overthinking\"" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="What's going on?" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
         <div id="navSearchResults"></div>
         <div id="navMenuLinks">
-          <a href="index.html#materials">Library</a>
-          <a href="community.html">Community</a>
-          <a href="deep-dives.html">Deep Dives</a>
-          <a href="saved-answers.html">Saved Answers</a>
-          <a href="daily-checkin.html">Daily Check-In</a>
+          <a href="index.html#materials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>Library</a>
+          <a href="community.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Community</a>
+          <a href="deep-dives.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Deep Dives</a>
+          <a href="saved-answers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z"/></svg>Saved Answers</a>
+          <a href="daily-checkin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>Daily Check-In</a>
         </div>
       </div>
     </div>
@@ -466,12 +469,11 @@
   <div class="wrap">
     <p class="brand-mark">Concrete Perspective Lab</p>
     <h1 class="title">You don't need the whole plan.<br>Just a concrete next step.</h1>
-    <p class="tagline">Start with the tool built for the moment you're not sure which one you need.</p>
     <a href="therapy-or-plan.html" class="mat hero-feature">
-      <span class="mat-tag">Start here, 2 minutes</span>
+      <span class="mat-tag">Start here</span>
       <h3>Process or Progress?</h3>
-      <p>Answer eight quick prompts and get a score that sorts your spiral into a next step or a conversation.</p>
-      <span class="hero-feature-btn">Answer the 8 questions &rarr;</span>
+      <p>Two minutes to know what you actually need.</p>
+      <span class="hero-feature-btn">Begin &rarr;</span>
     </a>
     <a href="#materials" class="hero-secondary-link">See the full library</a>
   </div>
@@ -513,13 +515,13 @@
           <span class="mat-icon rose-bg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2H9.5l-4 3.3v-3.3h-1a2 2 0 0 1-2-2z"/><path d="M8.7 10.2l1.9 1.9 4.3-4.3"/></svg></span>
           <span class="mat-tag">2 minutes</span>
           <h3>Process or Progress?</h3>
-          <p>What do I need? Answer eight quick prompts to find out if this needs talking through, or acting on.</p>
+          <p>Talk it through, or take action? We'll help you tell which.</p>
         </a>
         <a href="why-am-i-stuck.html" class="mat">
           <span class="mat-icon rose-bg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 1-1 1.7v.5"/><circle cx="12" cy="17.5" r=".6" fill="var(--rose-deep)"/><circle cx="12" cy="12" r="9"/></svg></span>
           <span class="mat-tag">2 minutes</span>
           <h3>Feeling Stuck?</h3>
-          <p>Sort out which kind of stuck you're in, then get a next step built for that exact kind.</p>
+          <p>Four kinds of stuck. One next step, built for yours.</p>
         </a>
       </div>
     </div>
@@ -534,13 +536,13 @@
           <span class="mat-icon sage-bg2"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M19.5 19.5l-4.5-4.5"/><path d="M7.8 10.5l1.7 1.7 3-3.4"/></svg></span>
           <span class="mat-tag">3 minutes</span>
           <h3>"Is This True?"</h3>
-          <p>A guided tool for overthinking spirals. Calm the body, then check the story against the facts.</p>
+          <p>A thought won't let go? Calm first, then check the facts.</p>
         </a>
         <a href="coping-environment.html" class="mat">
           <span class="mat-icon sage-bg2"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2"/><path d="M4 15c3 0 3-2.2 6-2.2s3 2.2 6 2.2 3-2.2 6-2.2"/></svg></span>
           <span class="mat-tag">3 minutes</span>
           <h3>Stressed! Is It the Environment, or Is It Me?</h3>
-          <p>A scored check-in for a stressful space, sort what's the environment from what's your nervous system, and what to do about each.</p>
+          <p>Is it the room, or is it you? Let's find out.</p>
         </a>
       </div>
     </div>
@@ -555,7 +557,7 @@
           <span class="mat-icon lavender-bg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4.2c-4.3.3-7.7 3.9-7.7 8.3s3.4 8 7.7 8.3c-2.6-1.5-4.3-4.3-4.3-8.3s1.7-6.8 4.3-8.3z"/><path d="M18.5 5v2.2"/><path d="M17.4 6.1h2.2"/><circle cx="19.3" cy="11" r=".6" fill="currentColor" stroke="none"/></svg></span>
           <span class="mat-tag">Anytime</span>
           <h3>Snake, Puzzles, and More</h3>
-          <p>Five small, pointless-on-purpose things: Snake, a shuffling puzzle, a spiral to trace, a maze, and a little jumping game.</p>
+          <p>Snake, Whack-a-Mole, a puzzle, a maze, a little jumping game. Pointless, on purpose.</p>
         </a>
       </div>
     </div>

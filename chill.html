@@ -13,8 +13,8 @@
     --ink:#3A3238;
     --muted:#7C7075;
     --border:#EAE0DC;
-    --rose:#D9A6A0;
-    --rose-deep:#C68B85;
+    --rose:#D9B08C;
+    --rose-deep:#B98259;
     --sage:#A9BBA8;
     --sage-deep:#87A186;
     --lavender:#C7BFD6;
@@ -50,15 +50,18 @@
   .nav-menu-btn:hover{color:var(--rose-deep);}
   .nav-menu-panel{
     position:absolute; top:100%; right:0; background:var(--surface); border:1px solid var(--border);
-    border-radius:14px; box-shadow:0 12px 32px rgba(58,50,56,0.14); padding:10px; display:none; flex-direction:column;
-    min-width:190px; z-index:60; margin-top:10px;
+    border-radius:18px; box-shadow:0 20px 48px rgba(58,50,56,0.16); padding:14px; display:none; flex-direction:column;
+    min-width:230px; z-index:60; margin-top:12px;
   }
   .nav-menu-panel.show{display:flex;}
-  .nav-menu-panel a{
-    padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--ink); text-decoration:none; transition:background .15s ease;
-    font-family:'Jost', sans-serif;
+  #navMenuPanel a{
+    padding:12px 14px; border-radius:11px; font-size:14.5px; color:var(--ink); text-decoration:none; transition:all .15s ease;
+    font-family:'Jost', sans-serif; text-transform:none !important; letter-spacing:normal !important; font-weight:450;
+    display:flex; align-items:center; gap:13px;
   }
-  .nav-menu-panel a:hover{background:var(--bg); color:var(--rose-deep);}
+  .nav-menu-panel a svg{width:18px; height:18px; color:var(--rose-deep); flex-shrink:0; opacity:0.75; transition:opacity .15s ease;}
+  .nav-menu-panel a:hover{background:#FBF3EE; color:var(--rose-deep); transform:translateX(2px);}
+  .nav-menu-panel a:hover svg{opacity:1;}
   .nav-search-input{
     width:100%; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; margin-bottom:8px;
     font-family:'Jost', sans-serif; font-size:13px; background:var(--bg); color:var(--ink); text-transform:none; letter-spacing:normal;
@@ -68,7 +71,7 @@
     display:block; padding:10px 14px; border-radius:9px; font-size:13px; color:var(--ink); text-decoration:none;
     text-transform:none; letter-spacing:normal; background:#FBF3F1; margin-bottom:4px;
   }
-  .nav-search-result:hover{background:#F6E6E3;}
+  .nav-search-result:hover{background:#F3E4D3;}
   .nav-search-result b{color:var(--rose-deep); font-weight:600;}
   .nav-search-empty{font-size:12px; color:var(--muted); padding:8px 14px; text-transform:none; letter-spacing:normal;}
   .nav-links a{
@@ -328,7 +331,7 @@
   .tab-panel.active{display:block;}
 
   .game-wrap{display:flex; flex-direction:column; align-items:center; gap:16px;}
-  #lineCanvas, #mazeCanvas{border-radius:16px; border:1.5px solid var(--border); background:#FBF7F4; touch-action:none; max-width:100%;}
+  #mazeCanvas{border-radius:16px; border:1.5px solid var(--border); background:#FBF7F4; touch-action:none; max-width:100%;}
   .line-msg{font-size:14px; color:var(--ink); font-weight:400; min-height:20px; text-align:center;}
   .maze-controls{display:grid; grid-template-columns:52px 52px 52px; grid-template-rows:52px 52px; gap:6px; justify-content:center; margin-top:4px;}
   #snakeCanvas{border-radius:16px; border:1.5px solid var(--border); background:#FBF7F4; touch-action:none; max-width:100%;}
@@ -354,6 +357,16 @@
   .maze-fact-text{font-size:14.5px; color:var(--ink); font-weight:300; line-height:1.65; max-width:38ch; margin:0 auto;}
 
   .puzzle-grid{display:grid; grid-template-columns:repeat(3, 90px); grid-template-rows:repeat(2, 90px); gap:4px; margin:0 auto;}
+
+  .mole-scorerow{display:flex; justify-content:space-between; width:100%; max-width:300px; margin:0 auto 14px; font-size:14px; color:var(--ink); font-family:'Jost', sans-serif;}
+  .mole-scorerow b{color:var(--rose-deep);}
+  .mole-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; width:100%; max-width:300px; margin:0 auto;}
+  .mole-hole{
+    aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 38%, #6B5544, #4A3B2E);
+    position:relative; overflow:hidden; cursor:pointer; box-shadow:inset 0 4px 10px rgba(0,0,0,0.35);
+  }
+  .mole-crit{position:absolute; bottom:-95%; left:0; transition:bottom .12s ease-out;}
+  .mole-hole.up .mole-crit{bottom:-6%;}
   .puzzle-piece{
     width:90px; height:90px; border-radius:8px; cursor:pointer; background-image:var(--puzzle-bg);
     background-size:270px 180px; border:2px solid transparent; transition:border-color .15s ease;
@@ -384,14 +397,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <div class="nav-menu-panel" id="navMenuPanel">
-        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search, e.g. \"stressed\" or \"overthinking\"" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="What's going on?" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
         <div id="navSearchResults"></div>
         <div id="navMenuLinks">
-          <a href="index.html#materials">Library</a>
-          <a href="community.html">Community</a>
-          <a href="deep-dives.html">Deep Dives</a>
-          <a href="saved-answers.html">Saved Answers</a>
-          <a href="daily-checkin.html">Daily Check-In</a>
+          <a href="index.html#materials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>Library</a>
+          <a href="community.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Community</a>
+          <a href="deep-dives.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Deep Dives</a>
+          <a href="saved-answers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z"/></svg>Saved Answers</a>
+          <a href="daily-checkin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>Daily Check-In</a>
         </div>
       </div>
     </div>
@@ -411,7 +424,7 @@
     <div class="tab-row" id="mainTabRow">
       <button class="tab-btn active" data-tab="snake" onclick="showTab('snake')">Snake</button>
       <button class="tab-btn" data-tab="puzzle" onclick="showTab('puzzle')">6-Piece Puzzle</button>
-      <button class="tab-btn" data-tab="line" onclick="showTab('line')">Follow the Spiral</button>
+      <button class="tab-btn" data-tab="mole" onclick="showTab('mole')">Whack-a-Mole</button>
       <button class="tab-btn" data-tab="maze" onclick="showTab('maze')">Maze</button>
       <button class="tab-btn" data-tab="jump" onclick="showTab('jump')">Little Jump</button>
     </div>
@@ -442,12 +455,16 @@
       </div>
     </div>
 
-    <div class="card tab-panel" id="panel-line">
-      <p class="lede" style="margin-bottom:14px;">Trace the spiral from the center out to the end, nice and steady. Drag with your finger or mouse, no rush.</p>
+    <div class="card tab-panel" id="panel-mole">
+      <p class="lede" style="margin-bottom:14px;">Whack the moles as they pop up. Quick, silly, no pressure. Thirty seconds.</p>
       <div class="game-wrap">
-        <canvas id="lineCanvas" width="280" height="280"></canvas>
-        <p class="line-msg" id="lineMsg">Start at the dot in the middle.</p>
-        <button class="restart-btn" onclick="resetLineGame()">Try Again</button>
+        <div class="mole-scorerow">
+          <span>Score: <b id="moleScore">0</b></span>
+          <span id="moleTimer">0:30</span>
+        </div>
+        <div class="mole-grid" id="moleGrid"></div>
+        <p class="line-msg" id="moleMsg">Tap Start when ready.</p>
+        <button class="restart-btn" id="moleStartBtn" onclick="startMoleGame()">Start</button>
       </div>
     </div>
 
@@ -607,7 +624,6 @@
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-'+name).classList.add('active');
     if(name === 'snake') drawSnakeFrame(1);
-    if(name === 'line') drawSpiralBase();
     if(name === 'maze') drawMaze();
     if(name === 'jump') drawJumpScene();
   }
@@ -969,137 +985,77 @@
 
   shufflePuzzle();
 
-  /* ---------- Follow the Spiral ---------- */
-  const lineCanvas = document.getElementById('lineCanvas');
-  const lctx = lineCanvas.getContext('2d');
-  const SPIRAL_CX = 140, SPIRAL_CY = 140, SPIRAL_TURNS = 2.5, SPIRAL_MAX_R = 110, SPIRAL_MIN_R = 14;
-  let spiralPoints = [];
-  let lineActive = false, lineFarthestT = 0, lastKnownT = 0;
-  const LINE_TOLERANCE = 16;
-  const T_BUCKETS = 100;
-  let bucketVisited, bucketOnTrack;
+  /* ---------- Whack-a-Mole ---------- */
+  let moleActive = false, moleScore = 0, moleTimeLeft = 30, moleTimer = null, molePopTimer = null, moleUpIndex = -1;
 
-  function buildSpiral(){
-    spiralPoints = [];
-    const steps = 800;
-    for(let i=0;i<=steps;i++){
-      const t = i/steps;
-      const angle = t * SPIRAL_TURNS * Math.PI * 2;
-      const r = SPIRAL_MIN_R + t * (SPIRAL_MAX_R - SPIRAL_MIN_R);
-      spiralPoints.push({x: SPIRAL_CX + r*Math.cos(angle), y: SPIRAL_CY + r*Math.sin(angle), t});
+  function buildMoleGrid(){
+    const grid = document.getElementById('moleGrid');
+    grid.innerHTML = '';
+    for(let i=0;i<9;i++){
+      const hole = document.createElement('div');
+      hole.className = 'mole-hole';
+      hole.dataset.i = i;
+      hole.innerHTML = `
+        <svg class="mole-crit" viewBox="0 0 60 50" width="100%" height="100%">
+          <ellipse cx="30" cy="34" rx="22" ry="18" fill="#8B7060"/>
+          <ellipse cx="21" cy="26" rx="4" ry="5" fill="#3A3238"/>
+          <ellipse cx="39" cy="26" rx="4" ry="5" fill="#3A3238"/>
+          <ellipse cx="30" cy="36" rx="6" ry="4" fill="#3A3238"/>
+          <rect x="27" y="38" width="3" height="6" fill="#FFFFFF"/>
+          <rect x="31" y="38" width="3" height="6" fill="#FFFFFF"/>
+        </svg>
+      `;
+      hole.addEventListener('click', ()=>whackMole(i));
+      grid.appendChild(hole);
     }
   }
-  buildSpiral();
+  buildMoleGrid();
 
-  function drawSpiralBase(){
-    lctx.fillStyle = '#FBF7F4';
-    lctx.fillRect(0,0,280,280);
-    lctx.strokeStyle = '#D8CFC9';
-    lctx.lineWidth = 2;
-    lctx.beginPath();
-    spiralPoints.forEach((p,i)=> i===0 ? lctx.moveTo(p.x,p.y) : lctx.lineTo(p.x,p.y));
-    lctx.stroke();
-
-    lctx.fillStyle = '#D9A6A0';
-    lctx.beginPath();
-    lctx.arc(spiralPoints[0].x, spiralPoints[0].y, 6, 0, Math.PI*2);
-    lctx.fill();
-
-    const end = spiralPoints[spiralPoints.length-1];
-    lctx.fillStyle = '#A9BBA8';
-    lctx.beginPath();
-    lctx.arc(end.x, end.y, 6, 0, Math.PI*2);
-    lctx.fill();
-  }
-  drawSpiralBase();
-
-  // Searches only a local window around the last known position along the path,
-  // so the spiral's inner and outer loops (which pass spatially close together)
-  // never get confused for each other — this is what makes the tracking accurate.
-  function nearestSpiralTLocal(x,y,lastT){
-    const windowBack = 0.04, windowFwd = 0.14;
-    const loIdx = Math.max(0, Math.floor((lastT - windowBack) * (spiralPoints.length-1)));
-    const hiIdx = Math.min(spiralPoints.length-1, Math.ceil((lastT + windowFwd) * (spiralPoints.length-1)));
-    let best = Infinity, bestT = lastT;
-    for(let i=loIdx;i<=hiIdx;i++){
-      const p = spiralPoints[i];
-      const d = Math.hypot(p.x-x, p.y-y);
-      if(d < best){ best = d; bestT = p.t; }
-    }
-    return {dist: best, t: bestT};
+  function whackMole(i){
+    if(!moleActive || i !== moleUpIndex) return;
+    moleScore++;
+    document.getElementById('moleScore').textContent = moleScore;
+    document.querySelectorAll('.mole-hole')[i].classList.remove('up');
+    moleUpIndex = -1;
   }
 
-  function lineCanvasPos(e){
-    const rect = lineCanvas.getBoundingClientRect();
-    const scaleX = lineCanvas.width / rect.width, scaleY = lineCanvas.height / rect.height;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY};
+  function popRandomMole(){
+    if(!moleActive) return;
+    const holes = document.querySelectorAll('.mole-hole');
+    if(moleUpIndex !== -1) holes[moleUpIndex].classList.remove('up');
+    let next = Math.floor(Math.random()*9);
+    moleUpIndex = next;
+    holes[next].classList.add('up');
+    const upTime = Math.max(450, 950 - moleScore*15);
+    molePopTimer = setTimeout(()=>{
+      if(moleUpIndex === next){ holes[next].classList.remove('up'); moleUpIndex = -1; }
+      if(moleActive) popRandomMole();
+    }, upTime);
   }
 
-  function resetLineGame(){
-    lineActive = false; lineFarthestT = 0; lastKnownT = 0;
-    bucketVisited = new Array(T_BUCKETS).fill(false);
-    bucketOnTrack = new Array(T_BUCKETS).fill(false);
-    document.getElementById('lineMsg').textContent = 'Start at the dot in the middle.';
-    drawSpiralBase();
+  function startMoleGame(){
+    moleActive = true;
+    moleScore = 0;
+    moleTimeLeft = 30;
+    document.getElementById('moleScore').textContent = '0';
+    document.getElementById('moleTimer').textContent = '0:30';
+    document.getElementById('moleMsg').textContent = 'Go!';
+    document.getElementById('moleStartBtn').textContent = 'Restart';
+    popRandomMole();
+    clearInterval(moleTimer);
+    moleTimer = setInterval(()=>{
+      moleTimeLeft--;
+      const sec = String(moleTimeLeft % 60).padStart(2,'0');
+      document.getElementById('moleTimer').textContent = Math.floor(moleTimeLeft/60) + ':' + sec;
+      if(moleTimeLeft <= 0){
+        moleActive = false;
+        clearInterval(moleTimer);
+        clearTimeout(molePopTimer);
+        document.querySelectorAll('.mole-hole').forEach(h=>h.classList.remove('up'));
+        document.getElementById('moleMsg').textContent = 'Time! Score: ' + moleScore + '. Tap Restart for another round.';
+      }
+    }, 1000);
   }
-  resetLineGame();
-
-  function lineStart(e){
-    const pos = lineCanvasPos(e);
-    const start = spiralPoints[0];
-    if(Math.hypot(pos.x-start.x, pos.y-start.y) < 26){
-      lineActive = true;
-      lineFarthestT = 0; lastKnownT = 0;
-      bucketVisited = new Array(T_BUCKETS).fill(false);
-      bucketOnTrack = new Array(T_BUCKETS).fill(false);
-      document.getElementById('lineMsg').textContent = 'Following...';
-    }
-  }
-  function lineMove(e){
-    if(!lineActive) return;
-    e.preventDefault();
-    const pos = lineCanvasPos(e);
-    const near = nearestSpiralTLocal(pos.x, pos.y, lastKnownT);
-    lastKnownT = near.t;
-    if(near.t > lineFarthestT) lineFarthestT = near.t;
-
-    const bucket = Math.min(T_BUCKETS-1, Math.floor(near.t * T_BUCKETS));
-    const onTrack = near.dist <= LINE_TOLERANCE;
-    if(!bucketVisited[bucket]){
-      bucketVisited[bucket] = true;
-      bucketOnTrack[bucket] = onTrack;
-    } else if(onTrack){
-      bucketOnTrack[bucket] = true;
-    }
-
-    lctx.fillStyle = onTrack ? 'rgba(169,187,168,0.55)' : 'rgba(217,166,160,0.5)';
-    lctx.beginPath();
-    lctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
-    lctx.fill();
-
-    if(lineFarthestT > 0.96){
-      lineActive = false;
-      const visitedCount = bucketVisited.filter(Boolean).length;
-      const onTrackCount = bucketOnTrack.filter(Boolean).length;
-      const pct = visitedCount ? Math.round((onTrackCount/visitedCount)*100) : 100;
-      document.getElementById('lineMsg').textContent = 'You made it out. Nice and steady ' + pct + '% of the way.';
-    }
-  }
-  function lineEnd(){
-    if(lineActive){
-      lineActive = false;
-      document.getElementById('lineMsg').textContent = 'That\'s alright, tap the dot to start again whenever.';
-    }
-  }
-
-  lineCanvas.addEventListener('mousedown', lineStart);
-  lineCanvas.addEventListener('mousemove', lineMove);
-  window.addEventListener('mouseup', lineEnd);
-  lineCanvas.addEventListener('touchstart', lineStart, {passive:true});
-  lineCanvas.addEventListener('touchmove', lineMove, {passive:false});
-  lineCanvas.addEventListener('touchend', lineEnd);
 
   /* ---------- Maze ---------- */
   const mazeCanvas = document.getElementById('mazeCanvas');
@@ -1168,7 +1124,7 @@
     mctx.moveTo(ex-7, ey+8); mctx.lineTo(ex-7, ey-8); mctx.lineTo(ex+6, ey-3); mctx.lineTo(ex-7, ey+2);
     mctx.fill();
 
-    mctx.fillStyle = '#D9A6A0';
+    mctx.fillStyle = '#D9B08C';
     mctx.beginPath();
     mctx.arc(playerPos.x*MCELL+MCELL/2, playerPos.y*MCELL+MCELL/2, MCELL/3.4, 0, Math.PI*2);
     mctx.fill();
@@ -1262,7 +1218,7 @@
   }
 
   function drawBunny(x,y){
-    jctx.fillStyle = '#D9A6A0';
+    jctx.fillStyle = '#D9B08C';
     jctx.beginPath(); jctx.ellipse(x, y-6, BUNNY_R, BUNNY_R-2, 0, 0, Math.PI*2); jctx.fill();
     jctx.beginPath(); jctx.ellipse(x+9, y-16, 7, 7, 0, 0, Math.PI*2); jctx.fill();
     jctx.beginPath(); jctx.ellipse(x+5, y-27, 2.6, 8, -0.3, 0, Math.PI*2); jctx.fill();
@@ -1311,7 +1267,13 @@
     nextObstacleIn--;
     if(nextObstacleIn <= 0){
       obstacles.push({x: JW+20, type: Math.random() < 0.5 ? 'bush' : 'rock', passed:false});
-      nextObstacleIn = 55 + Math.random()*45;
+      // once the player's warmed up, sometimes throw a close double obstacle for real challenge
+      if(jumpScore >= 6 && Math.random() < 0.3){
+        obstacles.push({x: JW+20+34, type: Math.random() < 0.5 ? 'bush' : 'rock', passed:false});
+      }
+      const gapFloor = Math.max(30, 55 - jumpScore*1.1);
+      const gapRange = Math.max(20, 45 - jumpScore*0.6);
+      nextObstacleIn = gapFloor + Math.random()*gapRange;
     }
 
     obstacles.forEach(o=> o.x -= jumpSpeed);
@@ -1332,7 +1294,8 @@
       }
     });
 
-    if(jumpSpeed < 6.5) jumpSpeed += 0.0025;
+    const speedCap = 9.5;
+    if(jumpSpeed < speedCap) jumpSpeed += 0.003 + jumpScore*0.0002;
 
     drawJumpScene();
     if(jumpRunning) jumpAnimId = requestAnimationFrame(jumpTick);

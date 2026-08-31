@@ -13,8 +13,8 @@
     --ink:#3A3238;
     --muted:#7C7075;
     --border:#EAE0DC;
-    --rose:#D9A6A0;
-    --rose-deep:#C68B85;
+    --rose:#D9B08C;
+    --rose-deep:#B98259;
     --sage:#A9BBA8;
     --sage-deep:#87A186;
     --lavender:#C7BFD6;
@@ -50,15 +50,18 @@
   .nav-menu-btn:hover{color:var(--rose-deep);}
   .nav-menu-panel{
     position:absolute; top:100%; right:0; background:var(--surface); border:1px solid var(--border);
-    border-radius:14px; box-shadow:0 12px 32px rgba(58,50,56,0.14); padding:10px; display:none; flex-direction:column;
-    min-width:190px; z-index:60; margin-top:10px;
+    border-radius:18px; box-shadow:0 20px 48px rgba(58,50,56,0.16); padding:14px; display:none; flex-direction:column;
+    min-width:230px; z-index:60; margin-top:12px;
   }
   .nav-menu-panel.show{display:flex;}
-  .nav-menu-panel a{
-    padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--ink); text-decoration:none; transition:background .15s ease;
-    font-family:'Jost', sans-serif;
+  #navMenuPanel a{
+    padding:12px 14px; border-radius:11px; font-size:14.5px; color:var(--ink); text-decoration:none; transition:all .15s ease;
+    font-family:'Jost', sans-serif; text-transform:none !important; letter-spacing:normal !important; font-weight:450;
+    display:flex; align-items:center; gap:13px;
   }
-  .nav-menu-panel a:hover{background:var(--bg); color:var(--rose-deep);}
+  .nav-menu-panel a svg{width:18px; height:18px; color:var(--rose-deep); flex-shrink:0; opacity:0.75; transition:opacity .15s ease;}
+  .nav-menu-panel a:hover{background:#FBF3EE; color:var(--rose-deep); transform:translateX(2px);}
+  .nav-menu-panel a:hover svg{opacity:1;}
   .nav-search-input{
     width:100%; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; margin-bottom:8px;
     font-family:'Jost', sans-serif; font-size:13px; background:var(--bg); color:var(--ink); text-transform:none; letter-spacing:normal;
@@ -68,7 +71,7 @@
     display:block; padding:10px 14px; border-radius:9px; font-size:13px; color:var(--ink); text-decoration:none;
     text-transform:none; letter-spacing:normal; background:#FBF3F1; margin-bottom:4px;
   }
-  .nav-search-result:hover{background:#F6E6E3;}
+  .nav-search-result:hover{background:#F3E4D3;}
   .nav-search-result b{color:var(--rose-deep); font-weight:600;}
   .nav-search-empty{font-size:12px; color:var(--muted); padding:8px 14px; text-transform:none; letter-spacing:normal;}
   .nav-links a{
@@ -95,6 +98,11 @@
   section{padding:8px 0 56px;}
   .section-head{text-align:center; margin-bottom:36px;}
   .tool-sigil{display:block; margin:0 auto 18px;}
+  .mascot-intro{text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .mascot{margin-bottom:14px;}
+  .mascot-name{font-family:'Cormorant Garamond', serif; font-size:20px; font-weight:600; color:var(--ink); margin-bottom:20px;}
+  .mascot-line{font-size:14.5px; color:var(--ink); font-weight:300; line-height:1.7; text-align:left; margin-bottom:14px; max-width:44ch;}
+  .mascot-line b{font-weight:600; color:var(--rose-deep);}
   .kicker{font-size:11.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--sage-deep); font-weight:500; display:block; margin-bottom:14px;}
   h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
   .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
@@ -383,14 +391,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <div class="nav-menu-panel" id="navMenuPanel">
-        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search, e.g. \"stressed\" or \"overthinking\"" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="What's going on?" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
         <div id="navSearchResults"></div>
         <div id="navMenuLinks">
-          <a href="index.html#materials">Library</a>
-          <a href="community.html">Community</a>
-          <a href="deep-dives.html">Deep Dives</a>
-          <a href="saved-answers.html">Saved Answers</a>
-          <a href="daily-checkin.html">Daily Check-In</a>
+          <a href="index.html#materials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>Library</a>
+          <a href="community.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>Community</a>
+          <a href="deep-dives.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Deep Dives</a>
+          <a href="saved-answers.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z"/></svg>Saved Answers</a>
+          <a href="daily-checkin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 5-4 6-4 11a4 4 0 0 0 8 0c0-5-4-6-4-11z"/><path d="M12 21v-4"/></svg>Daily Check-In</a>
         </div>
       </div>
     </div>
@@ -414,7 +422,35 @@
       <p class="lede">A guided tool for stopping an overthinking spiral. Calm the body first, then check the story your mind is telling you against the facts.</p>
     </div>
 
-    <div class="stuck-screen active" id="screen1">
+    <div class="stuck-screen active" id="screen0">
+      <div class="card mascot-intro">
+        <svg class="mascot" viewBox="0 0 140 160" width="96" height="110" fill="none">
+          <path d="M70 10c28 0 46 24 46 58s-18 82-46 82-46-48-46-82S42 10 70 10z" fill="var(--rose)"/>
+          <ellipse cx="45" cy="78" rx="7" ry="5" fill="var(--rose-deep)" opacity="0.35"/>
+          <ellipse cx="95" cy="78" rx="7" ry="5" fill="var(--rose-deep)" opacity="0.35"/>
+          <circle cx="52" cy="64" r="13" fill="none" stroke="#3A3238" stroke-width="2.5"/>
+          <circle cx="88" cy="64" r="13" fill="none" stroke="#3A3238" stroke-width="2.5"/>
+          <path d="M65 64h10" stroke="#3A3238" stroke-width="2.5"/>
+          <path d="M39 60l-8-4" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M101 60l8-4" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="52" cy="64" r="3" fill="#3A3238"/>
+          <circle cx="88" cy="64" r="3" fill="#3A3238"/>
+          <path d="M58 84q12 10 24 0" stroke="#3A3238" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M70 10c-2-8 4-14 10-12" stroke="var(--sage-deep)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M28 100q-14 4-16 20" stroke="var(--rose)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M112 100q14 4 16 20" stroke="var(--rose)" stroke-width="9" stroke-linecap="round"/>
+          <rect x="4" y="118" width="20" height="15" rx="2" fill="var(--sage-deep)"/>
+          <path d="M14 118v15" stroke="var(--bg)" stroke-width="1.2"/>
+        </svg>
+        <p class="mascot-name">Hey, it's Bean from the Lab 👋</p>
+        <p class="mascot-line"><b>What this is:</b> for when a thought has grabbed you and it feels completely, 100% true, even if it might not be.</p>
+        <p class="mascot-line"><b>Why it works:</b> an activated body makes it nearly impossible to think clearly, so this calms the body first (that's not optional, it's the actual mechanism), then walks you through checking the story against the real evidence.</p>
+        <p class="mascot-line"><b>What you'll get:</b> a short body-calming step, then a guided way to test the thought against the facts.</p>
+        <button class="primary" onclick="goToScreen(1)" style="margin-top:8px;">Let's go →</button>
+      </div>
+    </div>
+
+    <div class="stuck-screen" id="screen1">
     <div class="card">
       <div class="progress-dots"><span class="current"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div>
       <span class="step-label">Before You Begin</span>
