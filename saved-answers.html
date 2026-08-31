@@ -38,13 +38,39 @@
     position:sticky; top:0; z-index:50; background:rgba(251,247,244,0.88);
     backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
   }
-  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px;}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; position:relative;}
   .nav-brand{
     font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600; color:var(--ink);
     text-decoration:none; letter-spacing:0.01em; display:flex; align-items:center; gap:8px;
   }
   .nav-feather{height:20px; width:auto; display:block;}
-  .nav-links{display:flex; gap:22px;}
+  .nav-links{display:flex; gap:22px; align-items:center;}
+  .nav-menu-btn{background:none; border:none; cursor:pointer; color:var(--ink); padding:6px; display:flex; align-items:center; justify-content:center;}
+  .nav-menu-btn svg{width:22px; height:22px;}
+  .nav-menu-btn:hover{color:var(--rose-deep);}
+  .nav-menu-panel{
+    position:absolute; top:100%; right:0; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; box-shadow:0 12px 32px rgba(58,50,56,0.14); padding:10px; display:none; flex-direction:column;
+    min-width:190px; z-index:60; margin-top:10px;
+  }
+  .nav-menu-panel.show{display:flex;}
+  .nav-menu-panel a{
+    padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--ink); text-decoration:none; transition:background .15s ease;
+    font-family:'Jost', sans-serif;
+  }
+  .nav-menu-panel a:hover{background:var(--bg); color:var(--rose-deep);}
+  .nav-search-input{
+    width:100%; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; margin-bottom:8px;
+    font-family:'Jost', sans-serif; font-size:13px; background:var(--bg); color:var(--ink); text-transform:none; letter-spacing:normal;
+  }
+  .nav-search-input:focus{outline:none; border-color:var(--rose-deep);}
+  .nav-search-result{
+    display:block; padding:10px 14px; border-radius:9px; font-size:13px; color:var(--ink); text-decoration:none;
+    text-transform:none; letter-spacing:normal; background:#FBF3F1; margin-bottom:4px;
+  }
+  .nav-search-result:hover{background:#F6E6E3;}
+  .nav-search-result b{color:var(--rose-deep); font-weight:600;}
+  .nav-search-empty{font-size:12px; color:var(--muted); padding:8px 14px; text-transform:none; letter-spacing:normal;}
   .nav-links a{
     font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
     text-decoration:none; font-weight:400; transition:color .15s ease;
@@ -72,7 +98,7 @@
   h2{font-family:'Cormorant Garamond', serif; font-size:28px; font-weight:500; margin-bottom:10px;}
   .lede{color:var(--muted); max-width:48ch; margin:0 auto; font-size:15px; font-weight:300;}
 
-  .card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
+  .card{background:var(--surface); border:1px solid var(--border); border-left:4px solid #8B7FA3; border-radius:18px; padding:32px 30px; margin-bottom:20px; box-shadow:var(--shadow);}
   .step-label{display:inline-block; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); font-weight:500; margin-bottom:16px;}
   .prompt{display:block; font-size:16px; color:var(--ink); margin-bottom:12px; font-weight:400;}
   textarea{width:100%; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:'Jost', sans-serif; font-size:15px; font-weight:300; padding:8px 2px 12px; resize:vertical; min-height:44px; color:var(--ink); line-height:1.6;}
@@ -342,7 +368,20 @@
   <div class="wrap nav-inner">
     <a href="index.html" class="nav-brand"><img src="feather-icon.png" alt="" class="nav-feather">Concrete Perspective Lab</a>
     <div class="nav-links">
-      <a href="index.html#materials" class="back-link">← Library</a>
+      <button class="nav-menu-btn" onclick="toggleNavMenu(event)" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="nav-menu-panel" id="navMenuPanel">
+        <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search, e.g. \"stressed\" or \"overthinking\"" oninput="handleNavSearch(this.value)" onclick="event.stopPropagation()">
+        <div id="navSearchResults"></div>
+        <div id="navMenuLinks">
+          <a href="index.html#materials">Library</a>
+          <a href="community.html">Community</a>
+          <a href="deep-dives.html">Deep Dives</a>
+          <a href="saved-answers.html">Saved Answers</a>
+          <a href="daily-checkin.html">Daily Check-In</a>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
@@ -405,7 +444,7 @@
       <a href="index.html#materials">Library</a>
       <a href="index.html#about">About</a>
       <a href="community.html">Community</a>
-      <a href="field-notes.html">Field Notes</a>
+      <a href="deep-dives.html">Deep Dives</a>
       <a href="saved-answers.html">Saved Answers</a>
       <a href="daily-checkin.html">Daily Check-In</a>
     </nav>
@@ -445,6 +484,50 @@
 
 
 <script>
+  const SEARCH_INDEX = [
+    {title:'Process or Progress?', url:'therapy-or-plan.html', keywords:['talk','plan','unsure what i need','decision','spiral','process','progress']},
+    {title:'Feeling Stuck?', url:'why-am-i-stuck.html', keywords:['stuck','fog','unclear','frozen','overwhelmed','fear','decision','procrastinating']},
+    {title:'"Is This True?"', url:'is-this-true.html', keywords:['overthinking','spiral','anxious','anxiety','worried','worry','thoughts']},
+    {title:'Stressed! Is It the Environment, or Is It Me?', url:'coping-environment.html', keywords:['stressed','stress','environment','nervous system','overwhelmed','space']},
+    {title:'Daily Check-In', url:'daily-checkin.html', keywords:['mood','journal','gratitude','plant','daily','check in','feelings']},
+    {title:'Community', url:'community.html', keywords:['community','stories','share','others','helped']},
+    {title:'Deep Dives', url:'deep-dives.html', keywords:['learn','psychology','read','deep dive','articles','curious']},
+    {title:'Snake, Puzzles, and More', url:'chill.html', keywords:['game','games','snake','puzzle','maze','calm','relax','bored','fun']},
+    {title:'Your Saved Answers', url:'saved-answers.html', keywords:['saved','answers','history','journal entries']}
+  ];
+
+  function handleNavSearch(query){
+    const q = query.trim().toLowerCase();
+    const resultsEl = document.getElementById('navSearchResults');
+    const linksEl = document.getElementById('navMenuLinks');
+    if(!q){
+      resultsEl.innerHTML = '';
+      linksEl.style.display = 'block';
+      return;
+    }
+    linksEl.style.display = 'none';
+    const matches = SEARCH_INDEX.filter(item =>
+      item.title.toLowerCase().includes(q) || item.keywords.some(k => k.includes(q) || q.includes(k))
+    ).slice(0, 4);
+    if(!matches.length){
+      resultsEl.innerHTML = '<div class="nav-search-empty">Nothing matched, try a different word.</div>';
+      return;
+    }
+    resultsEl.innerHTML = matches.map(m => '<a class="nav-search-result" href="' + m.url + '">' + m.title + '</a>').join('');
+  }
+
+  function toggleNavMenu(e){
+    if(e) e.stopPropagation();
+    document.getElementById('navMenuPanel').classList.toggle('show');
+  }
+  document.addEventListener('click', function(e){
+    const panel = document.getElementById('navMenuPanel');
+    const btn = document.querySelector('.nav-menu-btn');
+    if(panel && panel.classList.contains('show') && !panel.contains(e.target) && (!btn || !btn.contains(e.target))){
+      panel.classList.remove('show');
+    }
+  });
+
   const SOURCES = [
     {
       key: 'worksheet-therapy-or-plan-scored',
