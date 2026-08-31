@@ -469,6 +469,8 @@
           <input type="range" min="1" max="10" value="5" class="scale-slider" id="fear_confidence">
           <div class="scale-readout"><span>Not at all</span><b id="fear_confidence_val">5</b><span>Completely</span></div>
         </div>
+        <span class="prompt" style="margin-top:22px;">Have you faced a decision like this before? What finally helped you decide?</span>
+        <textarea id="fear_before" rows="2" placeholder="..."></textarea>
         <span class="prompt" style="margin-top:22px;">What's the smallest, most reversible version of this choice you could try this week?</span>
         <textarea id="fear_smallest" rows="2" placeholder="..."></textarea>
         <span class="prompt" style="margin-top:22px;">If a close friend were facing this exact choice, what would you tell them?</span>
@@ -476,12 +478,19 @@
       </div>
 
       <div class="step-two-panel" id="panel-foggy">
-        <span class="prompt">If you woke up tomorrow and the fog was just gone, what's the first small thing you'd notice yourself doing differently?</span>
-        <textarea id="foggy_miracle" rows="2" placeholder="..."></textarea>
-        <span class="prompt" style="margin-top:22px;">Has there been any moment recently, even briefly, where this felt a little clearer? What was different then?</span>
-        <textarea id="foggy_exception" rows="2" placeholder="..."></textarea>
-        <span class="prompt" style="margin-top:22px;">What's one thing you're now sure you don't want, even if you don't know what you do want yet?</span>
-        <textarea id="foggy_notwant" rows="2" placeholder="..."></textarea>
+        <span class="prompt">Has this kind of fog happened before, feeling unclear about a similar thing?</span>
+        <div class="mini-select-row" id="foggy_before">
+          <div class="mini-select" data-v="yes">Yes</div>
+          <div class="mini-select" data-v="no">No, this is new</div>
+          <div class="mini-select" data-v="unsure">Not sure</div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">If yes, what helped you find some clarity last time? If no, what's your best guess at what might?</span>
+        <textarea id="foggy_helped_before" rows="2" placeholder="..."></textarea>
+        <span class="prompt" style="margin-top:22px;">On a scale of 1–10, how close do you feel to having any next step at all, even a small one?</span>
+        <div class="scale-field">
+          <input type="range" min="1" max="10" value="5" class="scale-slider" id="foggy_close">
+          <div class="scale-readout"><span>Not close at all</span><b id="foggy_close_val">5</b><span>Right there</span></div>
+        </div>
       </div>
 
       <div class="step-two-panel" id="panel-frozen">
@@ -509,7 +518,13 @@
       </div>
 
       <div class="step-two-panel" id="panel-practical">
-        <span class="prompt">What's the one specific thing you're missing, as concretely as you can name it?</span>
+        <span class="prompt">Have you solved something like this before, even partially?</span>
+        <div class="mini-select-row" id="practical_before">
+          <div class="mini-select" data-v="yes">Yes</div>
+          <div class="mini-select" data-v="no">No, this is new</div>
+          <div class="mini-select" data-v="unsure">Not sure</div>
+        </div>
+        <span class="prompt" style="margin-top:22px;">What's the one specific thing you're missing, as concretely as you can name it?</span>
         <textarea id="practical_missing" rows="2" placeholder="A number, a name, a resource..."></textarea>
         <span class="prompt" style="margin-top:22px;">Who's one person who might have access to that, even if you're not sure they'd help?</span>
         <textarea id="practical_who" rows="2" placeholder="..."></textarea>
@@ -597,7 +612,7 @@
     <div class="feedback-invite">
       <p class="feedback-eyebrow">Still Growing</p>
       <h2 class="feedback-heading">We're always refining the lab</h2>
-      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <p class="lede" style="margin-bottom:24px;">If something helped, or something felt off, we'd genuinely love to hear it.</p>
       <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
     </div>
   </div>
@@ -618,6 +633,8 @@
     <nav class="foot-links">
       <a href="index.html#materials">Library</a>
       <a href="index.html#about">About</a>
+      <a href="community.html">Community</a>
+      <a href="field-notes.html">Field Notes</a>
       <a href="saved-answers.html">Saved Answers</a>
       <a href="daily-checkin.html">Daily Check-In</a>
     </nav>
@@ -709,6 +726,8 @@
   }
   setupMiniSelect('frozen_state');
   setupMiniSelect('frozen_location');
+  setupMiniSelect('foggy_before');
+  setupMiniSelect('practical_before');
 
   function getMiniSelected(containerId){
     const el = document.querySelector('#'+containerId+' .selected');
@@ -740,37 +759,44 @@
 
     if(selectedType === 'fear'){
       const conf = sliderAnswer('fear_confidence');
+      const before = document.getElementById('fear_before').value.trim();
       const smallest = document.getElementById('fear_smallest').value.trim();
       const friendAdvice = document.getElementById('fear_friend').value.trim();
       const confTone = conf === null ? '' : conf <= 4 ? ", that's a real fear, not a small one" : conf <= 7 ? ", that's a real but workable amount of doubt" : ", you're more ready than the stuck feeling is letting on";
       const confPhrase = conf === null ? '' : ' A <em>' + conf + '/10</em> on handling it going wrong' + confTone + '.';
 
       meaning = 'You said you\'re stuck on ' + stuckLabel + '.' + confPhrase;
+      if(before) meaning += ' You\'ve made a call like this before, and something got you through it, that\'s real evidence you can use again.';
       research = 'Research on decision-making found something counterintuitive: people who chase the "best possible" choice are consistently less happy and more regretful than people who pick "good enough" and move on (Schwartz, 2002).';
       fix = 'The way through isn\'t more certainty, it\'s a smaller, undoable version of the choice.';
 
+      if(before) steps.push('Do what worked before: <em>' + escapeHtml(before) + '</em>');
       if(smallest) steps.push('Do this, this week: <em>' + escapeHtml(smallest) + '</em>');
       if(friendAdvice) steps.push('Try taking your own advice: <em>' + escapeHtml(friendAdvice) + '</em>');
       steps.push('Set a real deadline to decide, on paper, no matter what');
-      steps.push('Write down what you\'d actually do if it went wrong, most "worst cases" are more survivable and specific than they feel right now');
 
     } else if(selectedType === 'foggy'){
-      const miracle = document.getElementById('foggy_miracle').value.trim();
-      const exception = document.getElementById('foggy_exception').value.trim();
-      const notWant = document.getElementById('foggy_notwant').value.trim();
+      const before = getMiniSelected('foggy_before');
+      const helped = document.getElementById('foggy_helped_before').value.trim();
+      const close = sliderAnswer('foggy_close');
 
-      meaning = miracle
-        ? 'You said if the fog lifted, you\'d <em>"' + escapeHtml(miracle) + '"</em>. That\'s not nothing, that\'s the clearest sign of direction you\'ve given yourself all day.'
-        : 'You\'re stuck on ' + stuckLabel + ', and there\'s no clear direction to move toward yet, that\'s the fog itself, not a personal failing.';
-      if(exception) meaning += ' You also mentioned it felt clearer when <em>"' + escapeHtml(exception) + '"</em>, that\'s worth paying attention to, it\'s already worked once.';
+      meaning = 'You\'re stuck on ' + stuckLabel + ', and there\'s no clear direction to move toward yet, that\'s the fog itself, not a personal failing.';
+      if(before === 'yes') meaning += ' You\'ve been here before, which means you already have real evidence of what helps you find your way through this exact kind of fog.';
+      else if(before === 'no') meaning += ' This one\'s new, so there\'s no track record to lean on yet, that\'s worth naming, it changes what kind of help actually fits.';
+      if(close !== null){
+        const closeTone = close >= 7 ? 'closer than the fog is letting on' : close >= 4 ? 'partway there already' : 'still early, and that\'s alright';
+        meaning += ' A <em>' + close + '/10</em> on having a next step, ' + closeTone + '.';
+      }
 
-      research = 'Solution-focused therapy research found that imagining the problem already solved, and noticing moments when it\'s already a little better, measurably reduces the stuck feeling itself, not just clarifies goals (Neipp et al., 2021).';
-      fix = 'You don\'t need the whole answer yet. Elimination and small recreation both move you faster than waiting for clarity to arrive on its own.';
+      research = 'Research on stuck feelings has found that people move through them faster by looking backward at what\'s worked before, not by trying to imagine the whole answer forward (Neipp et al., 2021).';
+      fix = helped
+        ? 'You already named something that\'s helped before. Do a smaller version of that exact thing again, on purpose, this week.'
+        : 'Without a track record yet, the move is to try one small, low-cost thing and treat it as information, not a commitment.';
 
-      if(miracle) steps.push('Do the smallest version of: <em>' + escapeHtml(miracle) + '</em>, today');
-      if(exception) steps.push('Recreate what was different during: <em>"' + escapeHtml(exception) + '"</em>, on purpose, this week');
-      if(notWant) steps.push('Cross <em>"' + escapeHtml(notWant) + '"</em> off for good, then name one more thing you don\'t want');
+      if(helped) steps.push('Do a smaller version of: <em>' + escapeHtml(helped) + '</em>, this week');
       steps.push('Ask one person who knows you well: "what have you noticed me light up about lately?"');
+      steps.push('Set a timer for 10 minutes and just write, no editing, about ' + stuckLabel);
+      steps.push('Pick the smallest possible next action, even if it\'s just "look something up", and do only that');
 
     } else if(selectedType === 'frozen'){
       const state = getMiniSelected('frozen_state');
@@ -805,6 +831,7 @@
       steps.push('Set a timer for 2 minutes, do only the smallest visible piece of ' + stuckLabel);
 
     } else if(selectedType === 'practical'){
+      const before = getMiniSelected('practical_before');
       const missing = document.getElementById('practical_missing').value.trim();
       const who = document.getElementById('practical_who').value.trim();
       const solvable = sliderAnswer('practical_solvable');
@@ -812,6 +839,7 @@
       meaning = missing
         ? '<em>' + escapeHtml(missing) + '</em> is the actual wall here, not you.'
         : 'There\'s a real, external piece missing here, not you.';
+      if(before === 'yes') meaning += ' You\'ve worked through something like this before, at least partly, that\'s a real track record to lean on.';
       if(solvable !== null){
         const solvTone = solvable >= 7 ? 'that\'s genuinely solvable, even if it doesn\'t feel that way yet' : solvable >= 4 ? 'a real but workable amount' : 'worth breaking down even smaller than you have so far';
         meaning += ' A <em>' + solvable + '/10</em> on how solvable the smallest piece feels, ' + solvTone + '.';
@@ -853,14 +881,16 @@
       type: selectedType,
       stuckOn: document.getElementById('stuckOn').value,
       fear_confidence: sliderAnswer('fear_confidence'),
+      fear_before: document.getElementById('fear_before').value,
       fear_smallest: document.getElementById('fear_smallest').value,
       fear_friend: document.getElementById('fear_friend').value,
-      foggy_miracle: document.getElementById('foggy_miracle').value,
-      foggy_exception: document.getElementById('foggy_exception').value,
-      foggy_notwant: document.getElementById('foggy_notwant').value,
+      foggy_before: getMiniSelected('foggy_before'),
+      foggy_helped_before: document.getElementById('foggy_helped_before').value,
+      foggy_close: sliderAnswer('foggy_close'),
       frozen_state: getMiniSelected('frozen_state'),
       frozen_location: getMiniSelected('frozen_location'),
       frozen_charge: sliderAnswer('frozen_charge'),
+      practical_before: getMiniSelected('practical_before'),
       practical_missing: document.getElementById('practical_missing').value,
       practical_who: document.getElementById('practical_who').value,
       practical_solvable: sliderAnswer('practical_solvable'),
@@ -895,17 +925,19 @@
 
     if(d.type === 'fear'){
       out += 'Confidence handling it going wrong: ' + (d.fear_confidence !== null ? d.fear_confidence + '/10' : 'not set') + '\n';
+      out += 'Faced this before / what helped: ' + (d.fear_before || 'not answered') + '\n';
       out += 'Smallest reversible version: ' + (d.fear_smallest || 'not answered') + '\n';
       out += 'Advice to a friend: ' + (d.fear_friend || 'not answered') + '\n';
     } else if(d.type === 'foggy'){
-      out += 'If the fog lifted: ' + (d.foggy_miracle || 'not answered') + '\n';
-      out += 'A time it felt clearer: ' + (d.foggy_exception || 'not answered') + '\n';
-      out += "Something you don't want: " + (d.foggy_notwant || 'not answered') + '\n';
+      out += 'Happened before: ' + (d.foggy_before || 'not answered') + '\n';
+      out += 'What helped before / best guess: ' + (d.foggy_helped_before || 'not answered') + '\n';
+      out += 'How close to a next step: ' + (d.foggy_close !== null ? d.foggy_close + '/10' : 'not set') + '\n';
     } else if(d.type === 'frozen'){
       out += 'Body state: ' + (d.frozen_state || 'not answered') + '\n';
       out += 'Where felt most: ' + (d.frozen_location || 'not answered') + '\n';
       out += 'How intense it felt: ' + (d.frozen_charge !== null ? d.frozen_charge + '/10' : 'not set') + '\n';
     } else if(d.type === 'practical'){
+      out += 'Solved something like this before: ' + (d.practical_before || 'not answered') + '\n';
       out += 'The missing thing: ' + (d.practical_missing || 'not answered') + '\n';
       out += 'Who might help: ' + (d.practical_who || 'not answered') + '\n';
       out += 'How solvable it feels: ' + (d.practical_solvable !== null ? d.practical_solvable + '/10' : 'not set') + '\n';

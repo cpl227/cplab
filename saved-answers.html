@@ -383,7 +383,7 @@
     <div class="feedback-invite">
       <p class="feedback-eyebrow">Still Growing</p>
       <h2 class="feedback-heading">We're always refining the lab</h2>
-      <p class="lede" style="margin-bottom:24px;">If something felt off, or something helped, we'd genuinely love to hear it.</p>
+      <p class="lede" style="margin-bottom:24px;">If something helped, or something felt off, we'd genuinely love to hear it.</p>
       <button class="feedback-btn" onclick="openFeedback()">Share Your Thoughts</button>
     </div>
   </div>
@@ -404,6 +404,8 @@
     <nav class="foot-links">
       <a href="index.html#materials">Library</a>
       <a href="index.html#about">About</a>
+      <a href="community.html">Community</a>
+      <a href="field-notes.html">Field Notes</a>
       <a href="saved-answers.html">Saved Answers</a>
       <a href="daily-checkin.html">Daily Check-In</a>
     </nav>
@@ -492,25 +494,25 @@
           _labels: {}
         };
         if(data.type === 'fear'){
-          out._labels = {detail1:'Confidence handling it going wrong', detail2:'Smallest reversible version', detail3:'Advice to a friend'};
+          out._labels = {detail1:'Confidence handling it going wrong', detail2:'Faced this before / what helped', detail3:'Smallest reversible version'};
           out.detail1 = (data.fear_confidence !== null && data.fear_confidence !== undefined) ? data.fear_confidence + '/10' : '';
-          out.detail2 = data.fear_smallest || '';
-          out.detail3 = data.fear_friend || '';
+          out.detail2 = data.fear_before || '';
+          out.detail3 = data.fear_smallest || '';
         } else if(data.type === 'foggy'){
-          out._labels = {detail1:'If the fog lifted', detail2:'A time it felt clearer', detail3:"Something they don't want"};
-          out.detail1 = data.foggy_miracle || '';
-          out.detail2 = data.foggy_exception || '';
-          out.detail3 = data.foggy_notwant || '';
+          out._labels = {detail1:'Happened before', detail2:'What helped before / best guess', detail3:'How close to a next step'};
+          out.detail1 = data.foggy_before || '';
+          out.detail2 = data.foggy_helped_before || '';
+          out.detail3 = (data.foggy_close !== null && data.foggy_close !== undefined) ? data.foggy_close + '/10' : '';
         } else if(data.type === 'frozen'){
           out._labels = {detail1:'Body state', detail2:'Where felt most', detail3:'How intense it felt'};
           out.detail1 = data.frozen_state || '';
           out.detail2 = data.frozen_location || '';
           out.detail3 = (data.frozen_charge !== null && data.frozen_charge !== undefined) ? data.frozen_charge + '/10' : '';
         } else if(data.type === 'practical'){
-          out._labels = {detail1:'The missing thing', detail2:'Who might help', detail3:'How solvable it feels'};
-          out.detail1 = data.practical_missing || '';
-          out.detail2 = data.practical_who || '';
-          out.detail3 = (data.practical_solvable !== null && data.practical_solvable !== undefined) ? data.practical_solvable + '/10' : '';
+          out._labels = {detail1:'Solved something like this before', detail2:'The missing thing', detail3:'Who might help'};
+          out.detail1 = data.practical_before || '';
+          out.detail2 = data.practical_missing || '';
+          out.detail3 = data.practical_who || '';
         }
         return out;
       },
